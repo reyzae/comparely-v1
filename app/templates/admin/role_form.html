@@ -63,8 +63,13 @@
 
         <div class="form-group">
             <label for="permissions">Permissions</label>
-            <input type="text" id="permissions" name="permissions" value="{{ role.permissions if role else '' }}">
-            <small style="color: #6B7280; font-size: 0.875rem;">Comma-separated list of permissions</small>
+            <input type="text" id="permissions" name="permissions"
+                value="{{ role.permissions if role and role.permissions else '' }}"
+                placeholder="view_devices, view_categories, view_analytics">
+            <small style="color: #6B7280; font-size: 0.875rem; display: block; margin-top: 0.25rem;">
+                Comma-separated list of permissions. Example: <code
+                    style="background: #F3F4F6; padding: 2px 6px; border-radius: 4px;">view_devices, edit_devices, delete_devices</code>
+            </small>
         </div>
 
         <div class="form-actions">

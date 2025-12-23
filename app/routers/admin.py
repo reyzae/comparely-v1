@@ -979,6 +979,12 @@ async def admin_role_create(
 ):
     """Create new role"""
     try:
+        # Sanitize permissions - convert empty string or "None" to None
+        if permissions and permissions.strip() and permissions.strip().lower() != "none":
+            permissions = permissions.strip()
+        else:
+            permissions = None
+        
         role = Role(
             name=name,
             description=description,
@@ -1004,6 +1010,12 @@ async def admin_role_update(
         role = db.query(Role).filter(Role.id == role_id).first()
         if not role:
             return RedirectResponse(url="/admin/roles?error=Role not found", status_code=303)
+        
+        # Sanitize permissions - convert empty string or "None" to None
+        if permissions and permissions.strip() and permissions.strip().lower() != "none":
+            permissions = permissions.strip()
+        else:
+            permissions = None
         
         role.name = name
         role.description = description
