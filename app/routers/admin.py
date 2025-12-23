@@ -978,12 +978,21 @@ async def admin_role_create(
     db: Session = Depends(get_db)
 ):
     """Create new role"""
+    import logging
+    logger = logging.getLogger(__name__)
+    
     try:
+        # Log received data
+        logger.info(f"Creating role - Received data: name={name}, description={description}, permissions={repr(permissions)}")
+        
         # Sanitize permissions - convert empty string or "None" to None
+        original_permissions = permissions
         if permissions and permissions.strip() and permissions.strip().lower() != "none":
             permissions = permissions.strip()
         else:
             permissions = None
+        
+        logger.info(f"After sanitization: {repr(original_permissions)} -> {repr(permissions)}")
         
         role = Role(
             name=name,
@@ -992,8 +1001,12 @@ async def admin_role_create(
         )
         db.add(role)
         db.commit()
+        db.refresh(role)
+        
+        logger.info(f"Role created successfully: ID={role.id}, name={role.name}, permissions={repr(role.permissions)}")
         return RedirectResponse(url="/admin/roles?message=Role created successfully", status_code=303)
     except Exception as e:
+        logger.exception(f"Error creating role: {e}")
         return RedirectResponse(url=f"/admin/roles?error={str(e)}", status_code=303)
 
 @router.post("/roles/{role_id}/edit")
@@ -1006,24 +1019,39 @@ async def admin_role_update(
     db: Session = Depends(get_db)
 ):
     """Update role"""
+    import logging
+    logger = logging.getLogger(__name__)
+    
     try:
         role = db.query(Role).filter(Role.id == role_id).first()
         if not role:
             return RedirectResponse(url="/admin/roles?error=Role not found", status_code=303)
         
+        # Log received data
+        logger.info(f"Updating role ID={role_id} - Received data: name={name}, description={description}, permissions={repr(permissions)}")
+        logger.info(f"Current permissions in DB: {repr(role.permissions)}")
+        
         # Sanitize permissions - convert empty string or "None" to None
+        original_permissions = permissions
         if permissions and permissions.strip() and permissions.strip().lower() != "none":
             permissions = permissions.strip()
         else:
             permissions = None
+        
+        logger.info(f"After sanitization: {repr(original_permissions)} -> {repr(permissions)}")
         
         role.name = name
         role.description = description
         role.permissions = permissions
         
         db.commit()
+        db.refresh(role)
+        
+        logger.info(f"Role updated successfully: ID={role.id}, name={role.name}, permissions={repr(role.permissions)}")
+        db.commit()
         return RedirectResponse(url="/admin/roles?message=Role updated successfully", status_code=303)
     except Exception as e:
+        logger.exception(f"Error updating role: {e}")
         return RedirectResponse(url=f"/admin/roles?error={str(e)}", status_code=303)
 
 @router.post("/roles/{role_id}/delete")
