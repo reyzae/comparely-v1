@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Privacy Policy - COMPARELY{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='/css/pages.css') }}">
+{% endblock %}
+
+{% block breadcrumb %}
+<div class="breadcrumb-container">
+    <div class="container">
+        <a href="/">Home</a> / <span>Privacy Policy</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Privacy Policy Page -->
+<section class="about-section">
+    <div class="container">
+        <!-- Header -->
+        <div class="about-header">
+            <h1><i class="fa-solid fa-shield-halved"></i> Privacy Policy</h1>
+            <p class="section-subtitle">Kebijakan Privasi COMPARELY</p>
+        </div>
+
+        <!-- Privacy Content -->
+        <div class="about-content">
+            <!-- Introduction -->
+            <div class="about-card full-width">
+                <h2><i class="fa-solid fa-circle-info"></i> Pendahuluan</h2>
+                <p>COMPARELY menghargai privasi Anda. Kebijakan privasi ini menjelaskan bagaimana kami mengumpulkan,
+                    menggunakan, dan melindungi informasi pribadi Anda saat menggunakan website kami.</p>
+                <p style="margin-top: 12px;">Website ini dibuat sebagai project tugas akhir mata kuliah Dasar
+                    Pemrograman dan tidak mengumpulkan data pribadi pengguna secara aktif.</p>
+            </div>
+
+            <!-- Data Collection -->
+            <div class="about-card full-width">
+                <h2><i class="fa-solid fa-database"></i> Informasi yang Kami Kumpulkan</h2>
+                <p>Saat ini, COMPARELY tidak mengumpulkan informasi pribadi pengguna. Website ini hanya menampilkan data
+                    perangkat yang sudah tersedia secara publik untuk tujuan perbandingan.</p>
+                <ul style="margin-top: 12px; margin-left: 20px; line-height: 1.8;">
+                    <li>Tidak ada registrasi atau login yang diperlukan</li>
+                    <li>Tidak ada cookies yang menyimpan data pribadi</li>
+                    <li>Tidak ada tracking pengguna</li>
+                </ul>
+            </div>
+
+            <!-- Data Usage -->
+            <div class="about-card full-width">
+                <h2><i class="fa-solid fa-gears"></i> Penggunaan Data</h2>
+                <p>Data perangkat yang ditampilkan di website ini:</p>
+                <ul style="margin-top: 12px; margin-left: 20px; line-height: 1.8;">
+                    <li>Dikumpulkan dari sumber publik</li>
+                    <li>Digunakan hanya untuk tujuan perbandingan</li>
+                    <li>Ditampilkan untuk keperluan edukasi</li>
+                </ul>
+            </div>
+
+            <!-- Security -->
+            <div class="about-card full-width">
+                <h2><i class="fa-solid fa-lock"></i> Keamanan</h2>
+                <p>Meskipun kami tidak mengumpulkan data pribadi, kami tetap berkomitmen untuk menjaga keamanan website
+                    ini dan melindungi pengguna dari ancaman keamanan.</p>
+            </div>
+
+            <!-- Contact -->
+            <div class="about-card full-width">
+                <h2><i class="fa-solid fa-envelope"></i> Hubungi Kami</h2>
+                <p>Jika Anda memiliki pertanyaan tentang kebijakan privasi ini, silakan hubungi kami melalui halaman <a
+                        href="/contact" style="color: #06B6D4; text-decoration: underline;">Contact</a>.</p>
+            </div>
+
+            <!-- Last Updated -->
+            <div class="about-card full-width" style="background: #F3F4F6; border: 1px solid #E5E7EB;">
+                <p style="margin: 0; color: #6B7280; font-size: 14px;"><i class="fa-solid fa-calendar"></i> Terakhir
+                    diperbarui: Desember 2025</p>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="back-button-section" style="text-align: center; margin-top: 32px;">
+            <a href="/" class="btn btn-secondary"><i class="fa-solid fa-house"></i> Kembali ke Homepage</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

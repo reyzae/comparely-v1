@@ -1,0 +1,76 @@
+/* Minimalist Design for Devices List Page */
+.devices-section {
+  background: #FFFFFF !important;
+}
+
+.devices-header {
+  background: #F9FAFB !important;
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid #E5E7EB !important;
+}
+
+.filter-section {
+  background-color: #F9FAFB !important;
+  border: 1px solid #E5E7EB !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+.device-item-card {
+  background-color: white !important;
+  border: 1px solid #E5E7EB !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+.device-item-card:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+  border-color: #06B6D4 !important;
+}
+
+.device-price {
+  color: #06B6D4 !important;
+}
+
+.compare-bar {
+  background-color: #06B6D4 !important;
+}
+
+/* Minimalist Design for Device Detail Page */
+.device-detail-section {
+  background: #FFFFFF !important;
+}
+
+.device-detail-header {
+  background: #F9FAFB !important;
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid #E5E7EB !important;
+}
+
+.device-main-info {
+  background: white !important;
+}
+
+.price-box {
+  background-color: #DBEAFE !important;
+  border: 2px solid #06B6D4 !important;
+}
+
+.price-amount {
+  color: #06B6D4 !important;
+}
+
+.quick-info {
+  background-color: #F9FAFB !important;
+  border: 1px solid #E5E7EB !important;
+}
+
+.device-specs-full {
+  background-color: #F9FAFB !important;
+  border: 1px solid #E5E7EB !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+.spec-group {
+  border-bottom: 1px solid #E5E7EB !important;
+}

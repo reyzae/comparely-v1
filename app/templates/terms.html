@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Terms of Service - COMPARELY{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='/css/pages.css') }}">
+{% endblock %}
+
+{% block breadcrumb %}
+<div class="breadcrumb-container">
+    <div class="container">
+        <a href="/">Home</a> / <span>Terms of Service</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Terms of Service Page -->
+<section class="about-section">
+    <div class="container">
+        <!-- Header -->
+        <div class="about-header">
+            <h1><i class="fa-solid fa-file-contract"></i> Terms of Service</h1>
+            <p class="section-subtitle">Syarat dan Ketentuan Penggunaan COMPARELY</p>
+        </div>
+
+        <!-- Terms Content -->
+        <div class="about-content">
+            <!-- Introduction -->
+            <div class="about-card full-width">
+                <h2><i class="fa-solid fa-handshake"></i> Penerimaan Syarat</h2>
+                <p>Dengan mengakses dan menggunakan website COMPARELY, Anda setuju untuk terikat dengan syarat dan
+                    ketentuan berikut. Jika Anda tidak setuju dengan syarat ini, mohon untuk tidak menggunakan website
+                    kami.</p>
+            </div>
+
+            <!-- Usage -->
+            <div class="about-card full-width">
+                <h2><i class="fa-solid fa-user-check"></i> Penggunaan Website</h2>
+                <p>COMPARELY adalah platform perbandingan perangkat teknologi yang dibuat untuk tujuan edukasi sebagai
+                    project tugas akhir. Pengguna diperbolehkan untuk:</p>
+                <ul style="margin-top: 12px; margin-left: 20px; line-height: 1.8;">
+                    <li><i class="fa-solid fa-check"></i> Membandingkan spesifikasi perangkat</li>
+                    <li><i class="fa-solid fa-check"></i> Melihat informasi perangkat</li>
+                    <li><i class="fa-solid fa-check"></i> Menggunakan fitur pencarian dan filter</li>
+                </ul>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="about-card full-width">
+                <h2><i class="fa-solid fa-triangle-exclamation"></i> Disclaimer</h2>
+                <p>Informasi yang ditampilkan di COMPARELY:</p>
+                <ul style="margin-top: 12px; margin-left: 20px; line-height: 1.8;">
+                    <li><i class="fa-solid fa-circle-info"></i> Dikumpulkan dari berbagai sumber publik</li>
+                    <li><i class="fa-solid fa-circle-info"></i> Mungkin tidak selalu akurat atau up-to-date</li>
+                    <li><i class="fa-solid fa-circle-info"></i> Disediakan "as is" tanpa jaminan apapun</li>
+                    <li><i class="fa-solid fa-circle-info"></i> Tidak dimaksudkan sebagai saran pembelian</li>
+                </ul>
+            </div>
+
+            <!-- Intellectual Property -->
+            <div class="about-card full-width">
+                <h2><i class="fa-solid fa-copyright"></i> Hak Kekayaan Intelektual</h2>
+                <p>Website COMPARELY dan kontennya dilindungi oleh hak cipta. Nama brand, logo, dan trademark yang
+                    ditampilkan adalah milik dari pemilik masing-masing.</p>
+            </div>
+
+            <!-- Limitation -->
+            <div class="about-card full-width">
+                <h2><i class="fa-solid fa-scale-balanced"></i> Batasan Tanggung Jawab</h2>
+                <p>COMPARELY tidak bertanggung jawab atas:</p>
+                <ul style="margin-top: 12px; margin-left: 20px; line-height: 1.8;">
+                    <li><i class="fa-solid fa-xmark"></i> Keputusan pembelian yang dibuat berdasarkan informasi di
+                        website</li>
+                    <li><i class="fa-solid fa-xmark"></i> Ketidakakuratan data atau informasi</li>
+                    <li><i class="fa-solid fa-xmark"></i> Kerugian yang timbul dari penggunaan website</li>
+                </ul>
+            </div>
+
+            <!-- Changes -->
+            <div class="about-card full-width">
+                <h2><i class="fa-solid fa-pen-to-square"></i> Perubahan Syarat</h2>
+                <p>Kami berhak untuk mengubah syarat dan ketentuan ini sewaktu-waktu. Perubahan akan berlaku segera
+                    setelah dipublikasikan di halaman ini.</p>
+            </div>
+
+            <!-- Contact -->
+            <div class="about-card full-width">
+                <h2><i class="fa-solid fa-envelope"></i> Kontak</h2>
+                <p>Jika Anda memiliki pertanyaan tentang syarat dan ketentuan ini, silakan hubungi kami melalui halaman
+                    <a href="/contact" style="color: #06B6D4; text-decoration: underline;">Contact</a>.
+                </p>
+            </div>
+
+            <!-- Last Updated -->
+            <div class="about-card full-width" style="background: #F3F4F6; border: 1px solid #E5E7EB;">
+                <p style="margin: 0; color: #6B7280; font-size: 14px;"><i class="fa-solid fa-calendar"></i> Terakhir
+                    diperbarui: Desember 2025</p>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="back-button-section" style="text-align: center; margin-top: 32px;">
+            <a href="/" class="btn btn-secondary"><i class="fa-solid fa-house"></i> Kembali ke Homepage</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

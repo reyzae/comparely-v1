@@ -1,0 +1,73 @@
+/* Minimalist Clean Design Override */
+:root {
+  --color-primary: #06B6D4 !important;
+  --color-primary-light: #DBEAFE !important;
+  --color-primary-dark: #2563EB !important;
+  --color-bg-gray: #F9FAFB !important;
+  --color-bg-light: #F3F4F6 !important;
+}
+
+/* Hero Section - Minimalist Clean */
+.hero-v2 {
+  background: #FFFFFF !important;
+  padding: 80px 0 !important;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.hero-headline {
+  color: #111827 !important;
+}
+
+.hero-subheadline {
+  color: #6B7280 !important;
+}
+
+.quick-compare-box {
+  background: #F9FAFB !important;
+  border: 1px solid #E5E7EB !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+}
+
+.compare-search-input {
+  background: #FFFFFF !important;
+  border: 1px solid #D1D5DB !important;
+}
+
+.compare-search-input:focus {
+  border-color: #06B6D4 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+.btn-primary {
+  background-color: #06B6D4 !important;
+}
+
+.btn-primary:hover {
+  background-color: #2563EB !important;
+}
+
+.category-btn {
+  background: #F3F4F6 !important;
+  color: #374151 !important;
+  border: 1px solid #E5E7EB !important;
+}
+
+.category-btn:hover {
+  background: #E5E7EB !important;
+  color: #111827 !important;
+  border-color: #D1D5DB !important;
+}
+
+.how-it-works-v2 {
+  background: #F9FAFB !important;
+}
+
+.step-card {
+  background: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+.step-number {
+  background: #06B6D4 !important;
+}

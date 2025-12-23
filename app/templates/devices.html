@@ -1,0 +1,272 @@
+{% extends "base.html" %}
+
+{% block title %}Browse Devices - COMPARELY{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='/css/pages/devices.css') }}">
+{% endblock %}
+
+{% block breadcrumb %}
+<div class="breadcrumb-container">
+    <div class="container">
+        <a href="/">Home</a> / <span>Devices</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Halaman Daftar Semua Device -->
+<section class="devices-section">
+    <div class="container">
+        <!-- Header with View Toggle -->
+        <div class="devices-header">
+            <div class="header-left">
+                <h1>Browse Devices <span class="device-count" id="totalDeviceCount">({{ devices|length if devices else 0
+                        }} devices)</span></h1>
+                <p class="section-subtitle">Pilih 2 device untuk membandingkan</p>
+            </div>
+
+            <!-- View Toggle Buttons with Result Count -->
+            <div class="header-right">
+                <div class="results-info">
+                    <span class="results-count" id="resultsCount">Showing {{ devices|length if devices else 0 }}
+                        devices</span>
+                </div>
+                <div class="view-toggle">
+                    <button class="view-toggle-btn active" data-view="grid" id="gridViewBtn">
+                        <i class="fa-solid fa-grip"></i>
+                        <span>Grid</span>
+                    </button>
+                    <button class="view-toggle-btn" data-view="list" id="listViewBtn">
+                        <i class="fa-solid fa-list"></i>
+                        <span>List</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <form method="get" action="/devices" class="filter-form">
+                <!-- Filter by Category -->
+                <div class="filter-item">
+                    <label for="category">Kategori:</label>
+                    <select name="category" id="category" class="filter-select">
+                        <option value="">Semua Kategori</option>
+                        <option value="1" {% if category=='1' %}selected{% endif %}>Smartphone</option>
+                        <option value="2" {% if category=='2' %}selected{% endif %}>Laptop</option>
+                    </select>
+                </div>
+
+                <!-- Filter by Brand -->
+                <div class="filter-item">
+                    <label for="brand">Brand:</label>
+                    <select name="brand" id="brand" class="filter-select">
+                        <option value="">Semua Brand</option>
+                        {% for brand_item in brands %}
+                        <option value="{{ brand_item }}" {% if brand==brand_item %}selected{% endif %}>{{ brand_item }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Filter by RAM -->
+                <div class="filter-item">
+                    <label for="ram">RAM:</label>
+                    <select name="ram" id="ram" class="filter-select">
+                        <option value="">Semua RAM</option>
+                        <option value="4GB" {% if ram=='4GB' %}selected{% endif %}>4GB</option>
+                        <option value="6GB" {% if ram=='6GB' %}selected{% endif %}>6GB</option>
+                        <option value="8GB" {% if ram=='8GB' %}selected{% endif %}>8GB</option>
+                        <option value="12GB" {% if ram=='12GB' %}selected{% endif %}>12GB</option>
+                        <option value="16GB" {% if ram=='16GB' %}selected{% endif %}>16GB+</option>
+                    </select>
+                </div>
+
+                <!-- Filter by Storage -->
+                <div class="filter-item">
+                    <label for="storage">Storage:</label>
+                    <select name="storage" id="storage" class="filter-select">
+                        <option value="">Semua Storage</option>
+                        <option value="64GB" {% if storage=='64GB' %}selected{% endif %}>64GB</option>
+                        <option value="128GB" {% if storage=='128GB' %}selected{% endif %}>128GB</option>
+                        <option value="256GB" {% if storage=='256GB' %}selected{% endif %}>256GB</option>
+                        <option value="512GB" {% if storage=='512GB' %}selected{% endif %}>512GB</option>
+                        <option value="1TB" {% if storage=='1TB' %}selected{% endif %}>1TB+</option>
+                    </select>
+                </div>
+
+                <!-- Filter by Price with Dual-Range Slider -->
+                <div class="filter-item filter-item-price">
+                    <label>Budget Range:</label>
+
+                    <!-- Price Filter Card -->
+                    <div class="price-filter-card">
+                        <!-- Quick Price Presets -->
+                        <div class="price-presets">
+                            <button type="button" class="preset-btn" data-min="0" data-max="3000000">
+                                <span class="preset-icon">💰</span>
+                                <span class="preset-label">
+                                    < 3 Jt</span>
+                            </button>
+                            <button type="button" class="preset-btn" data-min="3000000" data-max="5000000">
+                                <span class="preset-icon">💎</span>
+                                <span class="preset-label">3-5 Jt</span>
+                            </button>
+                            <button type="button" class="preset-btn" data-min="5000000" data-max="10000000">
+                                <span class="preset-icon">🏆</span>
+                                <span class="preset-label">5-10 Jt</span>
+                            </button>
+                            <button type="button" class="preset-btn" data-min="10000000" data-max="20000000">
+                                <span class="preset-icon">⭐</span>
+                                <span class="preset-label">10-20 Jt</span>
+                            </button>
+                            <button type="button" class="preset-btn" data-min="20000000" data-max="50000000">
+                                <span class="preset-icon">🚀</span>
+                                <span class="preset-label">> 20 Jt</span>
+                            </button>
+                        </div>
+
+                        <!-- Custom Range Slider -->
+                        <div class="custom-range-section">
+                            <div class="range-label">Or set custom range:</div>
+
+                            <!-- Dual Range Sliders with Inline Labels -->
+                            <div class="dual-slider-wrapper">
+                                <input type="range" name="min_price" id="minPriceSlider"
+                                    class="price-slider price-slider-min" min="0" max="50000000" step="500000"
+                                    value="0">
+                                <input type="range" name="max_price" id="maxPriceSlider"
+                                    class="price-slider price-slider-max" min="0" max="50000000" step="500000"
+                                    value="50000000">
+                                <div class="slider-track" id="sliderTrack"></div>
+                            </div>
+
+                            <!-- Inline Price Labels -->
+                            <div class="price-inline-labels">
+                                <div class="price-label-left">
+                                    <span class="label-text">Min:</span>
+                                    <span class="label-value" id="minPriceLabel">Rp 0</span>
+                                </div>
+                                <div class="price-label-right">
+                                    <span class="label-text">Max:</span>
+                                    <span class="label-value" id="maxPriceLabel">Rp 50 Jt</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons Inside Card -->
+                        <div class="price-actions">
+                            <button type="submit" class="btn btn-primary btn-apply-filter">
+                                <i class="fa-solid fa-check"></i> Apply Filter
+                            </button>
+                            <a href="/devices" class="btn btn-secondary btn-clear-filter">
+                                <i class="fa-solid fa-xmark"></i> Clear
+                            </a>
+                        </div>
+
+                        <!-- Active Filters Badges (Compact) -->
+                        <div class="active-filters-badges" id="activeFiltersBadges" style="display: none;">
+                            <div class="badges-label">Active:</div>
+                            <div class="badges-container" id="badgesContainer">
+                                <!-- Small badges will be added dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Devices Grid View -->
+        <div class="devices-grid" id="devicesGrid">
+            {% if devices %}
+            {% for device in devices %}
+            <div class="device-item-card">
+                <!-- Checkbox untuk select device -->
+                <input type="checkbox" class="device-checkbox" data-id="{{ device.id }}" data-name="{{ device.name }}">
+
+                <h3>{{ device.name }}</h3>
+                <p class="device-brand">{{ device.brand }}</p>
+
+                <div class="device-specs-preview">
+                    <p><strong>CPU:</strong> {{ device.cpu or 'N/A' }}</p>
+                    <p><strong>RAM:</strong> {{ device.ram or 'N/A' }}</p>
+                    <p><strong>Storage:</strong> {{ device.storage or 'N/A' }}</p>
+                </div>
+
+                <p class="device-price">Rp {{ "{:,.0f}".format(device.price) if device.price else 'N/A' }}</p>
+
+                <div class="device-actions">
+                    <a href="/device/{{ device.id }}" class="btn btn-secondary btn-small">Detail</a>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="no-devices">
+                <div class="empty-icon">📱</div>
+                <p>Tidak ada device yang sesuai dengan filter yang Anda pilih.</p>
+                <p style="font-size: 14px; color: var(--color-text-light); margin-top: 8px;">Coba ubah filter atau reset
+                    untuk melihat semua device.</p>
+                <a href="/devices" class="btn btn-primary" style="margin-top: 16px;">Reset Filter</a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Devices List View (Hidden by default) -->
+        <div class="devices-list" id="devicesList" style="display: none;">
+            {% if devices %}
+            {% for device in devices %}
+            <div class="device-item-list">
+                <!-- Checkbox untuk select device -->
+                <input type="checkbox" class="device-checkbox" data-id="{{ device.id }}" data-name="{{ device.name }}">
+
+                <!-- Device Info -->
+                <div class="device-list-info">
+                    <h3>{{ device.name }}</h3>
+                    <p class="device-brand">{{ device.brand }}</p>
+                </div>
+
+                <!-- Device Specs -->
+                <div class="device-list-specs">
+                    <span class="spec-badge"><strong>CPU:</strong> {{ device.cpu or 'N/A' }}</span>
+                    <span class="spec-badge"><strong>RAM:</strong> {{ device.ram or 'N/A' }}</span>
+                    <span class="spec-badge"><strong>Storage:</strong> {{ device.storage or 'N/A' }}</span>
+                </div>
+
+                <!-- Device Price & Actions -->
+                <div class="device-list-actions">
+                    <p class="device-price">Rp {{ "{:,.0f}".format(device.price) if device.price else 'N/A' }}</p>
+                    <a href="/device/{{ device.id }}" class="btn btn-secondary btn-small">Detail</a>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="no-devices">
+                <div class="empty-icon">📱</div>
+                <p>Tidak ada device yang sesuai dengan filter yang Anda pilih.</p>
+                <p style="font-size: 14px; color: var(--color-text-light); margin-top: 8px;">Coba ubah filter atau reset
+                    untuk melihat semua device.</p>
+                <a href="/devices" class="btn btn-primary" style="margin-top: 16px;">Reset Filter</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Floating Compare Bar -->
+<div id="compareBar" class="compare-bar">
+    <div class="compare-bar-content">
+        <div id="selectedDevices" class="selected-devices">
+            <!-- Device tags akan ditambahkan via JavaScript -->
+        </div>
+        <div class="compare-bar-actions">
+            <button id="compareButton" class="btn btn-primary" disabled>Bandingkan</button>
+            <button id="clearButton" class="btn btn-secondary">Clear</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', path='/js/pages/devices.js') }}"></script>
+{% endblock %}

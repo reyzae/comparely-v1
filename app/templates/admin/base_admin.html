@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="COMPARELY Admin Panel - Kelola perangkat dan kategori">
+    <title>{% block title %}Admin Panel{% endblock %} - COMPARELY</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', path='/images/favicon.png') }}">
+
+    <!-- Font Awesome untuk icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    {% block extra_css %}{% endblock %}
+
+    <style>
+        /* ========================================
+           DESIGN SYSTEM - KONSISTEN & MUDAH DIPAHAMI
+        ======================================== */
+
+        /* RESET & BASE */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Prevent horizontal overflow on mobile */
+        html,
+        body {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+
+        /* Prevent images and media from overflowing */
+        img,
+        video,
+        iframe {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* ========================================
+           SIDEBAR - NAVIGASI UTAMA
+        ======================================== */
+        .admin-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            color: white;
+            padding: 0;
+            padding-bottom: 100px;
+            /* Space for footer */
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .admin-sidebar.collapsed {
+            transform: translateX(-280px);
+        }
+
+        /* Logo Section */
+        .sidebar-logo {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+        }
+
+        .sidebar-logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+
+
+
+        /* Navigation Menu */
+        .sidebar-nav {
+            padding: 1.5rem 0;
+        }
+
+        .nav-section {
+            margin-bottom: 2rem;
+        }
+
+        .nav-section-title {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.875rem 1.5rem;
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            color: white;
+            padding-left: 2rem;
+        }
+
+        .nav-item.active {
+            background-color: rgba(6, 182, 212, 0.15);
+            color: #06B6D4;
+            border-left: 4px solid #06B6D4;
+            font-weight: 600;
+        }
+
+        /* ========================================
+           USER DROPDOWN - Header Profile Menu
+        ======================================== */
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .user-dropdown-toggle:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .user-dropdown-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .user-dropdown-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-dropdown-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #0f172a;
+            line-height: 1.2;
+        }
+
+        .user-dropdown-role {
+            display: none !important;
+            /* OPTION 1: Hide "Admin" globally */
+            font-size: 0.75rem;
+            color: #64748b;
+            line-height: 1.2;
+        }
+
+        .user-dropdown-icon {
+            color: #64748b;
+            font-size: 0.875rem;
+            transition: transform 0.2s ease;
+        }
+
+        .user-dropdown.active .user-dropdown-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Dropdown Menu */
+        .user-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            border: 1px solid #e2e8f0;
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            z-index: 1000;
+        }
+
+        .user-dropdown.active .user-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .dropdown-menu-user {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .dropdown-menu-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: white;
+        }
+
+        .dropdown-menu-info {
+            flex: 1;
+        }
+
+        .dropdown-menu-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #0f172a;
+            margin-bottom: 2px;
+        }
+
+        .dropdown-menu-email {
+            font-size: 0.8rem;
+            color: #64748b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            /* Show ... for long emails */
+            max-width: 160px;
+        }
+
+        .dropdown-menu-items {
+            padding: 0.5rem;
+        }
+
+        .dropdown-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            /* Better spacing */
+            color: #475569;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            /* Space between items */
+        }
+
+        .dropdown-menu-item:hover {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .dropdown-menu-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        /* OPTION A: Separator before logout */
+        .dropdown-menu-item.logout {
+            color: #ef4444;
+            border-top: 1px solid #f1f5f9;
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+            /* Extra padding after separator */
+        }
+
+        .dropdown-menu-item.logout:hover {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            right: 1.5rem;
+            width: 6px;
+            height: 6px;
+            background: #06B6D4;
+            border-radius: 50%;
+        }
+
+        /* ========================================
+           MAIN CONTENT AREA
+        ======================================== */
+        .admin-main {
+            margin-left: 280px;
+            min-height: 100vh;
+            transition: margin-left 0.3s ease;
+        }
+
+        .admin-main.expanded {
+            margin-left: 0;
+        }
+
+        /* Top Header - KONSISTEN */
+        .admin-header {
+            background: white;
+            padding: 1.25rem 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .sidebar-toggle {
+            display: none;
+            /* HIDDEN: Use hamburger-btn instead */
+            background: #f1f5f9;
+            border: none;
+            font-size: 1.25rem;
+            color: #475569;
+            cursor: pointer;
+            padding: 0.75rem;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-toggle:hover {
+            background-color: #e2e8f0;
+            color: #06B6D4;
+            transform: scale(1.05);
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #64748b;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .breadcrumb a {
+            color: #06B6D4;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb a:hover {
+            color: #0891b2;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-btn {
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-view-site {
+            background-color: #f1f5f9;
+            color: #475569;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-view-site:hover {
+            background-color: #e2e8f0;
+            border-color: #cbd5e1;
+            transform: translateY(-1px);
+        }
+
+        /* ========================================
+           CONTENT CONTAINER
+        ======================================== */
+        .admin-container {
+            padding: 2rem;
+            max-width: 1600px;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .page-description {
+            color: #64748b;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* ========================================
+           CARDS - KONSISTEN & MODERN
+        ======================================== */
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #f1f5f9;
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title i {
+            color: #06B6D4;
+        }
+
+        /* ========================================
+           BUTTONS - KONSISTEN & JELAS (3-Second Understanding)
+        ======================================== */
+
+        /* Base Button Styles */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-family: inherit;
+            position: relative;
+            overflow: hidden;
+            line-height: 1.5;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn i {
+            font-size: 1.1em;
+        }
+
+        /* Primary Button - CYAN/TEAL (Main Actions: Search, Filter, Save) */
+        .btn-primary {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            color: white;
+            box-shadow: 0 4px 14px rgba(6, 182, 212, 0.35);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.45);
+            background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+        }
+
+        /* Success Button - GREEN (Add/Create New) */
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        }
+
+        /* Secondary Button - GRAY (Cancel, Back, Export) */
+        .btn-secondary {
+            background: #f8fafc;
+            color: #475569;
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-secondary:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Edit Button - BLUE (Edit/Modify) */
+        .btn-edit {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.45);
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        }
+
+        /* Delete Button - RED (Delete/Remove) */
+        .btn-delete {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.45);
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        }
+
+        /* Warning Button - ORANGE (Caution Actions) */
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.45);
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+        }
+
+        /* Button Sizes */
+        .btn-sm {
+            padding: 0.625rem 1.25rem;
+            font-size: 0.875rem;
+            border-radius: 10px;
+        }
+
+        .btn-lg {
+            padding: 1.125rem 2.25rem;
+            font-size: 1.0625rem;
+            border-radius: 14px;
+        }
+
+        /* Button with Icon Only */
+        .btn-icon {
+            padding: 0.75rem;
+            aspect-ratio: 1;
+        }
+
+        .btn-icon i {
+            margin: 0;
+        }
+
+        /* Disabled State */
+        .btn:disabled,
+        .btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Loading State */
+        .btn.loading {
+            position: relative;
+            color: transparent;
+            pointer-events: none;
+        }
+
+        .btn.loading::after {
+            content: "";
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            top: 50%;
+            left: 50%;
+            margin-left: -9px;
+            margin-top: -9px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spinner 0.7s linear infinite;
+        }
+
+        @keyframes spinner {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Button Group */
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-group .btn {
+            flex: 0 0 auto;
+        }
+
+        /* ========================================
+           FORMS - KONSISTEN & USER-FRIENDLY
+        ======================================== */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #334155;
+            font-size: 0.9rem;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            background: white;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #06b6d4;
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Search Bar - KONSISTEN */
+        .search-bar {
+            position: relative;
+        }
+
+        .search-bar input {
+            padding-left: 3rem;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        /* ========================================
+           TABLES - CLEAN & READABLE
+        ======================================== */
+        .table-container {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #f1f5f9;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .admin-table thead {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+
+        .admin-table th {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .admin-table td {
+            padding: 1.25rem;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.95rem;
+        }
+
+        .admin-table tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        .admin-table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .admin-table .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* ========================================
+           ALERTS - JELAS & INFORMATIF
+        ======================================== */
+        .alert {
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideDown 0.3s ease;
+            font-weight: 500;
+            border-left: 4px solid;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert i {
+            font-size: 1.25rem;
+        }
+
+        .alert-success {
+            background-color: #d1fae5;
+            color: #065f46;
+            border-color: #10b981;
+        }
+
+        .alert-error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border-color: #ef4444;
+        }
+
+        .alert-warning {
+            background-color: #fef3c7;
+            color: #92400e;
+            border-color: #f59e0b;
+        }
+
+        .alert-info {
+            background-color: #dbeafe;
+            color: #1e40af;
+            border-color: #3b82f6;
+        }
+
+        /* ========================================
+           BADGES - KONSISTEN
+        ======================================== */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .badge-primary {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-success {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-warning {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-danger {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* ========================================
+           PAGINATION - JELAS
+        ======================================== */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .page-link {
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #06b6d4;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: 2px solid #e2e8f0;
+            background: white;
+        }
+
+        .page-link:hover {
+            background-color: #f0f9ff;
+            border-color: #06b6d4;
+            transform: translateY(-1px);
+        }
+
+        .page-info {
+            color: #64748b;
+            font-weight: 600;
+            padding: 0.75rem 1.25rem;
+        }
+
+        /* ========================================
+           MOBILE RESPONSIVE - 3-Second Understanding
+        ======================================== */
+
+        /* Mobile Utility Classes */
+        .mobile-only {
+            display: none;
+        }
+
+        .desktop-only {
+            display: block;
+        }
+
+        /* Hamburger Menu Button - Fixed Position */
+        .hamburger-btn {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            /* Fixed position on left */
+            z-index: 1001;
+            background: #06b6d4;
+            color: white;
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+            transition: transform 0.2s ease;
+            /* Only transform transition */
+        }
+
+        .hamburger-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Sidebar Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            /* FIX #2: Darker overlay */
+            z-index: 999;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+
+            /* Show hamburger button on mobile */
+            .hamburger-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Hide hamburger when it has hidden class */
+            .hamburger-btn.hidden {
+                display: none !important;
+            }
+
+            /* Show close button when sidebar is open */
+            .admin-sidebar:not(.collapsed) .sidebar-close-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Show/Hide Utilities */
+            .mobile-only {
+                display: block;
+            }
+
+            .desktop-only {
+                display: none;
+            }
+
+            /* Show Hamburger Button */
+            .hamburger-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* FIX #4: Sidebar - Narrower width (260px) */
+            .admin-sidebar {
+                position: fixed;
+                width: 260px;
+                /* 280px → 260px */
+                left: -260px;
+                /* Match width */
+                transition: left 0.3s ease;
+                z-index: 1000;
+            }
+
+            .admin-sidebar.active {
+                left: 0;
+            }
+
+            /* Main Content - Full width */
+            .admin-main {
+                margin-left: 0;
+                padding-bottom: 80px;
+                /* Space for bottom tabs */
+            }
+
+            /* MINIMAL HEADER: Compact padding */
+            .admin-header {
+                padding: 0.625rem 1rem;
+                /* 0.875rem → 0.625rem */
+                margin-left: 60px;
+            }
+
+            /* MINIMAL HEADER: Icon-only View Site button */
+            .header-btn {
+                padding: 0.5rem;
+                min-width: 40px;
+                justify-content: center;
+            }
+
+            .header-btn span {
+                display: none;
+                /* Hide text */
+            }
+
+            .header-btn i {
+                margin: 0;
+                font-size: 1.125rem;
+            }
+
+            /* MINIMAL HEADER: Avatar-only user dropdown */
+            .user-dropdown-toggle {
+                padding: 0.375rem;
+                gap: 0.5rem;
+                /* Better spacing between avatar and text */
+                min-width: 44px;
+            }
+
+            .user-name,
+            .user-role {
+                display: none;
+                /* Hide name and role */
+            }
+
+            .user-dropdown-avatar {
+                width: 32px;
+                height: 32px;
+            }
+
+            .admin-container {
+                padding: 1rem;
+            }
+
+            /* OPTIMIZED: Typography - Compact */
+            .page-title {
+                font-size: 1.375rem;
+                /* 1.5rem → 1.375rem */
+                margin-bottom: 0.25rem;
+                /* Tighter spacing */
+            }
+
+            .page-description {
+                font-size: 0.8125rem;
+                /* Smaller subtitle */
+            }
+
+            .breadcrumb {
+                display: none;
+                /* Hide on mobile */
+            }
+
+            /* Cards - Less padding, MORE SPACING between cards */
+            .card {
+                padding: 1rem;
+                border-radius: 12px;
+                margin-bottom: 1.5rem;
+                /* FIX #1: More spacing */
+            }
+
+            .card+.card {
+                margin-top: 1.5rem;
+                /* FIX #1: Space between cards */
+            }
+
+            .card-header {
+                padding: 1rem;
+                margin-bottom: 1rem;
+                /* FIX #1: Space after header */
+            }
+
+            .card-body {
+                padding: 1rem;
+            }
+
+            /* OPTIMIZED: Buttons - Compact but Touch-Friendly (44px) */
+            .btn {
+                min-height: 44px;
+                /* Reduced from 48px */
+                min-width: auto;
+                /* Remove min-width */
+                padding: 0.625rem 1rem;
+                /* Reduced padding */
+                font-size: 0.875rem;
+                /* Smaller font */
+            }
+
+            .btn-sm {
+                min-height: 40px;
+                /* Reduced */
+                padding: 0.5rem 0.875rem;
+                font-size: 0.8125rem;
+            }
+
+            /* Form inputs - More compact */
+            .form-input,
+            .form-select,
+            .form-textarea {
+                padding: 0.625rem 0.875rem;
+                /* Reduced padding */
+                font-size: 0.875rem;
+                /* Smaller font */
+            }
+
+            /* Search bar - More compact */
+            .search-bar input {
+                padding: 0.625rem 0.875rem 0.625rem 2.5rem;
+                /* Reduced padding */
+                font-size: 0.875rem;
+                width: 100%;
+                /* Full width on mobile */
+                max-width: none;
+                /* Remove max-width restriction */
+            }
+
+            .search-bar i {
+                left: 0.875rem;
+                /* Adjust icon position */
+                font-size: 1rem;
+            }
+
+            .btn-lg {
+                min-height: 56px;
+                /* 60px → 56px */
+                padding: 1rem 1.75rem;
+            }
+
+            /* OPTIMIZED: Form Inputs - Match button height */
+            .form-input,
+            .form-select,
+            .form-textarea {
+                min-height: 48px;
+                /* 52px → 48px */
+                font-size: 16px;
+                /* Prevents zoom on iOS */
+                padding: 0.75rem 1rem;
+                /* Reduced padding */
+            }
+
+            /* FIX #1: Form Groups - MORE SPACING */
+            .form-group {
+                margin-bottom: 1.5rem;
+                /* 1rem → 1.5rem */
+            }
+
+            /* Stats Grid - Stack vertically */
+            .stats-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1.25rem;
+                /* FIX #1: More gap */
+            }
+
+            /* FIX #3: Tables - Hide ID column, better mobile display */
+            .table-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .admin-table {
+                min-width: 600px;
+            }
+
+            /* FIX #3: Hide ID column (first column) on mobile */
+            .admin-table th:first-child,
+            .admin-table td:first-child {
+                display: none;
+            }
+
+            /* FIX #3: Make Name column wider */
+            .admin-table th:nth-child(2),
+            .admin-table td:nth-child(2) {
+                min-width: 140px;
+                font-weight: 600;
+            }
+
+            /* FIX #3: Compact action buttons in table */
+            .admin-table .actions {
+                gap: 0.5rem;
+            }
+
+            .admin-table .btn-sm {
+                padding: 0.625rem 0.875rem;
+                font-size: 0.875rem;
+            }
+        }
+
+        /* ========================================
+           BOTTOM TAB NAVIGATION (Mobile Only)
+        ======================================== */
+        .mobile-tab-bar {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-tab-bar {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: white;
+                border-top: 1px solid #e5e7eb;
+                justify-content: space-around;
+                padding: 0.5rem 0;
+                z-index: 100;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            }
+
+            .tab-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0.25rem;
+                color: #6b7280;
+                font-size: 0.75rem;
+                padding: 0.5rem 1rem;
+                text-decoration: none;
+                transition: all 0.2s ease;
+                min-width: 60px;
+            }
+
+            /* FIX #6: Consistent tab icons */
+            .tab-item i {
+                font-size: 1.125rem;
+                /* 1.25rem → 1.125rem */
+                width: 24px;
+                /* Fixed width */
+                text-align: center;
+            }
+
+            .tab-item.active {
+                color: #06b6d4;
+                font-weight: 600;
+            }
+
+            .tab-item:active {
+                transform: scale(0.95);
+            }
+        }
+
+        /* ========================================
+           FAB (Floating Action Button) - Mobile Only
+        ======================================== */
+        .fab-container {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .fab-container {
+                display: block;
+                position: fixed;
+                bottom: 110px;
+                /* FIX #3: Safer position (100px → 110px) */
+                right: 1rem;
+                z-index: 99;
+            }
+
+            .fab-main {
+                width: 56px;
+                /* OPTIMIZED: 64px → 56px */
+                height: 56px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                color: white;
+                border: none;
+                box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+                font-size: 1.5rem;
+                /* 1.75rem → 1.5rem */
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-decoration: none;
+            }
+
+            .fab-main i {
+                display: block;
+                /* FIX: Ensure icon displays properly */
+                line-height: 1;
+                /* FIX: Remove extra spacing */
+            }
+
+            .fab-main:active {
+                transform: scale(0.9);
+            }
+        }
+
+        /* ========================================
+           UTILITY CLASSES
+        ======================================== */
+        .text-muted {
+            color: #94a3b8;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-2 {
+            margin-top: 1rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 1rem;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .gap-1 {
+            gap: 0.5rem;
+        }
+
+        .gap-2 {
+            gap: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Hamburger Menu Button (Mobile Only) -->
+    <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Overlay (Mobile Only) -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="admin-sidebar" id="adminSidebar">
+
+
+        <div class="sidebar-logo">
+            <img src="{{ url_for('static', path='/images/logo.png') }}" alt="COMPARELY Logo">
+            <span class="sidebar-logo-text">COMPARELY</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <!-- Main Section -->
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a href="/admin/dashboard" class="nav-item {% if '/dashboard' in request.url.path %}active{% endif %}">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/admin/analytics" class="nav-item {% if '/analytics' in request.url.path %}active{% endif %}">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Analytics</span>
+                </a>
+            </div>
+
+            <!-- Management Section -->
+            <div class="nav-section">
+                <div class="nav-section-title">Management</div>
+                <a href="/admin/devices"
+                    class="nav-item {% if '/devices' in request.url.path and '/devices' != request.url.path %}active{% endif %}">
+                    <i class="fas fa-mobile-alt"></i>
+                    <span>Devices</span>
+                </a>
+                <a href="/admin/categories"
+                    class="nav-item {% if '/categories' in request.url.path %}active{% endif %}">
+                    <i class="fas fa-tags"></i>
+                    <span>Categories</span>
+                </a>
+            </div>
+
+            <!-- User Management (Admin only) -->
+            {% if is_admin %}
+            <div class="nav-section">
+                <div class="nav-section-title">User Management</div>
+                <a href="/admin/users" class="nav-item {% if '/users' in request.url.path %}active{% endif %}">
+                    <i class="fas fa-users"></i>
+                    <span>Users</span>
+                </a>
+                <a href="/admin/roles" class="nav-item {% if '/roles' in request.url.path %}active{% endif %}">
+                    <i class="fas fa-user-shield"></i>
+                    <span>Roles</span>
+                </a>
+            </div>
+            {% endif %}
+
+            <!-- Operations Section (Admin only) -->
+            {% if is_admin %}
+            <div class="nav-section">
+                <div class="nav-section-title">Operations</div>
+                <a href="/admin/bulk-operations"
+                    class="nav-item {% if '/bulk-operations' in request.url.path %}active{% endif %}">
+                    <i class="fas fa-tasks"></i>
+                    <span>Bulk Operations</span>
+                </a>
+                <a href="/admin/activity-logs"
+                    class="nav-item {% if '/activity-logs' in request.url.path %}active{% endif %}">
+                    <i class="fas fa-history"></i>
+                    <span>Activity Logs</span>
+                </a>
+                <a href="/admin/tools" class="nav-item {% if '/tools' in request.url.path %}active{% endif %}">
+                    <i class="fas fa-tools"></i>
+                    <span>Tools</span>
+                </a>
+            </div>
+            {% endif %}
+
+            <!-- System Section (Admin only) -->
+            {% if is_admin %}
+            <div class="nav-section">
+                <div class="nav-section-title">System</div>
+                <a href="/admin/settings" class="nav-item {% if '/settings' in request.url.path %}active{% endif %}">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="/docs" target="_blank" class="nav-item">
+                    <i class="fas fa-book"></i>
+                    <span>Docs Swagger</span>
+                </a>
+            </div>
+            {% endif %}
+        </nav>
+
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="admin-main" id="adminMain">
+        <!-- Top Header -->
+        <header class="admin-header">
+            <div class="header-left">
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="breadcrumb">
+                    <a href="/admin/dashboard"><i class="fas fa-home"></i></a>
+                    <span>/</span>
+                    <span>{% block breadcrumb %}Admin{% endblock %}</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <a href="/" target="_blank" class="header-btn btn-view-site">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span>View Site</span>
+                </a>
+
+                <!-- User Dropdown -->
+                <div class="user-dropdown" id="userDropdown">
+                    <button class="user-dropdown-toggle" type="button">
+                        <div class="user-dropdown-avatar">
+                            {% if current_user.full_name %}
+                            {{ current_user.full_name[0].upper() }}
+                            {% else %}
+                            <i class="fas fa-user"></i>
+                            {% endif %}
+                        </div>
+                        <div class="user-dropdown-info">
+                            <div class="user-dropdown-name">
+                                {{ current_user.full_name if current_user.full_name else current_user.username }}
+                            </div>
+                            <div class="user-dropdown-role">
+                                {% if current_user.role %}
+                                {{ current_user.role.name if current_user.role.name else 'User' }}
+                                {% else %}
+                                User
+                                {% endif %}
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-down user-dropdown-icon"></i>
+                    </button>
+
+                    <div class="user-dropdown-menu">
+                        <div class="dropdown-menu-header">
+                            <div class="dropdown-menu-user">
+                                <div class="dropdown-menu-avatar">
+                                    {% if current_user.full_name %}
+                                    {{ current_user.full_name[0].upper() }}
+                                    {% else %}
+                                    <i class="fas fa-user"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="dropdown-menu-info">
+                                    <div class="dropdown-menu-name">
+                                        {{ current_user.full_name if current_user.full_name else current_user.username
+                                        }}
+                                    </div>
+                                    <div class="dropdown-menu-email">{{ current_user.email }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dropdown-menu-items">
+                            <a href="/admin/profile" class="dropdown-menu-item">
+                                <i class="fas fa-user-circle"></i>
+                                <span>My Profile</span>
+                            </a>
+                            <a href="/admin/settings" class="dropdown-menu-item">
+                                <i class="fas fa-cog"></i>
+                                <span>Settings</span>
+                            </a>
+                            <a href="/admin/logout" class="dropdown-menu-item logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Container -->
+        <div class="admin-container">
+            <!-- Alert Messages -->
+            {% if request.query_params.get('message') %}
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i>
+                <span>{{ request.query_params.get('message') }}</span>
+            </div>
+            {% endif %}
+
+            {% if request.query_params.get('error') %}
+            <div class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>{{ request.query_params.get('error') }}</span>
+            </div>
+            {% endif %}
+
+            <!-- Page Content -->
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Core Scripts -->
+    <script>
+        // Sidebar Toggle Functionality
+        const sidebar = document.getElementById('adminSidebar');
+        const mainContent = document.getElementById('adminMain');
+        const toggleBtn = document.getElementById('sidebarToggle');
+
+        toggleBtn.addEventListener('click', function () {
+            sidebar.classList.toggle('collapsed');
+            sidebar.classList.toggle('show');
+            mainContent.classList.toggle('expanded');
+        });
+
+        // Close sidebar on mobile when clicking outside
+        document.addEventListener('click', function (event) {
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(event.target) && !toggleBtn.contains(event.target)) {
+                    sidebar.classList.remove('show');
+                }
+            }
+        });
+
+        // User Dropdown Toggle
+        const userDropdown = document.getElementById('userDropdown');
+        const dropdownToggle = userDropdown.querySelector('.user-dropdown-toggle');
+
+        dropdownToggle.addEventListener('click', function (e) {
+            e.stopPropagation();
+            userDropdown.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function (event) {
+            if (!userDropdown.contains(event.target)) {
+                userDropdown.classList.remove('active');
+            }
+        });
+
+        // Prevent dropdown from closing when clicking inside
+        userDropdown.querySelector('.user-dropdown-menu').addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+
+        // Auto-hide alerts after 5 seconds
+        setTimeout(function () {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function (alert) {
+                alert.style.transition = 'opacity 0.5s ease';
+                alert.style.opacity = '0';
+                setTimeout(function () {
+                    alert.remove();
+                }, 500);
+            });
+        }, 5000);
+    </script>
+
+    <!-- Bottom Tab Navigation (Mobile Only) -->
+    <nav class="mobile-tab-bar">
+        <a href="/admin/dashboard" class="tab-item {% if '/dashboard' in request.url.path %}active{% endif %}">
+            <i class="fas fa-chart-line"></i>
+            <span>Home</span>
+        </a>
+        <a href="/admin/devices" class="tab-item {% if '/devices' in request.url.path %}active{% endif %}">
+            <i class="fas fa-mobile-alt"></i>
+            <span>Device</span>
+        </a>
+        <a href="/admin/categories" class="tab-item {% if '/categories' in request.url.path %}active{% endif %}">
+            <i class="fas fa-tags"></i>
+            <span>Category</span>
+        </a>
+        <a href="/admin/tools" class="tab-item {% if '/tools' in request.url.path %}active{% endif %}">
+            <i class="fas fa-tools"></i>
+            <span>Tool</span>
+        </a>
+    </nav>
+
+    <!-- FAB (Floating Action Button) - Mobile Only -->
+    <div class="fab-container">
+        <a href="/admin/devices/new" class="fab-main" title="Add New Device">
+            <i class="fas fa-plus"></i>
+        </a>
+    </div>
+
+    <!-- Mobile Navigation JavaScript -->
+    <script>
+        // Toggle Sidebar (Mobile)
+        function toggleSidebar() {
+            const sidebar = document.getElementById('adminSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const hamburger = document.getElementById('hamburgerBtn');
+
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+
+            // Hide hamburger when sidebar is open
+            if (sidebar.classList.contains('active')) {
+                hamburger.classList.add('hidden');
+            } else {
+                hamburger.classList.remove('hidden');
+            }
+        }
+
+        // Close Sidebar (Mobile)
+        function closeSidebar() {
+            const sidebar = document.getElementById('adminSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const hamburger = document.getElementById('hamburgerBtn');
+
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            hamburger.classList.remove('hidden'); // Show hamburger when sidebar closes
+        }
+
+        // Close sidebar when clicking nav item (Mobile)
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function () {
+                if (window.innerWidth <= 768) {
+                    closeSidebar();
+                }
+            });
+        });
+
+        // Prevent zoom on iOS when focusing inputs
+        document.querySelectorAll('input, select, textarea').forEach(element => {
+            element.addEventListener('focus', function () {
+                if (this.style.fontSize !== '16px') {
+                    this.style.fontSize = '16px';
+                }
+            });
+        });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,78 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}{{ 'Edit Category' if category else 'Add Category' }}{% endblock %}
+{% block page_title %}{{ 'Edit Category' if category else 'Add New Category' }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-container {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #374151;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #E5E7EB;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #06B6D4;
+    }
+
+    .form-group small {
+        display: block;
+        margin-top: 0.25rem;
+        color: #6B7280;
+        font-size: 0.875rem;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <form method="POST"
+        action="{{ '/admin/categories/' + category.id|string + '/edit' if category else '/admin/categories/new' }}">
+        <div class="form-group">
+            <label for="name">Category Name *</label>
+            <input type="text" id="name" name="name" value="{{ category.name if category else '' }}" required>
+            <small>Contoh: Smartphone, Laptop, Tablet</small>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-success btn-lg">
+                <i class="fas fa-save"></i> {{ 'Update Category' if category else 'Create Category' }}
+            </button>
+            <a href="/admin/categories" class="btn btn-secondary btn-lg">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

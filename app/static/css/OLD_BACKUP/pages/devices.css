@@ -1,0 +1,274 @@
+/* ==========================================
+   DEVICES PAGE - Page-Specific Styles
+   File: devices.css
+   Deskripsi: CSS khusus untuk halaman devices list
+   ========================================== */
+
+/* ==========================================
+   DEVICES SECTION
+   ========================================== */
+.devices-section {
+    padding: 40px 0;
+    min-height: 60vh;
+}
+
+.devices-section h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+    color: #111827;
+}
+
+.section-subtitle {
+    color: #6B7280;
+    margin-bottom: 32px;
+}
+
+/* ==========================================
+   FILTER SECTION
+   ========================================== */
+.filter-section {
+    background: #F9FAFB;
+    padding: 24px;
+    border-radius: 12px;
+    margin-bottom: 32px;
+    border: 1px solid #E5E7EB;
+}
+
+.filter-form {
+    display: flex;
+    gap: 16px;
+    align-items: end;
+    flex-wrap: wrap;
+}
+
+.filter-item {
+    flex: 1;
+    min-width: 200px;
+}
+
+.filter-item label {
+    display: block;
+    margin-bottom: 8px;
+    color: #374151;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.filter-select,
+.filter-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.filter-select:focus,
+.filter-input:focus {
+    outline: none;
+    border-color: #06B6D4;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* ==========================================
+   DEVICES GRID
+   ========================================== */
+.devices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 80px;
+}
+
+/* ==========================================
+   DEVICE CARD dengan Hover Effect
+   ========================================== */
+.device-item-card {
+    background: white;
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    position: relative;
+    cursor: pointer;
+}
+
+/* Hover effect - simple tapi keren */
+.device-item-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    border-color: #06B6D4;
+}
+
+/* Selected state - border biru tebal */
+.device-item-card.selected {
+    border-color: #06B6D4;
+    border-width: 3px;
+    background: #F0F9FF;
+}
+
+/* Checkbox styling */
+.device-checkbox {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.device-item-card h3 {
+    margin-top: 8px;
+    margin-bottom: 4px;
+    color: #111827;
+    font-size: 18px;
+}
+
+.device-brand {
+    color: #6B7280;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+}
+
+/* ==========================================
+   DEVICE SPECS PREVIEW dengan Icons
+   ========================================== */
+.device-specs-preview {
+    margin: 16px 0;
+    padding: 12px;
+    background: #F9FAFB;
+    border-radius: 8px;
+}
+
+.device-specs-preview p {
+    margin: 6px 0;
+    font-size: 13px;
+    color: #374151;
+}
+
+.device-specs-preview strong {
+    color: #111827;
+    font-weight: 600;
+}
+
+/* Price styling */
+.device-price {
+    color: #06B6D4;
+    font-size: 20px;
+    font-weight: 700;
+    margin: 12px 0;
+}
+
+/* ==========================================
+   DEVICE ACTIONS
+   ========================================== */
+.device-actions {
+    margin-top: 12px;
+}
+
+/* ==========================================
+   FLOATING COMPARE BAR
+   ========================================== */
+.compare-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #06B6D4 0%, #14B8A6 100%);
+    padding: 20px;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    z-index: 999;
+}
+
+/* Show compare bar saat ada device yang dipilih */
+.compare-bar.active {
+    transform: translateY(0);
+}
+
+.compare-bar-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.selected-devices {
+    display: flex;
+    gap: 12px;
+    flex: 1;
+    color: white;
+}
+
+.selected-device-tag {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 16px;
+    border-radius: 20px;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.compare-bar-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.compare-bar-actions .btn {
+    padding: 10px 24px;
+    font-size: 14px;
+}
+
+/* ==========================================
+   NO DEVICES STATE
+   ========================================== */
+.no-devices {
+    text-align: center;
+    padding: 60px 20px;
+    background: #F9FAFB;
+    border-radius: 12px;
+    border: 2px dashed #D1D5DB;
+}
+
+.empty-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+}
+
+.no-devices p {
+    color: #6B7280;
+    margin: 8px 0;
+}
+
+/* ==========================================
+   RESPONSIVE - MOBILE
+   ========================================== */
+@media (max-width: 768px) {
+    .devices-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-form {
+        flex-direction: column;
+    }
+
+    .filter-item {
+        width: 100%;
+    }
+
+    .compare-bar-content {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .selected-devices {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}

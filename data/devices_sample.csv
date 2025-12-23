@@ -1,0 +1,6 @@
+name,brand,category_id,cpu,gpu,ram,storage,camera,battery,screen,release_year,price,image_url,source_data
+Samsung Galaxy S23,Samsung,1,Snapdragon 8 Gen 2,Adreno 740,8GB,256GB,50MP + 12MP + 10MP,3900mAh,6.1 inch AMOLED,2023,12999000,https://example.com/s23.jpg,GSMArena
+iPhone 15 Pro,Apple,1,A17 Pro,Apple GPU,8GB,256GB,48MP + 12MP + 12MP,3274mAh,6.1 inch OLED,2023,17999000,https://example.com/iphone15pro.jpg,Apple Official
+Xiaomi 13T,Xiaomi,1,Dimensity 8200-Ultra,Mali-G610,8GB,256GB,50MP + 12MP + 50MP,5000mAh,6.67 inch AMOLED,2023,5999000,https://example.com/xiaomi13t.jpg,Xiaomi Official
+OPPO Reno 10,OPPO,1,Dimensity 7050,Mali-G68,8GB,256GB,64MP + 32MP + 8MP,5000mAh,6.7 inch AMOLED,2023,5499000,https://example.com/opporeno10.jpg,OPPO Official
+Vivo V29,Vivo,1,Snapdragon 778G,Adreno 642L,12GB,256GB,50MP + 8MP + 2MP,4600mAh,6.78 inch AMOLED,2023,5299000,https://example.com/vivov29.jpg,Vivo Official

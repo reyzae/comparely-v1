@@ -1,0 +1,102 @@
+/* ==========================================
+   DEVICE DETAIL PAGE - Page-Specific Styles
+   File: device-detail.css
+   Deskripsi: CSS khusus untuk halaman device detail
+   ========================================== */
+
+/* ==========================================
+   TABBED INTERFACE
+   ========================================== */
+.tabs-container {
+    margin-bottom: var(--spacing-lg);
+}
+
+.tabs-nav {
+    display: flex;
+    gap: 8px;
+    border-bottom: 2px solid var(--color-border);
+    margin-bottom: var(--spacing-lg);
+}
+
+.tab-button {
+    padding: 12px 24px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--color-text-gray);
+    transition: all 0.3s ease;
+    margin-bottom: -2px;
+}
+
+.tab-button:hover {
+    color: var(--color-primary);
+}
+
+.tab-button.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease-in;
+}
+
+/* ==========================================
+   DEVICE HEADER
+   ========================================== */
+.device-header-enhanced {
+    background: linear-gradient(135deg, #06B6D4 0%, #14B8A6 100%);
+    color: white;
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-xl);
+    text-align: center;
+}
+
+.device-header-enhanced h1 {
+    color: white;
+    margin-bottom: var(--spacing-xs);
+}
+
+.device-header-enhanced .device-brand-large {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* ==========================================
+   SHARE BUTTON
+   ========================================== */
+.share-button {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: var(--spacing-sm);
+}
+
+.share-button:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ==========================================
+   RESPONSIVE - MOBILE
+   ========================================== */
+@media (max-width: 768px) {
+    .tabs-nav {
+        flex-wrap: wrap;
+    }
+
+    .tab-button {
+        flex: 1;
+        min-width: 100px;
+    }
+}

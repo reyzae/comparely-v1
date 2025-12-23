@@ -1,0 +1,80 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}{{ 'Edit Role' if role else 'Add Role' }}{% endblock %}
+{% block page_title %}{{ 'Edit Role' if role else 'Add New Role' }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-container {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #374151;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #E5E7EB;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #06B6D4;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <form method="POST" action="{{ '/admin/roles/' + role.id|string + '/edit' if role else '/admin/roles/new' }}">
+        <div class="form-group">
+            <label for="name">Role Name *</label>
+            <input type="text" id="name" name="name" value="{{ role.name if role else '' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="3">{{ role.description if role else '' }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="permissions">Permissions</label>
+            <input type="text" id="permissions" name="permissions" value="{{ role.permissions if role else '' }}">
+            <small style="color: #6B7280; font-size: 0.875rem;">Comma-separated list of permissions</small>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-success btn-lg">
+                <i class="fas fa-save"></i> {{ 'Update Role' if role else 'Create Role' }}
+            </button>
+            <a href="/admin/roles" class="btn btn-secondary btn-lg">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

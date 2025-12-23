@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}Hasil Pencarian: {{ query }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='/css/pages/devices.css') }}">
+{% endblock %}
+
+{% block breadcrumb %}
+<div class="breadcrumb-container">
+    <div class="container">
+        <a href="/">Home</a> / <span>Search Results</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Halaman Hasil Pencarian -->
+<section class="devices-section">
+    <div class="container">
+        <!-- Header dengan Info Pencarian -->
+        <div class="devices-header">
+            <h1>🔍 Hasil Pencarian</h1>
+            <p>Menampilkan <strong>{{ total_results }}</strong> hasil untuk "<strong>{{ query }}</strong>"</p>
+        </div>
+
+        {% if total_results == 0 %}
+        <!-- Jika tidak ada hasil -->
+        <div class="no-results">
+            <div class="no-results-icon">😕</div>
+            <h2>Tidak ada hasil ditemukan</h2>
+            <p>Tidak ada perangkat yang cocok dengan pencarian "{{ query }}"</p>
+            <div class="no-results-actions">
+                <a href="/" class="btn btn-primary">🏠 Kembali ke Homepage</a>
+                <a href="/devices" class="btn btn-secondary">📱 Lihat Semua Devices</a>
+            </div>
+        </div>
+
+        <style>
+            .no-results {
+                text-align: center;
+                padding: 60px 20px;
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 16px;
+                margin-top: 40px;
+            }
+
+            .no-results-icon {
+                font-size: 80px;
+                margin-bottom: 20px;
+            }
+
+            .no-results h2 {
+                color: var(--text-primary);
+                margin-bottom: 12px;
+            }
+
+            .no-results p {
+                color: var(--text-secondary);
+                margin-bottom: 30px;
+            }
+
+            .no-results-actions {
+                display: flex;
+                gap: 16px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+        </style>
+
+        {% else %}
+        <!-- Filter Section (opsional, bisa diaktifkan nanti) -->
+        <!-- <div class="filter-section">
+            <form method="get" action="/search" class="filter-form">
+                <input type="hidden" name="query" value="{{ query }}">
+                <select name="category" class="filter-select">
+                    <option value="">Semua Kategori</option>
+                    <option value="1">Smartphone</option>
+                    <option value="2">Laptop</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </form>
+        </div> -->
+
+        <!-- Grid Devices -->
+        <div class="devices-grid">
+            {% for device in devices %}
+            <div class="device-card">
+                <!-- Gradient Header -->
+                <div class="device-card-header">
+                    <h3>{{ device.name }}</h3>
+                    <p class="brand-text">{{ device.brand }}</p>
+                </div>
+
+                <!-- Spesifikasi Singkat -->
+                <div class="device-specs">
+                    <div class="spec-row">
+                        <span class="spec-icon">⚡</span>
+                        <span class="spec-text">{{ device.cpu or 'N/A' }}</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-icon">💾</span>
+                        <span class="spec-text">{{ device.ram or 'N/A' }}</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-icon">📷</span>
+                        <span class="spec-text">{{ device.camera or 'N/A' }}</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-icon">🔋</span>
+                        <span class="spec-text">{{ device.battery or 'N/A' }}</span>
+                    </div>
+                </div>
+
+                <!-- Harga -->
+                <div class="device-price">
+                    <span class="price-label">Harga:</span>
+                    <span class="price-value">Rp {{ "{:,.0f}".format(device.price) if device.price else 'N/A' }}</span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="device-actions">
+                    <a href="/device/{{ device.id }}" class="btn btn-secondary btn-small">Detail</a>
+                    <button class="btn btn-primary btn-small select-device-btn" data-id="{{ device.id }}"
+                        data-name="{{ device.name }}">
+                        Select
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Compare Button (muncul jika ada 2 device selected) -->
+        <div class="compare-floating-btn" id="compareBtn" style="display: none;">
+            <span id="selectedCount">0</span> device dipilih
+            <button class="btn btn-primary" id="compareDevicesBtn">Bandingkan</button>
+        </div>
+
+        <!-- Back to Search -->
+        <div class="back-button-section" style="margin-top: 40px;">
+            <a href="/" class="btn btn-secondary">🏠 Kembali ke Homepage</a>
+            <a href="/devices" class="btn btn-primary" style="margin-left: 12px;">📱 Lihat Semua Devices</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', path='/js/pages/devices.js') }}"></script>
+{% endblock %}

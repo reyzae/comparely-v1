@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Features - COMPARELY{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='/css/pages.css') }}">
+{% endblock %}
+
+{% block breadcrumb %}
+<div class="breadcrumb-container">
+    <div class="container">
+        <a href="/">Home</a> / <span>Features</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Features Page -->
+<section class="features-section">
+    <div class="container">
+        <!-- Header -->
+        <div class="features-header">
+            <h1>Fitur Unggulan COMPARELY</h1>
+            <p class="section-subtitle">Bandingkan perangkat dengan mudah dan cepat menggunakan fitur-fitur canggih kami
+            </p>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="features-grid">
+            <!-- Feature 1 -->
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+                <h3>Pencarian Cepat</h3>
+                <p>Temukan perangkat yang Anda cari dengan sistem pencarian yang cepat dan akurat. Autocomplete membantu
+                    Anda menemukan device dengan mudah.</p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+                <h3>Perbandingan Detail</h3>
+                <p>Bandingkan spesifikasi lengkap dari dua perangkat secara side-by-side. Lihat perbedaan CPU, RAM,
+                    storage, battery, dan lainnya dengan jelas.</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                <h3>Rekomendasi Cerdas</h3>
+                <p>Dapatkan highlight otomatis yang menunjukkan kelebihan masing-masing perangkat berdasarkan
+                    spesifikasi yang lebih unggul.</p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-bullseye"></i></div>
+                <h3>Filter Canggih</h3>
+                <p>Filter perangkat berdasarkan kategori (Smartphone/Laptop) dan harga maksimal untuk menemukan device
+                    yang sesuai budget Anda.</p>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                <h3>Responsive Design</h3>
+                <p>Akses COMPARELY dari perangkat apapun. Desain responsive memastikan pengalaman yang optimal di
+                    desktop, tablet, maupun smartphone.</p>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+                <h3>Performa Cepat</h3>
+                <p>Website yang dioptimasi untuk kecepatan. Dapatkan hasil perbandingan dalam hitungan detik tanpa
+                    loading yang lama.</p>
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="features-cta">
+            <h2>Siap Mencoba?</h2>
+            <p>Mulai bandingkan perangkat favorit Anda sekarang!</p>
+            <a href="/devices" class="btn btn-primary">Mulai Sekarang</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

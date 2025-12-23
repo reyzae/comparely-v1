@@ -1,0 +1,43 @@
+<!-- Empty State Component -->
+<!-- Digunakan ketika tidak ada data untuk ditampilkan -->
+
+<div class="empty-state">
+    <div class="empty-icon">
+        <i class="fas {{ icon or 'fa-inbox' }}"></i>
+    </div>
+    <h3 class="empty-title">{{ title or 'No Data Found' }}</h3>
+    <p class="empty-message">{{ message or 'There is no data to display at the moment.' }}</p>
+
+    {% if action_url and action_text %}
+    <a href="{{ action_url }}" class="btn-primary">
+        <i class="fas fa-plus-circle"></i> {{ action_text }}
+    </a>
+    {% endif %}
+</div>
+
+<style>
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        color: #E5E7EB;
+        margin-bottom: 1rem;
+    }
+
+    .empty-title {
+        font-size: 1.5rem;
+        color: #111827;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-message {
+        color: #6B7280;
+        margin-bottom: 1.5rem;
+    }
+</style>

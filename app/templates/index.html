@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}COMPARELY - Bandingkan Perangkat Lebih Cerdas{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='/css/pages/homepage.css') }}">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section dengan Quick Compare -->
+<section class="hero-v2">
+    <div class="container">
+        <div class="hero-center">
+            <!-- Headline -->
+            <h1 class="hero-headline">Compare Smarter.<br>Choose Faster.</h1>
+            <p class="hero-subheadline">
+                Bandingkan perangkat teknologi dalam hitungan detik
+            </p>
+
+            <!-- Quick Compare Box -->
+            <div class="quick-compare-box">
+                <h3>Quick Compare</h3>
+
+                <!-- Compare Inputs -->
+                <div class="compare-inputs">
+                    <!-- Device 1 Input -->
+                    <div class="compare-input-wrapper">
+                        <div class="search-icon-wrapper">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <input type="text" id="device1Input" class="compare-search-input"
+                            placeholder="Cari device pertama..." autocomplete="off">
+                        <div id="device1Suggestions" class="suggestions-dropdown"></div>
+                    </div>
+
+                    <!-- VS Text -->
+                    <div class="vs-text">vs</div>
+
+                    <!-- Device 2 Input -->
+                    <div class="compare-input-wrapper">
+                        <div class="search-icon-wrapper">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <input type="text" id="device2Input" class="compare-search-input"
+                            placeholder="Cari device kedua..." autocomplete="off">
+                        <div id="device2Suggestions" class="suggestions-dropdown"></div>
+                    </div>
+                </div>
+
+                <!-- Compare Button -->
+                <button id="compareBtn" class="btn btn-primary btn-large" disabled
+                    title="Pilih 2 device terlebih dahulu untuk membandingkan">
+                    Bandingkan Sekarang
+                </button>
+
+                <!-- Helper text untuk user guidance -->
+                <p id="compareHelp"
+                    style="font-size: 12px; color: var(--color-text-light); margin-top: 8px; text-align: center;">
+                    💡 Pilih 2 device untuk membandingkan
+                </p>
+            </div>
+
+            <!-- Popular Categories -->
+            <div class="popular-categories">
+                <p style="margin-bottom: 12px; color: var(--color-text-gray);">Atau pilih kategori:</p>
+                <div class="category-buttons">
+                    <a href="/devices?category=1" class="category-btn">
+                        <i class="fa-solid fa-mobile-screen-button"></i> Smartphones
+                    </a>
+                    <a href="/devices?category=2" class="category-btn">
+                        <i class="fa-solid fa-laptop"></i> Laptops
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works-v2">
+    <div class="container">
+        <h2 style="text-align: center; margin-bottom: 48px;">Cara Menggunakan COMPARELY</h2>
+
+        <div class="steps-grid">
+            <!-- Step 1 -->
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Pilih Device</h3>
+                <p>Cari dan pilih 2 perangkat yang ingin Anda bandingkan menggunakan search bar di atas.</p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>Lihat Perbandingan</h3>
+                <p>Sistem akan menampilkan perbandingan detail spesifikasi dari kedua perangkat secara side-by-side.</p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Buat Keputusan</h3>
+                <p>Analisis perbedaan dan keunggulan masing-masing perangkat untuk membuat keputusan yang tepat.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', path='/js/pages/homepage.js') }}"></script>
+{% endblock %}

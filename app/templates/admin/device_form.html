@@ -1,0 +1,199 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}{{ 'Edit Device' if device else 'Add Device' }}{% endblock %}
+{% block page_title %}{{ 'Edit Device' if device else 'Add New Device' }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-container {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #374151;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #E5E7EB;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #06B6D4;
+    }
+
+    .form-group textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .form-group small {
+        display: block;
+        margin-top: 0.25rem;
+        color: #6B7280;
+        font-size: 0.875rem;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    @media (max-width: 768px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <form method="POST"
+        action="{{ '/admin/devices/' + device.id|string + '/edit' if device else '/admin/devices/new' }}">
+        <!-- Basic Info -->
+        <div class="form-group">
+            <label for="name">Device Name *</label>
+            <input type="text" id="name" name="name" value="{{ device.name if device else '' }}" required>
+            <small>Contoh: iPhone 15 Pro, Samsung Galaxy S24</small>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="brand">Brand *</label>
+                <input type="text" id="brand" name="brand" value="{{ device.brand if device else '' }}" required>
+                <small>Contoh: Apple, Samsung, Xiaomi</small>
+            </div>
+
+            <div class="form-group">
+                <label for="category_id">Category *</label>
+                <select id="category_id" name="category_id" required>
+                    <option value="">Select Category</option>
+                    {% if categories %}
+                    {% for category in categories %}
+                    <option value="{{ category.id }}" {% if device and device.category_id==category.id %}selected{%
+                        endif %}>
+                        {{ category.name }}
+                    </option>
+                    {% endfor %}
+                    {% endif %}
+                </select>
+            </div>
+        </div>
+
+        <!-- Specifications -->
+        <div class="form-row">
+            <div class="form-group">
+                <label for="cpu">CPU/Processor</label>
+                <input type="text" id="cpu" name="cpu" value="{{ device.cpu if device else '' }}">
+                <small>Contoh: A17 Pro, Snapdragon 8 Gen 3</small>
+            </div>
+
+            <div class="form-group">
+                <label for="gpu">GPU/Graphics</label>
+                <input type="text" id="gpu" name="gpu" value="{{ device.gpu if device else '' }}">
+                <small>Contoh: Apple GPU 6-core</small>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="ram">RAM</label>
+                <input type="text" id="ram" name="ram" value="{{ device.ram if device else '' }}">
+                <small>Contoh: 8GB, 12GB</small>
+            </div>
+
+            <div class="form-group">
+                <label for="storage">Storage</label>
+                <input type="text" id="storage" name="storage" value="{{ device.storage if device else '' }}">
+                <small>Contoh: 256GB, 512GB</small>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="camera">Camera</label>
+                <input type="text" id="camera" name="camera" value="{{ device.camera if device else '' }}">
+                <small>Contoh: 48MP + 12MP + 12MP</small>
+            </div>
+
+            <div class="form-group">
+                <label for="battery">Battery</label>
+                <input type="text" id="battery" name="battery" value="{{ device.battery if device else '' }}">
+                <small>Contoh: 5000 mAh</small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="screen">Screen/Display</label>
+            <input type="text" id="screen" name="screen" value="{{ device.screen if device else '' }}">
+            <small>Contoh: 6.7" AMOLED 120Hz</small>
+        </div>
+
+        <!-- Additional Info -->
+        <div class="form-row">
+            <div class="form-group">
+                <label for="release_year">Release Year</label>
+                <input type="number" id="release_year" name="release_year"
+                    value="{{ device.release_year if device else '' }}" min="2000" max="2030">
+                <small>Contoh: 2024</small>
+            </div>
+
+            <div class="form-group">
+                <label for="price">Price (Rp)</label>
+                <input type="number" id="price" name="price" value="{{ device.price if device else '' }}" step="1000">
+                <small>Contoh: 15000000</small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="image_url">Image URL</label>
+            <input type="url" id="image_url" name="image_url" value="{{ device.image_url if device else '' }}">
+            <small>URL gambar produk (opsional)</small>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description">{{ device.description if device else '' }}</textarea>
+            <small>Deskripsi lengkap perangkat (opsional)</small>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <button type="submit" class="btn btn-success btn-lg">
+                <i class="fas fa-save"></i> {{ 'Update Device' if device else 'Create Device' }}
+            </button>
+            <a href="/admin/devices" class="btn btn-secondary btn-lg">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

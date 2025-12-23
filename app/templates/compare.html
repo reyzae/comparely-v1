@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}Perbandingan {{ device1.name }} vs {{ device2.name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='/css/pages/compare.css') }}">
+{% endblock %}
+
+{% block breadcrumb %}
+<div class="breadcrumb-container">
+    <div class="container">
+        <a href="/">Home</a> / <span>Compare</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Halaman Perbandingan 2 Device -->
+<section class="compare-section">
+    <div class="container">
+        <!-- Judul Halaman -->
+        <div class="compare-header">
+            <h1>Perbandingan Perangkat</h1>
+            <p>{{ device1.name }} vs {{ device2.name }}</p>
+        </div>
+
+        <!-- Grid Perbandingan 2 Device -->
+        <div class="compare-grid-full">
+            <!-- Device 1 (Kiri) -->
+            <div class="device-compare-card">
+                <!-- Gradient Header -->
+                <div class="device-card-header">
+                    <h2>{{ device1.name }}</h2>
+                    <p class="brand-text">{{ device1.brand }}</p>
+                </div>
+
+                <!-- Spesifikasi Device 1 -->
+                <div class="specs-list">
+                    <div class="spec-item">
+                        <span class="spec-label"><i class="fa-solid fa-microchip"></i> Processor</span>
+                        <span class="spec-value">{{ device1.cpu or 'N/A' }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label"><i class="fa-solid fa-gamepad"></i> GPU</span>
+                        <span class="spec-value">{{ device1.gpu or 'N/A' }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label"><i class="fa-solid fa-memory"></i> RAM</span>
+                        <span class="spec-value">{{ device1.ram or 'N/A' }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label"><i class="fa-solid fa-hard-drive"></i> Storage</span>
+                        <span class="spec-value">{{ device1.storage or 'N/A' }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label"><i class="fa-solid fa-camera"></i> Camera</span>
+                        <span class="spec-value">{{ device1.camera or 'N/A' }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label"><i class="fa-solid fa-battery-three-quarters"></i> Battery</span>
+                        <span class="spec-value">{{ device1.battery or 'N/A' }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label"><i class="fa-solid fa-display"></i> Screen</span>
+                        <span class="spec-value">{{ device1.screen or 'N/A' }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label"><i class="fa-solid fa-calendar"></i> Tahun Rilis</span>
+                        <span class="spec-value">{{ device1.release_year or 'N/A' }}</span>
+                    </div>
+                    <div class="spec-item price-item">
+                        <span class="spec-label"><i class="fa-solid fa-tag"></i> Harga</span>
+                        <span class="spec-value price-value">Rp {{ "{:,.0f}".format(device1.price) if device1.price else
+                            'N/A' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Device 2 (Kanan) -->
+            <div class="device-compare-card">
+                <!-- Gradient Header -->
+                <div class="device-card-header">
+                    <h2>{{ device2.name }}</h2>
+                    <p class="brand-text">{{ device2.brand }}</p>
+                </div>
+
+                <!-- Spesifikasi Device 2 -->
+                <div class="specs-list">
+                    <div class="spec-item">
+                        <span class="spec-label"><i class="fa-solid fa-microchip"></i> Processor</span>
+                        <span class="spec-value">{{ device2.cpu or 'N/A' }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label"><i class="fa-solid fa-gamepad"></i> GPU</span>
+                        <span class="spec-value">{{ device2.gpu or 'N/A' }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label"><i class="fa-solid fa-memory"></i> RAM</span>
+                        <span class="spec-value">{{ device2.ram or 'N/A' }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label"><i class="fa-solid fa-hard-drive"></i> Storage</span>
+                        <span class="spec-value">{{ device2.storage or 'N/A' }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label"><i class="fa-solid fa-camera"></i> Camera</span>
+                        <span class="spec-value">{{ device2.camera or 'N/A' }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label"><i class="fa-solid fa-battery-three-quarters"></i> Battery</span>
+                        <span class="spec-value">{{ device2.battery or 'N/A' }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label"><i class="fa-solid fa-display"></i> Screen</span>
+                        <span class="spec-value">{{ device2.screen or 'N/A' }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label"><i class="fa-solid fa-calendar"></i> Tahun Rilis</span>
+                        <span class="spec-value">{{ device2.release_year or 'N/A' }}</span>
+                    </div>
+                    <div class="spec-item price-item">
+                        <span class="spec-label"><i class="fa-solid fa-tag"></i> Harga</span>
+                        <span class="spec-value price-value">Rp {{ "{:,.0f}".format(device2.price) if device2.price else
+                            'N/A' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bagian Highlights (Mana yang Lebih Unggul) -->
+        {% if highlights %}
+        <div class="highlights-section">
+            <h3><i class="fa-solid fa-trophy"></i> Highlights Perbandingan</h3>
+            <div class="highlights-grid">
+                {% for highlight in highlights %}
+                <div class="highlight-card">
+                    <strong>{{ highlight.category|safe }}</strong>
+                    <span>{{ highlight.winner }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Bagian AI Analysis (Otomatis Muncul) -->
+        <div class="ai-analysis-section" id="aiAnalysisSection">
+            <h3><i class="fa-solid fa-robot"></i> Analisis AI</h3>
+
+            <!-- Loading State (tampil pertama kali) -->
+            <div class="ai-loading" id="aiLoading">
+                <div class="loading-spinner"></div>
+                <p>Sedang menganalisis kedua device dengan AI...</p>
+            </div>
+
+            <!-- AI Result (tampil setelah fetch berhasil) -->
+            <div class="ai-result" id="aiResult" style="display: none;">
+                <!-- Hasil AI akan diisi oleh JavaScript -->
+            </div>
+
+            <!-- Error State (tampil jika fetch gagal) -->
+            <div class="ai-error" id="aiError" style="display: none;">
+                <p><i class="fa-solid fa-circle-xmark"></i> Maaf, analisis AI gagal dimuat.</p>
+                <button class="btn btn-primary" id="retryBtn"><i class="fa-solid fa-rotate-right"></i> Coba
+                    Lagi</button>
+            </div>
+        </div>
+
+        <!-- Tombol Kembali -->
+        <div class="back-button-section">
+            <a href="/" class="btn btn-secondary"><i class="fa-solid fa-house"></i> Kembali ke Homepage</a>
+            <a href="/devices" class="btn btn-primary" style="margin-left: 12px;"><i
+                    class="fa-solid fa-mobile-screen-button"></i> Browse Devices</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', path='/js/pages/compare.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block title %}{{ device.name }} - COMPARELY{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='/css/minimalist-pages.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', path='/css/pages/device-detail.css') }}">
+{% endblock %}
+
+{% block breadcrumb %}
+<div class="breadcrumb-container">
+    <div class="container">
+        <a href="/">Home</a> / <a href="/devices">Devices</a> / <span>{{ device.name }}</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Halaman Detail 1 Device -->
+<section class="device-detail-section">
+    <div class="container">
+        <!-- Enhanced Header Device -->
+        <div class="device-header-enhanced">
+            <h1>{{ device.name }}</h1>
+            <p class="device-brand-large">{{ device.brand }}</p>
+            <button class="share-button" onclick="shareDevice()">
+                📤 Share Device
+            </button>
+        </div>
+
+        <!-- Grid: Info Utama dan Specs -->
+        <div class="device-detail-grid">
+            <!-- Kolom Kiri: Info Utama -->
+            <div class="device-main-info">
+                <!-- Harga -->
+                <div class="price-box">
+                    <p class="price-label">Harga</p>
+                    <p class="price-amount">
+                        {% if device.price %}
+                        Rp {{ "{:,.0f}".format(device.price) }}
+                        {% else %}
+                        Belum tersedia
+                        {% endif %}
+                    </p>
+                </div>
+
+                <!-- Info Singkat -->
+                <div class="quick-info">
+                    <div class="info-item">
+                        <span class="info-icon">📱</span>
+                        <div>
+                            <p class="info-label">Kategori</p>
+                            <p class="info-value">
+                                {% if device.category_id == 1 %}
+                                Smartphone
+                                {% elif device.category_id == 2 %}
+                                Laptop
+                                {% else %}
+                                Lainnya
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-icon">📅</span>
+                        <div>
+                            <p class="info-label">Tahun Rilis</p>
+                            <p class="info-value">{{ device.release_year or 'N/A' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-icon">🏷️</span>
+                        <div>
+                            <p class="info-label">Brand</p>
+                            <p class="info-value">{{ device.brand }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tombol Aksi -->
+                <div class="action-buttons">
+                    <a href="/devices" class="btn btn-secondary">Kembali ke Daftar</a>
+                    <button class="btn btn-primary"
+                        onclick="alert('Pilih device lain di halaman Devices untuk membandingkan')">
+                        Bandingkan
+                    </button>
+                </div>
+            </div>
+
+            <!-- Kolom Kanan: Spesifikasi Lengkap dengan Tabs -->
+            <div class="device-specs-full">
+                <h2>Spesifikasi Lengkap</h2>
+
+                <!-- Tabs Navigation -->
+                <div class="tabs-container">
+                    <div class="tabs-nav">
+                        <button class="tab-button active" onclick="switchTab('overview')">Overview</button>
+                        <button class="tab-button" onclick="switchTab('performance')">Performance</button>
+                        <button class="tab-button" onclick="switchTab('display')">Display & Media</button>
+                    </div>
+
+                    <!-- Tab Content: Overview -->
+                    <div id="overview-tab" class="tab-content active">
+                        <div class="spec-group">
+                            <h3>📋 Informasi Umum</h3>
+                            <div class="spec-row">
+                                <span class="spec-name">Nama Device</span>
+                                <span class="spec-val">{{ device.name }}</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-name">Brand</span>
+                                <span class="spec-val">{{ device.brand }}</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-name">Tahun Rilis</span>
+                                <span class="spec-val">{{ device.release_year or 'N/A' }}</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-name">Harga</span>
+                                <span class="spec-val">Rp {{ "{:,.0f}".format(device.price) if device.price else 'N/A'
+                                    }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab Content: Performance -->
+                    <div id="performance-tab" class="tab-content">
+                        <div class="spec-group">
+                            <h3>⚡ Performa</h3>
+                            <div class="spec-row">
+                                <span class="spec-name">Processor (CPU)</span>
+                                <span class="spec-val">{{ device.cpu or 'N/A' }}</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-name">Graphics (GPU)</span>
+                                <span class="spec-val">{{ device.gpu or 'N/A' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="spec-group">
+                            <h3>💾 Memory & Storage</h3>
+                            <div class="spec-row">
+                                <span class="spec-name">RAM</span>
+                                <span class="spec-val">{{ device.ram or 'N/A' }}</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-name">Storage</span>
+                                <span class="spec-val">{{ device.storage or 'N/A' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="spec-group">
+                            <h3>🔋 Battery</h3>
+                            <div class="spec-row">
+                                <span class="spec-name">Battery</span>
+                                <span class="spec-val">{{ device.battery or 'N/A' }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab Content: Display & Media -->
+                    <div id="display-tab" class="tab-content">
+                        <div class="spec-group">
+                            <h3>📺 Display</h3>
+                            <div class="spec-row">
+                                <span class="spec-name">Screen</span>
+                                <span class="spec-val">{{ device.screen or 'N/A' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="spec-group">
+                            <h3>📷 Camera</h3>
+                            <div class="spec-row">
+                                <span class="spec-name">Camera</span>
+                                <span class="spec-val">{{ device.camera or 'N/A' }}</span>
+                            </div>
+                        </div>
+
+                        {% if device.source_data %}
+                        <div class="spec-group">
+                            <h3>ℹ️ Informasi Tambahan</h3>
+                            <div class="spec-row">
+                                <span class="spec-name">Sumber Data</span>
+                                <span class="spec-val">{{ device.source_data }}</span>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', path='/js/pages/device-detail.js') }}"></script>
+{% endblock %}

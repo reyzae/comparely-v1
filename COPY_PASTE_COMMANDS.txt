@@ -1,0 +1,219 @@
+========================================
+COMPARELY - VPS DEPLOYMENT COMMANDS
+========================================
+VPS IP      : 160.187.210.125
+Username    : root
+Password    : [PASSWORD_VPS]
+========================================
+
+CARA PAKAI:
+1. Connect ke VPS: ssh root@160.187.210.125
+2. Copy-paste SEMUA command di bawah ini
+3. Tunggu sampai selesai
+
+========================================
+MULAI DARI SINI - COPY SEMUA
+========================================
+
+# Set backup date
+BACKUP_DATE=$(date +%Y%m%d_%H%M%S)
+echo "Backup date: $BACKUP_DATE"
+
+# Create backup directory
+echo "[1/9] Creating backup directory..."
+mkdir -p /root/backups
+
+# Backup existing project
+echo "[2/9] Backing up existing project..."
+if [ -d "/root/comparely" ]; then
+    echo "Existing project found. Creating backup..."
+    tar -czf /root/backups/comparely_backup_$BACKUP_DATE.tar.gz -C /root comparely
+    echo "Backup created: /root/backups/comparely_backup_$BACKUP_DATE.tar.gz"
+    
+    # Move old project
+    mv /root/comparely /root/comparely_old_$BACKUP_DATE
+    echo "Old project moved to: /root/comparely_old_$BACKUP_DATE"
+else
+    echo "No existing project found."
+fi
+
+# Update system
+echo "[3/9] Updating system..."
+apt update -y
+
+# Install dependencies
+echo "[4/9] Installing dependencies..."
+apt install -y python3 python3-pip python3-venv nginx git curl
+
+# Clone project
+echo "[5/9] Cloning project from GitHub..."
+cd /root
+git clone https://github.com/reyzae/comparely.git
+
+# Check if clone successful
+if [ ! -d "/root/comparely" ]; then
+    echo "ERROR: Failed to clone project!"
+    exit 1
+fi
+
+# Setup virtual environment
+echo "[6/9] Setting up virtual environment..."
+cd /root/comparely
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Install Python dependencies
+echo "[7/9] Installing Python packages..."
+pip install --upgrade pip
+pip install -r requirements.txt
+pip install gunicorn
+
+# Setup .env
+echo "[8/9] Setting up .env file..."
+if [ ! -f ".env" ]; then
+    cp .env.example .env
+    echo ".env file created"
+fi
+
+# Summary
+echo "[9/9] Deployment complete!"
+echo ""
+echo "========================================"
+echo "  DEPLOYMENT SUMMARY"
+echo "========================================"
+echo ""
+echo "Backup location:"
+if [ -f "/root/backups/comparely_backup_$BACKUP_DATE.tar.gz" ]; then
+    ls -lh /root/backups/comparely_backup_$BACKUP_DATE.tar.gz
+fi
+echo ""
+echo "Old project: /root/comparely_old_$BACKUP_DATE"
+echo "New project: /root/comparely"
+echo ""
+echo "========================================"
+echo "  NEXT STEPS"
+echo "========================================"
+echo ""
+echo "1. Edit .env file:"
+echo "   nano /root/comparely/.env"
+echo ""
+echo "2. Generate SECRET_KEY:"
+echo "   python3 -c 'import secrets; print(secrets.token_urlsafe(32))'"
+echo ""
+echo "3. Initialize database:"
+echo "   cd /root/comparely"
+echo "   source .venv/bin/activate"
+echo "   python scripts/utils/init_db.py"
+echo ""
+echo "4. Create admin user:"
+echo "   python scripts/utils/create_admin_simple.py"
+echo ""
+echo "5. Test application:"
+echo "   gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000"
+echo ""
+echo "6. Setup systemd service (see DEPLOYMENT_VPS.md)"
+echo "7. Setup Nginx (see DEPLOYMENT_VPS.md)"
+echo ""
+echo "Deployment completed at: $(date)"
+echo "========================================"
+
+========================================
+SELESAI - STOP COPY DI SINI
+========================================
+
+SETELAH DEPLOYMENT SELESAI:
+
+1. EDIT .ENV FILE:
+   nano /root/comparely/.env
+   
+   Update:
+   - SECRET_KEY (generate dengan: python3 -c 'import secrets; print(secrets.token_urlsafe(32))')
+   - DATABASE_URL (jika pakai MySQL)
+   - AI_API_KEY (jika pakai AI)
+
+2. INITIALIZE DATABASE:
+   cd /root/comparely
+   source .venv/bin/activate
+   python scripts/utils/init_db.py
+
+3. CREATE ADMIN USER:
+   python scripts/utils/create_admin_simple.py
+
+4. TEST APLIKASI:
+   gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
+   
+   Buka browser: http://160.187.210.125:8000
+   Tekan Ctrl+C untuk stop
+
+5. SETUP SYSTEMD SERVICE:
+   Lihat file DEPLOYMENT_VPS.md atau QUICK_DEPLOY.md
+
+6. SETUP NGINX:
+   Lihat file DEPLOYMENT_VPS.md atau QUICK_DEPLOY.md
+
+========================================
+BACKUP INFORMATION
+========================================
+
+Semua backup disimpan di: /root/backups/
+
+List backup:
+  ls -lh /root/backups/
+
+Restore backup:
+  cd /root
+  tar -xzf backups/comparely_backup_YYYYMMDD_HHMMSS.tar.gz
+
+========================================
+TROUBLESHOOTING
+========================================
+
+Jika ada error:
+
+1. Check logs:
+   tail -f /var/log/comparely/error.log
+   journalctl -u comparely -f
+
+2. Check service status:
+   systemctl status comparely
+   systemctl status nginx
+
+3. Restart services:
+   systemctl restart comparely
+   systemctl restart nginx
+
+4. Check permissions:
+   ls -la /root/comparely
+   chown -R root:root /root/comparely
+
+========================================
+USEFUL COMMANDS
+========================================
+
+Connect to VPS:
+  ssh root@160.187.210.125
+
+Check disk space:
+  df -h
+
+Check memory:
+  free -h
+
+Check processes:
+  htop
+
+View logs:
+  tail -f /var/log/comparely/error.log
+  tail -f /var/log/nginx/error.log
+
+Restart application:
+  systemctl restart comparely
+
+Update application:
+  cd /root/comparely
+  git pull origin main
+  source .venv/bin/activate
+  pip install -r requirements.txt
+  systemctl restart comparely
+
+========================================

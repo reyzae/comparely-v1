@@ -1,0 +1,248 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Admin Tools{% endblock %}
+{% block breadcrumb %}Tools{% endblock %}
+
+{% block extra_css %}
+<style>
+    .tools-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .tool-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .tool-card h3 {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+        color: #111827;
+    }
+
+    .tool-card p {
+        color: #6B7280;
+        margin-bottom: 1rem;
+    }
+
+    .import-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .file-upload {
+        border: 2px dashed #E5E7EB;
+        border-radius: 8px;
+        padding: 2rem;
+        text-align: center;
+        margin-bottom: 1rem;
+        transition: border-color 0.2s ease;
+    }
+
+    .file-upload:hover {
+        border-color: #06B6D4;
+    }
+
+    .file-upload input[type="file"] {
+        display: none;
+    }
+
+    .file-upload label {
+        cursor: pointer;
+        color: #06B6D4;
+        font-weight: 600;
+    }
+
+    .preview-table {
+        max-height: 400px;
+        overflow: auto;
+        margin-top: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Tools Grid -->
+<div class="tools-grid">
+    <!-- CSV Import Tool -->
+    <div class="tool-card">
+        <h3><i class="fas fa-file-import"></i> Import Devices</h3>
+        <p>Import devices dari file CSV</p>
+        <button onclick="showImportSection()" class="btn btn-primary">
+            <i class="fas fa-upload"></i> Import CSV
+        </button>
+    </div>
+
+    <!-- Export Tool -->
+    <div class="tool-card">
+        <h3><i class="fas fa-file-export"></i> Export Devices</h3>
+        <p>Export semua devices ke CSV</p>
+        <a href="/admin/devices/export" class="btn btn-secondary">
+            <i class="fas fa-download"></i> Export CSV
+        </a>
+    </div>
+
+    <!-- Database Stats -->
+    <div class="tool-card">
+        <h3><i class="fas fa-database"></i> Database Stats</h3>
+        <p>Lihat statistik database</p>
+        <a href="/admin/analytics" class="btn btn-secondary">
+            <i class="fas fa-chart-bar"></i> View Stats
+        </a>
+    </div>
+</div>
+
+<!-- CSV Import Section -->
+<div class="import-section" id="importSection" style="display: none;">
+    <h3 style="margin-bottom: 1rem;">Import Devices from CSV</h3>
+
+    <!-- File Upload -->
+    <div class="file-upload">
+        <input type="file" id="csvFile" accept=".csv" onchange="handleFileSelect(event)">
+        <label for="csvFile">
+            <i class="fas fa-cloud-upload-alt"
+                style="font-size: 3rem; color: #06B6D4; display: block; margin-bottom: 1rem;"></i>
+            <span>Click to upload CSV file</span>
+            <p style="color: #6B7280; font-size: 0.875rem; margin-top: 0.5rem;">
+                Format: name, brand, category_id, cpu, gpu, ram, storage, camera, battery, screen, release_year, price
+            </p>
+        </label>
+    </div>
+
+    <!-- Preview -->
+    <div id="previewSection" style="display: none;">
+        <h4>Preview Data:</h4>
+        <div class="preview-table">
+            <table class="admin-table" id="previewTable">
+                <thead id="previewHeader"></thead>
+                <tbody id="previewBody"></tbody>
+            </table>
+        </div>
+
+        <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+            <button onclick="importData()" class="btn btn-success">
+                <i class="fas fa-check"></i> Confirm Import
+            </button>
+            <button onclick="cancelImport()" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancel
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let csvData = [];
+
+    function showImportSection() {
+        document.getElementById('importSection').style.display = 'block';
+    }
+
+    function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const text = e.target.result;
+            parseCSV(text);
+        };
+        reader.readAsText(file);
+    }
+
+    function parseCSV(text) {
+        const lines = text.split('\n').filter(line => line.trim());
+        if (lines.length < 2) {
+            alert('CSV file harus punya header dan minimal 1 baris data');
+            return;
+        }
+
+        // Parse header
+        const headers = lines[0].split(',').map(h => h.trim());
+
+        // Parse data
+        csvData = [];
+        for (let i = 1; i < lines.length; i++) {
+            const values = lines[i].split(',').map(v => v.trim());
+            const row = {};
+            headers.forEach((header, index) => {
+                row[header] = values[index] || '';
+            });
+            csvData.push(row);
+        }
+
+        // Show preview
+        displayPreview(headers, csvData);
+    }
+
+    function displayPreview(headers, data) {
+        const previewSection = document.getElementById('previewSection');
+        const previewHeader = document.getElementById('previewHeader');
+        const previewBody = document.getElementById('previewBody');
+
+        // Build header
+        let headerHTML = '<tr>';
+        headers.forEach(header => {
+            headerHTML += `<th>${header}</th>`;
+        });
+        headerHTML += '</tr>';
+        previewHeader.innerHTML = headerHTML;
+
+        // Build body (max 10 rows)
+        let bodyHTML = '';
+        const maxRows = Math.min(data.length, 10);
+        for (let i = 0; i < maxRows; i++) {
+            bodyHTML += '<tr>';
+            headers.forEach(header => {
+                bodyHTML += `<td>${data[i][header] || ''}</td>`;
+            });
+            bodyHTML += '</tr>';
+        }
+        previewBody.innerHTML = bodyHTML;
+
+        previewSection.style.display = 'block';
+    }
+
+    async function importData() {
+        if (csvData.length === 0) {
+            alert('Tidak ada data untuk diimport');
+            return;
+        }
+
+        try {
+            const response = await fetch('/admin/devices/import', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ devices: csvData })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert(`Berhasil import ${result.imported} devices!`);
+                window.location.href = '/admin/devices';
+            } else {
+                alert(`Error: ${result.detail || 'Import gagal'}`);
+            }
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+        }
+    }
+
+    function cancelImport() {
+        document.getElementById('previewSection').style.display = 'none';
+        document.getElementById('csvFile').value = '';
+        csvData = [];
+    }
+</script>
+{% endblock %}

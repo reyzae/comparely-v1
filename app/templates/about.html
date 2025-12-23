@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}About - COMPARELY{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='/css/pages.css') }}">
+{% endblock %}
+
+{% block breadcrumb %}
+<div class="breadcrumb-container">
+    <div class="container">
+        <a href="/">Home</a> / <span>About</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- About Page -->
+<section class="about-section">
+    <div class="container">
+        <!-- Header -->
+        <div class="about-header">
+            <h1>Tentang COMPARELY</h1>
+            <p class="section-subtitle">Platform perbandingan perangkat teknologi</p>
+        </div>
+
+        <!-- About Content -->
+        <div class="about-content">
+            <!-- Latar Belakang -->
+            <div class="about-card">
+                <div class="about-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                <h2>Latar Belakang</h2>
+                <p>Di era digital saat ini, pilihan gadget yang tersedia sangat beragam dan seringkali membuat bingung.
+                    Sebagai mahasiswa yang sering membutuhkan device baru, baik laptop untuk keperluan kuliah maupun
+                    smartphone untuk aktivitas sehari-hari, kami merasakan kesulitan dalam mencari informasi
+                    perbandingan yang lengkap dan mudah dipahami.</p>
+                <p style="margin-top: 12px;">Oleh karena itu, kami membuat COMPARELY - sebuah website yang dapat
+                    membantu membandingkan spesifikasi perangkat dengan lebih mudah. Tidak perlu lagi membuka banyak tab
+                    browser hanya untuk membandingkan spesifikasi seperti RAM atau kapasitas baterai.</p>
+            </div>
+
+            <!-- Tujuan -->
+            <div class="about-card">
+                <div class="about-icon"><i class="fa-solid fa-bullseye"></i></div>
+                <h2>Tujuan Project</h2>
+                <p>Project ini dibuat sebagai tugas akhir mata kuliah <strong>Dasar Pemrograman</strong>. Tujuan dari
+                    pembuatan website ini adalah:</p>
+                <ul style="margin-top: 12px; margin-left: 20px; line-height: 1.8;">
+                    <li>Mengaplikasikan konsep pemrograman yang telah dipelajari selama perkuliahan</li>
+                    <li>Mempelajari pengembangan web application yang fungsional dan dapat digunakan</li>
+                    <li>Memahami implementasi database dan backend development</li>
+                    <li>Membuat aplikasi yang bermanfaat untuk membantu pengguna dalam mengambil keputusan</li>
+                </ul>
+            </div>
+
+            <!-- Fitur Utama -->
+            <div class="about-card full-width">
+                <h2>Fitur-Fitur Utama</h2>
+                <div class="why-grid">
+                    <div class="why-item">
+                        <h4><i class="fa-solid fa-magnifying-glass"></i> Pencarian Device</h4>
+                        <p>Cari device dengan autocomplete yang cepat</p>
+                    </div>
+                    <div class="why-item">
+                        <h4><i class="fa-solid fa-scale-balanced"></i> Perbandingan Detail</h4>
+                        <p>Bandingkan 2 device side-by-side dengan lengkap</p>
+                    </div>
+                    <div class="why-item">
+                        <h4><i class="fa-solid fa-bullseye"></i> Filter & Kategori</h4>
+                        <p>Filter berdasarkan harga dan kategori</p>
+                    </div>
+                    <div class="why-item">
+                        <h4><i class="fa-solid fa-lightbulb"></i> Highlight Otomatis</h4>
+                        <p>Sistem menampilkan spesifikasi yang lebih unggul</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tech Stack -->
+            <div class="about-card full-width">
+                <h2>Teknologi yang Digunakan</h2>
+                <p>Berikut adalah teknologi yang digunakan dalam pengembangan COMPARELY:</p>
+                <div class="why-grid" style="margin-top: 16px;">
+                    <div class="why-item">
+                        <h4><i class="fa-brands fa-python"></i> Python & FastAPI</h4>
+                        <p>Backend framework yang cepat dan modern</p>
+                    </div>
+                    <div class="why-item">
+                        <h4><i class="fa-solid fa-database"></i> SQLite</h4>
+                        <p>Database yang ringan namun powerful</p>
+                    </div>
+                    <div class="why-item">
+                        <h4><i class="fa-solid fa-palette"></i> HTML/CSS/JS</h4>
+                        <p>Frontend dengan design yang clean</p>
+                    </div>
+                    <div class="why-item">
+                        <h4><i class="fa-solid fa-robot"></i> AI Integration</h4>
+                        <p>Menggunakan AI untuk generate insights</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Info -->
+            <div class="about-card full-width team-card">
+                <h2>Tentang Pembuat</h2>
+                <p>COMPARELY dibuat sebagai project tugas akhir mata kuliah Dasar Pemrograman. Melalui project ini, kami
+                    mempelajari banyak hal mulai dari database design, backend development, hingga pembuatan user
+                    interface yang user-friendly.</p>
+                <p style="margin-top: 16px;">Semoga website ini dapat bermanfaat bagi pengguna yang membutuhkan
+                    informasi perbandingan perangkat teknologi untuk membantu dalam pengambilan keputusan pembelian.</p>
+
+                <!-- Team Members -->
+                <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #E5E7EB;">
+                    <h3 style="font-size: 18px; margin-bottom: 16px; color: #111827;">Tim Pengembang</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                        <div style="background: white; padding: 12px; border-radius: 8px; border: 1px solid #E5E7EB;">
+                            <p style="font-weight: 600; color: #111827; margin: 0;">Reyza Wirakusuma</p>
+                            <p style="font-size: 14px; color: #6B7280; margin: 4px 0 0 0;">17250107</p>
+                        </div>
+                        <div style="background: white; padding: 12px; border-radius: 8px; border: 1px solid #E5E7EB;">
+                            <p style="font-weight: 600; color: #111827; margin: 0;">Rachmat Muhaimin Rustam</p>
+                            <p style="font-size: 14px; color: #6B7280; margin: 4px 0 0 0;">17250381</p>
+                        </div>
+                        <div style="background: white; padding: 12px; border-radius: 8px; border: 1px solid #E5E7EB;">
+                            <p style="font-weight: 600; color: #111827; margin: 0;">Tegar Abdiansyah Pangestu</p>
+                            <p style="font-size: 14px; color: #6B7280; margin: 4px 0 0 0;">17250651</p>
+                        </div>
+                        <div style="background: white; padding: 12px; border-radius: 8px; border: 1px solid #E5E7EB;">
+                            <p style="font-weight: 600; color: #111827; margin: 0;">Rofik Rokhmattullah</p>
+                            <p style="font-size: 14px; color: #6B7280; margin: 4px 0 0 0;">17250705</p>
+                        </div>
+                        <div style="background: white; padding: 12px; border-radius: 8px; border: 1px solid #E5E7EB;">
+                            <p style="font-weight: 600; color: #111827; margin: 0;">Abdul Khair</p>
+                            <p style="font-size: 14px; color: #6B7280; margin: 4px 0 0 0;">17250610</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="about-cta">
+            <h2>Coba Sekarang</h2>
+            <p>Bandingkan perangkat dan temukan yang paling sesuai dengan kebutuhan Anda</p>
+            <a href="/devices" class="btn btn-primary">Lihat Semua Device</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

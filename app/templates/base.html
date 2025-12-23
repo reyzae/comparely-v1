@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="COMPARELY - Bandingkan perangkat teknologi dengan mudah dan cepat">
+    <title>{% block title %}COMPARELY - Bandingkan Perangkat Lebih Cerdas{% endblock %}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', path='/images/favicon.png') }}">
+
+    <!-- CSS -->
+    <!-- Main Stylesheet with Design System -->
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+
+    <!-- Mobile Responsive Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/mobile.css') }}?v=2.0">
+
+    <!-- Font Awesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        /* Mobile Responsive Fixes */
+        @media (max-width: 768px) {
+
+            /* Hide hamburger menu - using bottom nav instead */
+            .hamburger-menu {
+                display: none !important;
+            }
+
+            /* Hide desktop navigation on mobile */
+            .nav {
+                display: none !important;
+            }
+
+            /* Add padding to body for bottom nav */
+            body {
+                padding-bottom: 70px;
+            }
+
+            /* Hide desktop footer on mobile */
+            .footer {
+                display: none !important;
+            }
+
+            /* Force Vertical Stack for Compare Inputs */
+            .compare-inputs {
+                grid-template-columns: 1fr !important;
+                display: grid !important;
+                gap: 12px !important;
+            }
+
+            .vs-text {
+                display: none !important;
+            }
+
+            .compare-input-wrapper {
+                width: 100% !important;
+            }
+        }
+
+        /* Mobile Bottom Navigation Styles */
+        .mobile-bottom-nav {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-bottom-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background-color: white;
+                border-top: 1px solid #E5E7EB;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+                z-index: 1000;
+                height: 60px;
+                justify-content: space-around;
+                align-items: center;
+                padding: 0;
+            }
+
+            .mobile-bottom-nav .nav-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                flex: 1;
+                height: 100%;
+                color: #6B7280;
+                text-decoration: none;
+                transition: all 0.2s ease;
+                gap: 4px;
+            }
+
+            .mobile-bottom-nav .nav-item svg {
+                width: 24px;
+                height: 24px;
+                stroke: currentColor;
+            }
+
+            .mobile-bottom-nav .nav-item span {
+                font-size: 11px;
+                font-weight: 500;
+            }
+
+            .mobile-bottom-nav .nav-item.active {
+                color: #0077BE;
+            }
+
+            .mobile-bottom-nav .nav-item:active {
+                background-color: #F3F4F6;
+            }
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="/" class="logo">
+                <img src="{{ url_for('static', path='/images/logo.png') }}" alt="COMPARELY Logo">
+                <span>COMPARELY</span>
+            </a>
+
+            <!-- Mobile Info Menu (Privacy, Terms, Contact) -->
+            <div class="mobile-info-menu">
+                <button class="mobile-info-btn" id="mobileInfoBtn" aria-label="Info Menu">
+                    <i class="fa-solid fa-circle-info"></i>
+                </button>
+                <div class="mobile-info-dropdown" id="mobileInfoDropdown">
+                    <a href="/privacy"><i class="fa-solid fa-shield-halved"></i> Privacy</a>
+                    <a href="/terms"><i class="fa-solid fa-file-contract"></i> Terms</a>
+                    <a href="/contact"><i class="fa-solid fa-envelope"></i> Contact</a>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="nav" id="navMenu">
+                <a href="/" class="nav-link {% if request.url.path == '/' %}active{% endif %}">Home</a>
+                <a href="/devices" class="nav-link {% if '/devices' in request.url.path %}active{% endif %}">Compare</a>
+                <a href="/features"
+                    class="nav-link {% if '/features' in request.url.path %}active{% endif %}">Features</a>
+                <a href="/about" class="nav-link {% if '/about' in request.url.path %}active{% endif %}">About</a>
+                <a href="/devices" class="btn btn-primary btn-small btn-cta">Get Started</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Breadcrumb (akan diisi oleh child templates) -->
+    {% block breadcrumb %}{% endblock %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="footer-text">© 2025 COMPARELY - Built for better choices.</p>
+            <div class="footer-links">
+                <a href="/privacy">Privacy</a>
+                <a href="/terms">Terms</a>
+                <a href="/contact">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <a href="/" class="nav-item {% if request.url.path == '/' %}active{% endif %}">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="/devices" class="nav-item {% if '/devices' in request.url.path %}active{% endif %}">
+            <i class="fa-solid fa-mobile-screen-button"></i>
+            <span>Compare</span>
+        </a>
+        <a href="/features" class="nav-item {% if '/features' in request.url.path %}active{% endif %}">
+            <i class="fa-solid fa-star"></i>
+            <span>Features</span>
+        </a>
+        <a href="/about" class="nav-item {% if '/about' in request.url.path %}active{% endif %}">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>About</span>
+        </a>
+    </nav>
+
+    <!-- Core Scripts - Load first (dependencies) -->
+    <script src="{{ url_for('static', path='/js/header-scroll.js') }}"></script>
+    <script src="{{ url_for('static', path='/js/autocomplete.js') }}"></script>
+    <script src="{{ url_for('static', path='/js/utils.js') }}"></script>
+    <!-- Mobile Info Menu Script -->
+    <script src="{{ url_for('static', path='/js/mobile-info-menu.js') }}"></script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

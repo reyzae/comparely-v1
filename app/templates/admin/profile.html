@@ -1,0 +1,174 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Profile{% endblock %}
+{% block page_title %}My Profile{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-container {
+        max-width: 800px;
+    }
+
+    .profile-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+    }
+
+    .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid #E5E7EB;
+    }
+
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #06B6D4 0%, #14B8A6 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+    .profile-info h2 {
+        font-size: 1.5rem;
+        margin-bottom: 0.25rem;
+        color: #111827;
+    }
+
+    .profile-role {
+        color: #6B7280;
+        font-size: 0.875rem;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .info-item {
+        padding: 1rem;
+        background-color: #F9FAFB;
+        border-radius: 8px;
+    }
+
+    .info-label {
+        font-size: 0.875rem;
+        color: #6B7280;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #374151;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #E5E7EB;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #06B6D4;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <!-- Profile Info Card -->
+    <div class="profile-card">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                {{ current_user.username[0].upper() if current_user else 'A' }}
+            </div>
+            <div class="profile-info">
+                <h2>{{ current_user.username if current_user else 'Admin User' }}</h2>
+                <div class="profile-role">
+                    <i class="fas fa-user-shield"></i> Administrator
+                </div>
+            </div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Username</div>
+                <div class="info-value">{{ current_user.username if current_user else 'admin' }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Email</div>
+                <div class="info-value">{{ current_user.email if current_user else 'admin@comparely.com' }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Role</div>
+                <div class="info-value">Administrator</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Last Login</div>
+                <div class="info-value">Just now</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Card -->
+    <div class="profile-card">
+        <h3 style="margin-bottom: 1.5rem;">Change Password</h3>
+
+        <form method="POST" action="/admin/profile/change-password">
+            <div class="form-group">
+                <label for="current_password">Current Password</label>
+                <input type="password" id="current_password" name="current_password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="new_password">New Password</label>
+                <input type="password" id="new_password" name="new_password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password">Confirm New Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
+            </div>
+
+            <button type="submit" class="btn-primary">
+                <i class="fas fa-key"></i> Update Password
+            </button>
+        </form>
+    </div>
+
+    <!-- Logout -->
+    <div class="profile-card">
+        <h3 style="margin-bottom: 1rem;">Session</h3>
+        <p style="color: #6B7280; margin-bottom: 1rem;">Logout dari admin panel</p>
+        <a href="/admin/logout" class="btn-secondary">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
+</div>
+{% endblock %}

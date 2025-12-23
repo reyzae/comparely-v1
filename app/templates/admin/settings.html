@@ -1,0 +1,471 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Settings{% endblock %}
+{% block breadcrumb %}Settings{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ========================================
+       SETTINGS PAGE - Modern UI/UX
+    ======================================== */
+
+    /* Notification Messages */
+    .notification {
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-weight: 500;
+        animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .notification.success {
+        background: #d1fae5;
+        color: #065f46;
+        border-left: 4px solid #10b981;
+    }
+
+    .notification.error {
+        background: #fee2e2;
+        color: #991b1b;
+        border-left: 4px solid #ef4444;
+    }
+
+    .notification i {
+        font-size: 1.25rem;
+    }
+
+    /* Settings Grid */
+    .settings-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Card Improvements */
+    .card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+        transition: all 0.2s ease;
+    }
+
+    .card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #e5e7eb;
+    }
+
+    .card-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1e293b;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .card-title i {
+        color: #06b6d4;
+        font-size: 1.25rem;
+    }
+
+    /* System Info Stats */
+    .stats-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .stat-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem;
+        background: #f8fafc;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .stat-item:hover {
+        background: #f1f5f9;
+    }
+
+    .stat-label {
+        font-weight: 600;
+        color: #475569;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .stat-label i {
+        color: #06b6d4;
+        width: 20px;
+        text-align: center;
+    }
+
+    .stat-value {
+        font-weight: 700;
+        color: #0f172a;
+        background: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 6px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .stat-value.success {
+        color: #059669;
+        background: #d1fae5;
+        border-color: #10b981;
+    }
+
+    /* Form styling */
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #374151;
+    }
+
+    .text-muted {
+        color: #6b7280;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
+
+    /* Button consistency */
+    .card .btn {
+        min-height: 44px;
+        padding: 0.75rem 1.5rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+
+    /* Database management buttons */
+    .card form {
+        display: inline-block;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    /* Loading state */
+    .btn.loading {
+        position: relative;
+        color: transparent;
+        pointer-events: none;
+    }
+
+    .btn.loading::after {
+        content: "";
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        top: 50%;
+        left: 50%;
+        margin-left: -9px;
+        margin-top: -9px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spinner 0.7s linear infinite;
+    }
+
+    @keyframes spinner {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* Mobile Optimization */
+    @media (max-width: 768px) {
+        .settings-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .card {
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .card-header {
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1rem;
+        }
+
+        .card form {
+            display: block;
+            width: 100%;
+            margin-bottom: 0.75rem;
+        }
+
+        .card .btn {
+            width: 100%;
+            min-height: 48px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+        }
+
+        .button-group {
+            flex-direction: column;
+        }
+
+        .button-group .btn {
+            width: 100%;
+        }
+
+        .admin-main {
+            padding-bottom: 100px !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Settings</h1>
+    <p class="page-description">Konfigurasi sistem dan preferensi</p>
+</div>
+
+<!-- Success/Error Messages -->
+{% if request.query_params.get('message') %}
+<div class="notification success">
+    <i class="fas fa-check-circle"></i>
+    <span>{{ request.query_params.get('message') }}</span>
+</div>
+{% endif %}
+
+{% if request.query_params.get('error') %}
+<div class="notification error">
+    <i class="fas fa-exclamation-circle"></i>
+    <span>{{ request.query_params.get('error') }}</span>
+</div>
+{% endif %}
+
+<!-- System Information -->
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-info-circle"></i> System Information
+        </h3>
+    </div>
+    <div class="stats-list">
+        <div class="stat-item">
+            <span class="stat-label">
+                <i class="fas fa-tag"></i> Application Name
+            </span>
+            <span class="stat-value">COMPARELY</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">
+                <i class="fas fa-code-branch"></i> Version
+            </span>
+            <span class="stat-value">1.0.0</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">
+                <i class="fas fa-database"></i> Database Status
+            </span>
+            <span class="stat-value success">{{ database_status }}</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">
+                <i class="fas fa-hdd"></i> Database Size
+            </span>
+            <span class="stat-value">{{ database_size }}</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">
+                <i class="fas fa-mobile-alt"></i> Total Devices
+            </span>
+            <span class="stat-value">{{ total_devices }}</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">
+                <i class="fas fa-tags"></i> Total Categories
+            </span>
+            <span class="stat-value">{{ total_categories }}</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">
+                <i class="fas fa-save"></i> Last Backup
+            </span>
+            <span class="stat-value">{{ last_backup }}</span>
+        </div>
+    </div>
+</div>
+
+<!-- API Configuration -->
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-key"></i> API Configuration
+        </h3>
+    </div>
+    <form method="post" action="/admin/settings/update-api" onsubmit="return handleFormSubmit(event, this)">
+        <div class="form-group">
+            <label class="form-label">AI API Key</label>
+            <input type="password" name="ai_api_key" class="form-input" value="{{ ai_api_key_masked }}"
+                placeholder="Enter AI API Key">
+            <small class="text-muted">
+                API key untuk fitur AI recommendation
+            </small>
+        </div>
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Save API Settings
+        </button>
+    </form>
+</div>
+
+<!-- Database Management -->
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-database"></i> Database Management
+        </h3>
+    </div>
+    <div class="button-group">
+        <form method="post" action="/admin/settings/backup-database" onsubmit="return handleFormSubmit(event, this)">
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-download"></i> Backup Database
+            </button>
+        </form>
+
+        <form method="post" action="/admin/settings/optimize-database"
+            onsubmit="return handleFormSubmit(event, this, 'Optimize database? Ini akan membersihkan data yang tidak diperlukan.')">
+            <button type="submit" class="btn btn-secondary">
+                <i class="fas fa-broom"></i> Optimize Database
+            </button>
+        </form>
+
+        <form method="post" action="/admin/reset-database"
+            onsubmit="return handleFormSubmit(event, this, 'PERINGATAN: Ini akan menghapus SEMUA data devices! Apakah Anda yakin?')">
+            <button type="submit" class="btn btn-delete">
+                <i class="fas fa-exclamation-triangle"></i> Reset Database
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- UI Preferences -->
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-paint-brush"></i> UI Preferences
+        </h3>
+    </div>
+    <form method="post" action="/admin/settings/update-ui" onsubmit="return handleFormSubmit(event, this)">
+        <div class="form-group">
+            <label class="form-label">Items Per Page</label>
+            <select name="items_per_page" class="form-select">
+                <option value="10" {% if items_per_page=="10" %}selected{% endif %}>10</option>
+                <option value="20" {% if items_per_page=="20" %}selected{% endif %}>20</option>
+                <option value="50" {% if items_per_page=="50" %}selected{% endif %}>50</option>
+                <option value="100" {% if items_per_page=="100" %}selected{% endif %}>100</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Date Format</label>
+            <select name="date_format" class="form-select">
+                <option value="DD/MM/YYYY" {% if date_format=="DD/MM/YYYY" %}selected{% endif %}>DD/MM/YYYY</option>
+                <option value="MM/DD/YYYY" {% if date_format=="MM/DD/YYYY" %}selected{% endif %}>MM/DD/YYYY</option>
+                <option value="YYYY-MM-DD" {% if date_format=="YYYY-MM-DD" %}selected{% endif %}>YYYY-MM-DD</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Save Preferences
+        </button>
+    </form>
+</div>
+
+<!-- Cache Management -->
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-sync"></i> Cache Management
+        </h3>
+    </div>
+    <p class="text-muted">Clear cache untuk memastikan data terbaru ditampilkan</p>
+    <form method="post" action="/admin/settings/clear-cache" onsubmit="return handleFormSubmit(event, this)">
+        <button type="submit" class="btn btn-secondary">
+            <i class="fas fa-trash-alt"></i> Clear All Cache
+        </button>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function handleFormSubmit(event, form, confirmMessage = null) {
+        // Show confirmation if needed
+        if (confirmMessage && !confirm(confirmMessage)) {
+            event.preventDefault();
+            return false;
+        }
+
+        // Add loading state to submit button
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+        }
+
+        return true;
+    }
+
+    // Auto-hide notifications after 5 seconds
+    document.addEventListener('DOMContentLoaded', function () {
+        const notifications = document.querySelectorAll('.notification');
+        notifications.forEach(notification => {
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        });
+    });
+</script>
+{% endblock %}

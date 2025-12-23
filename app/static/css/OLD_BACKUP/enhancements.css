@@ -1,0 +1,352 @@
+/* ===================================
+   COMPARELY - Enhanced Styles
+   Student-friendly UI improvements
+   =================================== */
+
+/* ===================================
+   Button Loading & States Enhancement
+   =================================== */
+
+/* Active state saat button diklik */
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+}
+
+/* Disabled state untuk button */
+.btn:disabled,
+.btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Loading state untuk button */
+.btn.loading {
+    color: transparent;
+    pointer-events: none;
+    position: relative;
+}
+
+.btn.loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid transparent;
+    border-top-color: white;
+    border-radius: 50%;
+    animation: button-loading-spinner 0.6s linear infinite;
+}
+
+/* Animasi spinner untuk loading state */
+@keyframes button-loading-spinner {
+    from {
+        transform: rotate(0turn);
+    }
+
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+/* ===================================
+   Skeleton Loading States
+   =================================== */
+
+/* Skeleton untuk loading state */
+.skeleton {
+    background: linear-gradient(90deg,
+            var(--color-bg-gray) 0%,
+            #f0f0f0 50%,
+            var(--color-bg-gray) 100%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+    border-radius: var(--radius-sm);
+}
+
+/* Animasi shimmer effect */
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Skeleton card untuk device loading */
+.skeleton-card {
+    background-color: white;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.skeleton-text {
+    height: 16px;
+    margin-bottom: 8px;
+}
+
+.skeleton-title {
+    height: 24px;
+    width: 70%;
+    margin-bottom: 12px;
+}
+
+.skeleton-button {
+    height: 40px;
+    width: 100%;
+    margin-top: 12px;
+}
+
+/* ===================================
+   Fade In Animation
+   =================================== */
+
+/* Fade in animation untuk cards */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Stagger animation untuk multiple cards */
+.fade-in-1 {
+    animation-delay: 0.1s;
+}
+
+.fade-in-2 {
+    animation-delay: 0.2s;
+}
+
+.fade-in-3 {
+    animation-delay: 0.3s;
+}
+
+.fade-in-4 {
+    animation-delay: 0.4s;
+}
+
+/* ===================================
+   Toast Notification
+   =================================== */
+
+/* Container untuk toast notifications */
+.toast-container {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Toast notification card */
+.toast {
+    background-color: white;
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 300px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: slideInRight 0.3s ease-out;
+    border-left: 4px solid var(--color-primary);
+}
+
+/* Toast variants */
+.toast.success {
+    border-left-color: var(--color-success);
+}
+
+.toast.error {
+    border-left-color: var(--color-error);
+}
+
+.toast.warning {
+    border-left-color: var(--color-warning);
+}
+
+/* Toast icon */
+.toast-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+/* Toast message */
+.toast-message {
+    flex: 1;
+    color: var(--color-text-dark);
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Toast close button */
+.toast-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--color-text-light);
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.toast-close:hover {
+    color: var(--color-text-dark);
+}
+
+/* Slide in animation */
+@keyframes slideInRight {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* ===================================
+   Focus States untuk Accessibility
+   =================================== */
+
+/* Focus visible untuk keyboard navigation */
+*:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Focus untuk input fields */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 0;
+}
+
+/* Focus untuk buttons */
+.btn:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* ===================================
+   Mobile Touch Improvements
+   =================================== */
+
+/* Minimum touch target 44x44px */
+@media (max-width: 768px) {
+    .btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    /* Larger tap targets untuk mobile */
+    .device-actions .btn {
+        padding: 12px 16px;
+    }
+
+    /* Better spacing untuk mobile */
+    .filter-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-item {
+        width: 100%;
+    }
+}
+
+/* ===================================
+   Empty State Improvements
+   =================================== */
+
+/* Better empty state styling */
+.no-devices {
+    text-align: center;
+    padding: var(--spacing-xxl);
+    background-color: var(--color-bg-gray);
+    border-radius: var(--radius-lg);
+    grid-column: 1 / -1;
+    border: 2px dashed var(--color-border);
+}
+
+.no-devices p {
+    font-size: var(--font-size-large);
+    color: var(--color-text-gray);
+    margin-bottom: var(--spacing-md);
+}
+
+/* Icon untuk empty state */
+.empty-icon {
+    font-size: 64px;
+    margin-bottom: var(--spacing-md);
+    opacity: 0.5;
+}
+
+/* ===================================
+   Compare Page Visual Indicators
+   =================================== */
+
+/* Visual indicators untuk better/worse specs */
+.spec-better {
+    background-color: #D1FAE5 !important;
+    border-left: 3px solid #10B981 !important;
+}
+
+.spec-worse {
+    background-color: #FEE2E2 !important;
+    border-left: 3px solid #EF4444 !important;
+}
+
+/* Badge untuk winner */
+.winner-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    background-color: #10B981;
+    color: white;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+/* Hover effect untuk spec items */
+.spec-item {
+    transition: all 0.2s ease;
+}
+
+.spec-item:hover {
+    transform: translateX(4px);
+}

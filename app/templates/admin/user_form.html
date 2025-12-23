@@ -1,0 +1,435 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}{{ 'Edit User' if user else 'Add User' }}{% endblock %}
+{% block page_title %}{{ 'Edit User' if user else 'Add New User' }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ========================================
+       FORM CONTAINER - Modern Card Style
+    ======================================== */
+    .form-container {
+        background: white;
+        border-radius: 16px;
+        padding: 2.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        max-width: 650px;
+        margin: 0 auto;
+        border: 1px solid #f1f5f9;
+    }
+
+    /* ========================================
+       FORM GROUPS - Spacing & Layout
+    ======================================== */
+    .form-group {
+        margin-bottom: 1.75rem;
+        position: relative;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.625rem;
+        color: #334155;
+        font-size: 0.95rem;
+    }
+
+    .form-group label .required {
+        color: #ef4444;
+        margin-left: 2px;
+    }
+
+    /* ========================================
+       INPUT FIELDS - Consistent Styling
+    ======================================== */
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="password"],
+    .form-group select {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+        font-family: inherit;
+        background: white;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: #06b6d4;
+        box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+    }
+
+    /* Placeholder styling */
+    .form-group input::placeholder {
+        color: #94a3b8;
+        font-size: 0.9rem;
+    }
+
+    /* ========================================
+       PASSWORD FIELD WRAPPER - For Toggle Button
+    ======================================== */
+    .password-field-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .password-field-wrapper input {
+        padding-right: 3rem;
+    }
+
+    .password-toggle-btn {
+        position: absolute;
+        right: 0.75rem;
+        background: none;
+        border: none;
+        color: #64748b;
+        cursor: pointer;
+        padding: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        border-radius: 6px;
+    }
+
+    .password-toggle-btn:hover {
+        color: #06b6d4;
+        background: #f1f5f9;
+    }
+
+    .password-toggle-btn i {
+        font-size: 1.1rem;
+    }
+
+    /* ========================================
+       VALIDATION STATES - Visual Feedback
+    ======================================== */
+    .input-valid {
+        border-color: #10b981 !important;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2310b981'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 1.25rem;
+        padding-right: 2.75rem;
+    }
+
+    .input-invalid {
+        border-color: #ef4444 !important;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ef4444'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 1.25rem;
+        padding-right: 2.75rem;
+    }
+
+    /* Error message styling */
+    .field-error {
+        color: #ef4444;
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+        animation: slideDown 0.2s ease;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-5px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ========================================
+       PASSWORD STRENGTH INDICATOR
+    ======================================== */
+    .password-strength {
+        margin-top: 0.75rem;
+        display: none;
+    }
+
+    .strength-bar {
+        height: 6px;
+        background: #e2e8f0;
+        border-radius: 3px;
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+    }
+
+    .strength-bar-fill {
+        height: 100%;
+        transition: all 0.3s ease;
+        border-radius: 3px;
+    }
+
+    .strength-bar-fill.weak {
+        background: linear-gradient(90deg, #ef4444, #dc2626);
+        width: 33%;
+    }
+
+    .strength-bar-fill.medium {
+        background: linear-gradient(90deg, #f59e0b, #d97706);
+        width: 66%;
+    }
+
+    .strength-bar-fill.strong {
+        background: linear-gradient(90deg, #10b981, #059669);
+        width: 100%;
+    }
+
+    .strength-text {
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .strength-text.weak {
+        color: #ef4444;
+    }
+
+    .strength-text.medium {
+        color: #f59e0b;
+    }
+
+    .strength-text.strong {
+        color: #10b981;
+    }
+
+    /* ========================================
+       TOGGLE SWITCH - Modern Active/Inactive
+    ======================================== */
+    .toggle-group {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.25rem;
+        background: #f8fafc;
+        border-radius: 10px;
+        border: 2px solid #e2e8f0;
+    }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 52px;
+        height: 28px;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #cbd5e1;
+        transition: all 0.3s ease;
+        border-radius: 28px;
+    }
+
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: all 0.3s ease;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .toggle-switch input:checked+.toggle-slider {
+        background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+    }
+
+    .toggle-switch input:checked+.toggle-slider:before {
+        transform: translateX(24px);
+    }
+
+    .toggle-label {
+        font-weight: 600;
+        color: #334155;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .toggle-label i {
+        color: #06b6d4;
+    }
+
+    /* ========================================
+       FORM ACTIONS - Button Container
+    ======================================== */
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2.5rem;
+        padding-top: 2rem;
+        border-top: 2px solid #f1f5f9;
+    }
+
+    .form-actions .btn-primary,
+    .form-actions .btn-secondary {
+        flex: 1;
+        justify-content: center;
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+    }
+
+    /* Loading state for submit button */
+    .btn-primary:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+    /* ========================================
+       RESPONSIVE DESIGN
+    ======================================== */
+    @media (max-width: 640px) {
+        .form-container {
+            padding: 1.5rem;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .form-actions .btn-primary,
+        .form-actions .btn-secondary {
+            width: 100%;
+        }
+    }
+
+    /* ========================================
+       HELPER TEXT
+    ======================================== */
+    .helper-text {
+        font-size: 0.85rem;
+        color: #64748b;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+
+    .helper-text i {
+        color: #06b6d4;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <form id="userForm" method="POST"
+        action="{{ '/admin/users/' + user.id|string + '/edit' if user else '/admin/users/new' }}">
+
+        <!-- Username Field -->
+        <div class="form-group">
+            <label for="username">
+                Username <span class="required">*</span>
+            </label>
+            <input type="text" id="username" name="username" value="{{ user.username if user else '' }}"
+                placeholder="Masukkan username (min. 3 karakter)" required autocomplete="username">
+            <div class="helper-text">
+                <i class="fas fa-info-circle"></i>
+                Hanya huruf, angka, underscore (_) dan dash (-)
+            </div>
+        </div>
+
+        <!-- Email Field -->
+        <div class="form-group">
+            <label for="email">
+                Email <span class="required">*</span>
+            </label>
+            <input type="email" id="email" name="email" value="{{ user.email if user else '' }}"
+                placeholder="contoh@email.com" required autocomplete="email">
+        </div>
+
+        <!-- Password Field (Only for Create) -->
+        {% if not user %}
+        <div class="form-group">
+            <label for="password">
+                Password <span class="required">*</span>
+            </label>
+            <input type="password" id="password" name="password" placeholder="Masukkan password yang kuat" required
+                autocomplete="new-password">
+            <div class="helper-text">
+                <i class="fas fa-shield-alt"></i>
+                Gunakan kombinasi huruf besar, kecil, angka, dan simbol
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Role Selection -->
+        <div class="form-group">
+            <label for="role_id">
+                Role <span class="required">*</span>
+            </label>
+            <select id="role_id" name="role_id" required>
+                <option value="">-- Pilih Role --</option>
+                {% if roles %}
+                {% for role in roles %}
+                <option value="{{ role.id }}" {% if user and user.role_id==role.id %}selected{% endif %}>
+                    {{ role.name }}
+                </option>
+                {% endfor %}
+                {% endif %}
+            </select>
+        </div>
+
+        <!-- Active Toggle Switch -->
+        <div class="form-group">
+            <div class="toggle-group">
+                <label class="toggle-switch">
+                    <input type="checkbox" name="is_active" id="is_active" {% if not user or user.is_active %}checked{%
+                        endif %}>
+                    <span class="toggle-slider"></span>
+                </label>
+                <label for="is_active" class="toggle-label">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Active User</span>
+                </label>
+            </div>
+            <div class="helper-text">
+                <i class="fas fa-info-circle"></i>
+                User yang tidak aktif tidak dapat login ke sistem
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <button type="submit" class="btn btn-success btn-lg">
+                <i class="fas fa-save"></i>
+                {{ 'Update User' if user else 'Create User' }}
+            </button>
+            <a href="/admin/users" class="btn btn-secondary btn-lg">
+                <i class="fas fa-times"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Form Validation Module -->
+<script src="{{ url_for('static', path='/js/admin/form-validation.js') }}"></script>
+{% endblock %}

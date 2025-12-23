@@ -1,0 +1,364 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Devices{% endblock %}
+{% block breadcrumb %}Devices Management{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Bulk selection toolbar */
+    .bulk-toolbar {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        display: none;
+        align-items: center;
+        gap: 1rem;
+        animation: slideDown 0.3s ease;
+    }
+
+    .bulk-toolbar.show {
+        display: flex;
+    }
+
+    .bulk-toolbar-text {
+        flex: 1;
+        font-weight: 600;
+    }
+
+    .bulk-toolbar-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    /* Checkbox styling */
+    .checkbox-cell {
+        width: 40px;
+        text-align: center;
+    }
+
+    input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+    }
+
+    /* Row selection */
+    tr.selected {
+        background-color: #dbeafe !important;
+    }
+
+    /* Quick view badge */
+    .quick-badge {
+        display: inline-block;
+        padding: 0.15rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        margin-right: 0.25rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Device Management</h1>
+    <p class="page-description">Kelola semua perangkat dalam database</p>
+</div>
+
+<!-- Bulk Action Toolbar (Hidden by default) -->
+{% if can_delete %}
+<div class="bulk-toolbar" id="bulkToolbar">
+    <div class="bulk-toolbar-text">
+        <i class="fas fa-check-circle"></i>
+        <span id="selectedCount">0</span> device(s) selected
+    </div>
+    <div class="bulk-toolbar-actions">
+        <button type="button" class="btn btn-sm btn-secondary" onclick="clearSelection()">
+            <i class="fas fa-times"></i> Clear
+        </button>
+        <button type="button" class="btn btn-sm btn-delete" onclick="bulkDelete()">
+            <i class="fas fa-trash"></i> Delete Selected
+        </button>
+    </div>
+</div>
+{% endif %}
+
+<!-- Search and Filter Bar -->
+<div class="card">
+    <form method="GET" action="/admin/devices" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: end;">
+        <div class="form-group" style="flex: 1; min-width: 200px; margin-bottom: 0;">
+            <label class="form-label">Search</label>
+            <input type="text" name="search" placeholder="Cari device..." value="{{ search }}" class="form-input">
+        </div>
+
+        <div class="form-group" style="flex: 1; min-width: 150px; margin-bottom: 0;">
+            <label class="form-label">Category</label>
+            <select name="category_id" class="form-select">
+                <option value="">Semua Category</option>
+                {% for category in categories %}
+                <option value="{{ category.id }}" {% if selected_category==category.id %}selected{% endif %}>
+                    {{ category.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group" style="flex: 1; min-width: 150px; margin-bottom: 0;">
+            <label class="form-label">Brand</label>
+            <select name="brand" class="form-select">
+                <option value="">Semua Brand</option>
+                {% for brand in brands %}
+                <option value="{{ brand }}" {% if selected_brand==brand %}selected{% endif %}>
+                    {{ brand }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i> Filter
+            </button>
+        </div>
+
+        {% if can_create %}
+        <div class="form-group" style="margin-bottom: 0;">
+            <a href="/admin/devices/new" class="btn btn-success">
+                <i class="fas fa-plus-circle"></i> Add New
+            </a>
+        </div>
+        {% endif %}
+    </form>
+</div>
+
+<!-- Devices Table -->
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">All Devices ({{ devices|length }})</h3>
+        <a href="/admin/devices/export" class="btn btn-secondary btn-sm">
+            <i class="fas fa-download"></i> Export CSV
+        </a>
+    </div>
+
+    <div class="table-container">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    {% if can_delete %}
+                    <th class="checkbox-cell">
+                        <input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)">
+                    </th>
+                    {% endif %}
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Brand</th>
+                    <th>Category</th>
+                    <th>Specs</th>
+                    <th>Price</th>
+                    <th>Year</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if devices %}
+                {% for device in devices %}
+                <tr data-device-id="{{ device.id }}">
+                    {% if can_delete %}
+                    <td class="checkbox-cell">
+                        <input type="checkbox" class="device-checkbox" value="{{ device.id }}"
+                            onchange="updateBulkToolbar()">
+                    </td>
+                    {% endif %}
+                    <td>{{ device.id }}</td>
+                    <td>
+                        <strong>{{ device.name }}</strong>
+                    </td>
+                    <td>{{ device.brand }}</td>
+                    <td>
+                        {% if device.category %}
+                        <span class="badge badge-primary">{{ device.category.name }}</span>
+                        {% else %}
+                        <span class="badge">N/A</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if device.ram %}
+                        <span class="quick-badge" style="background: #dbeafe; color: #1e40af;">
+                            <i class="fas fa-memory"></i> {{ device.ram }}
+                        </span>
+                        {% endif %}
+                        {% if device.storage %}
+                        <span class="quick-badge" style="background: #d1fae5; color: #065f46;">
+                            <i class="fas fa-hdd"></i> {{ device.storage }}
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if device.price %}
+                        <strong>Rp {{ "{:,.0f}".format(device.price) }}</strong>
+                        {% else %}
+                        <span class="text-muted">N/A</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ device.release_year or 'N/A' }}</td>
+                    <td class="actions">
+                        {% if can_edit %}
+                        <!-- Edit button -->
+                        <a href="/admin/devices/{{ device.id }}/edit" class="btn btn-sm btn-edit" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        {% endif %}
+
+                        {% if can_delete %}
+                        <!-- Delete button -->
+                        <form method="POST" action="/admin/devices/{{ device.id }}/delete" style="display: inline;"
+                            data-device-name="{{ device.name }}" onsubmit="return confirmDelete(this)">
+                            <button type="submit" class="btn btn-sm btn-delete" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                        {% endif %}
+
+                        {% if not can_edit and not can_delete %}
+                        <span class="text-muted" style="font-size: 0.85rem;">View only</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="9" class="text-center" style="padding: 2rem;">
+                        {% if search %}
+                        <i class="fas fa-search" style="font-size: 2rem; opacity: 0.3; margin-bottom: 1rem;"></i>
+                        <p>Tidak ada device yang cocok dengan "{{ search }}"</p>
+                        {% else %}
+                        <i class="fas fa-mobile-alt" style="font-size: 2rem; opacity: 0.3; margin-bottom: 1rem;"></i>
+                        <p>Belum ada device. <a href="/admin/devices/new">Tambahkan device pertama</a></p>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Pagination -->
+{% if total_pages > 1 %}
+<div class="pagination">
+    {% if page > 1 %}
+    <a href="?page={{ page - 1 }}{% if search %}&search={{ search }}{% endif %}{% if selected_category %}&category_id={{ selected_category }}{% endif %}{% if selected_brand %}&brand={{ selected_brand }}{% endif %}"
+        class="page-link">
+        <i class="fas fa-chevron-left"></i> Previous
+    </a>
+    {% endif %}
+
+    <span class="page-info">Page {{ page }} of {{ total_pages }}</span>
+
+    {% if page < total_pages %} <a
+        href="?page={{ page + 1 }}{% if search %}&search={{ search }}{% endif %}{% if selected_category %}&category_id={{ selected_category }}{% endif %}{% if selected_brand %}&brand={{ selected_brand }}{% endif %}"
+        class="page-link">
+        Next <i class="fas fa-chevron-right"></i>
+        </a>
+        {% endif %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Select/Deselect all checkboxes
+    function toggleSelectAll(checkbox) {
+        const checkboxes = document.querySelectorAll('.device-checkbox');
+        checkboxes.forEach(cb => {
+            cb.checked = checkbox.checked;
+            updateRowSelection(cb);
+        });
+        updateBulkToolbar();
+    }
+
+    // Update row selection visual
+    function updateRowSelection(checkbox) {
+        const row = checkbox.closest('tr');
+        if (checkbox.checked) {
+            row.classList.add('selected');
+        } else {
+            row.classList.remove('selected');
+        }
+    }
+
+    // Update bulk toolbar visibility
+    function updateBulkToolbar() {
+        const checkboxes = document.querySelectorAll('.device-checkbox:checked');
+        const toolbar = document.getElementById('bulkToolbar');
+        const count = document.getElementById('selectedCount');
+
+        count.textContent = checkboxes.length;
+
+        if (checkboxes.length > 0) {
+            toolbar.classList.add('show');
+        } else {
+            toolbar.classList.remove('show');
+        }
+
+        // Update row selection
+        document.querySelectorAll('.device-checkbox').forEach(cb => {
+            updateRowSelection(cb);
+        });
+
+        // Update select all checkbox
+        const selectAll = document.getElementById('selectAll');
+        const allCheckboxes = document.querySelectorAll('.device-checkbox');
+        selectAll.checked = allCheckboxes.length > 0 && checkboxes.length === allCheckboxes.length;
+    }
+
+    // Clear selection
+    function clearSelection() {
+        document.querySelectorAll('.device-checkbox').forEach(cb => {
+            cb.checked = false;
+            updateRowSelection(cb);
+        });
+        document.getElementById('selectAll').checked = false;
+        updateBulkToolbar();
+    }
+
+    // Bulk delete
+    function bulkDelete() {
+        const checkboxes = document.querySelectorAll('.device-checkbox:checked');
+        if (checkboxes.length === 0) {
+            alert('Pilih minimal 1 device untuk dihapus');
+            return;
+        }
+
+        const count = checkboxes.length;
+        if (!confirm(`Apakah Anda yakin ingin menghapus ${count} device(s)?`)) {
+            return;
+        }
+
+        // Collect IDs
+        const ids = Array.from(checkboxes).map(cb => cb.value);
+
+        // Create form and submit
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/admin/devices/bulk-delete';
+
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'device_ids';
+        input.value = ids.join(',');
+
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    // Confirm single delete
+    function confirmDelete(form) {
+        const deviceName = form.getAttribute('data-device-name');
+        return confirm(`Apakah Anda yakin ingin menghapus device "${deviceName}"?`);
+    }
+</script>
+{% endblock %}

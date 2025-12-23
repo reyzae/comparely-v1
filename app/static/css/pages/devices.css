@@ -1,0 +1,1086 @@
+/* ==========================================
+   DEVICES PAGE - Page-Specific Styles
+   File: devices.css
+   Deskripsi: CSS khusus untuk halaman devices list
+   ========================================== */
+
+/* ==========================================
+   DEVICES SECTION
+   ========================================== */
+.devices-section {
+    padding: 40px 0;
+    min-height: 60vh;
+}
+
+/* Devices Header with View Toggle */
+.devices-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    gap: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #F0F1F2;
+}
+
+.header-left {
+    flex: 1;
+}
+
+.header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.devices-header h1 {
+    font-size: 36px;
+    margin-bottom: 8px;
+    color: #111827;
+    font-weight: 700;
+}
+
+/* Device Count Badge */
+.device-count {
+    font-size: 18px;
+    font-weight: 500;
+    color: #06B6D4;
+    background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 2px solid rgba(6, 182, 212, 0.2);
+    display: inline-block;
+    margin-left: 12px;
+}
+
+/* Results Info */
+.results-info {
+    margin-bottom: 8px;
+}
+
+.results-count {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    background: #F3F4F6;
+    padding: 6px 14px;
+    border-radius: 8px;
+}
+
+.section-subtitle {
+    color: #6B7280;
+    margin-bottom: 0;
+    font-size: 14px;
+}
+
+/* ==========================================
+   VIEW TOGGLE BUTTONS - ENHANCED UX
+   ========================================== */
+.view-toggle {
+    display: inline-flex;
+    background: white;
+    padding: 4px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #E5E7EB;
+    gap: 0;
+}
+
+.view-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    color: #6B7280;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover effect with scale and background */
+.view-toggle-btn:hover {
+    color: #0891B2;
+    background: rgba(6, 182, 212, 0.08);
+    transform: scale(1.02);
+}
+
+/* Active state with gradient and glow */
+.view-toggle-btn.active {
+    background: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%);
+    color: white;
+    box-shadow:
+        0 4px 12px rgba(6, 182, 212, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: scale(1);
+}
+
+.view-toggle-btn.active:hover {
+    background: linear-gradient(135deg, #0891B2 0%, #06B6D4 100%);
+    box-shadow:
+        0 6px 16px rgba(6, 182, 212, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: scale(1);
+}
+
+/* Icon animations */
+.view-toggle-btn i {
+    font-size: 18px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.view-toggle-btn:hover i {
+    transform: scale(1.1);
+}
+
+.view-toggle-btn.active i {
+    transform: scale(1.05);
+}
+
+/* OLD ACTIVE FILTERS - REMOVED */
+/* Moved to compact badges inside budget range card */
+
+/* ==========================================
+   FILTER SECTION
+   ========================================== */
+.filter-section {
+    background: #FAFBFC;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #F0F1F2;
+    margin-top: 20px;
+}
+
+.filter-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    align-items: end;
+}
+
+.filter-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-item label {
+    display: block;
+    margin-bottom: 8px;
+    color: #374151;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.filter-select,
+.filter-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+    background: white;
+}
+
+.filter-select:focus,
+.filter-input:focus {
+    outline: none;
+    border-color: #06B6D4;
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+}
+
+/* Filter Buttons Container */
+.filter-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+}
+
+/* Consistent Button Sizing */
+.btn-filter {
+    flex: 1;
+    min-width: 100px;
+    height: 44px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* ==========================================
+   PRICE RANGE SLIDER - REDESIGNED FOR 3-SEC UX
+   ========================================== */
+.filter-item-price {
+    grid-column: 1 / -1;
+    position: relative;
+}
+
+.filter-item-price>label {
+    font-size: 15px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 12px;
+}
+
+/* Price Filter Card - Visual Grouping */
+.price-filter-card {
+    background: white;
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* Quick Price Presets - With Icons */
+.price-presets {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.preset-btn {
+    flex: 1;
+    min-width: 90px;
+    padding: 12px 14px;
+    background: white;
+    border: 2px solid #E5E7EB;
+    border-radius: 10px;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.preset-icon {
+    font-size: 18px;
+    display: block;
+}
+
+.preset-label {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.preset-btn:hover {
+    border-color: #06B6D4;
+    color: #06B6D4;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(6, 182, 212, 0.2);
+}
+
+.preset-btn.active {
+    background: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%);
+    border-color: #06B6D4;
+    color: white;
+    box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+}
+
+.price-slider-container {
+    margin-top: 12px;
+    position: relative;
+}
+
+/* Custom Range Section */
+.custom-range-section {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #E5E7EB;
+}
+
+.range-label {
+    font-size: 13px;
+    color: #6B7280;
+    margin-bottom: 16px;
+    font-weight: 500;
+}
+
+/* OLD PRICE DISPLAY - REMOVED */
+/* .price-display { ... } */
+/* .price-value { ... } */
+
+/* Dual Slider Wrapper */
+.dual-slider-wrapper {
+    position: relative;
+    height: 10px;
+    margin: 16px 0;
+}
+
+/* Background track */
+.dual-slider-wrapper::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 10px;
+    background: #E5E7EB;
+    border-radius: 8px;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+/* Slider Track - Active Range */
+.slider-track {
+    position: absolute;
+    height: 10px;
+    background: linear-gradient(90deg, #06B6D4 0%, #0891B2 100%);
+    border-radius: 8px;
+    top: 0;
+    pointer-events: none;
+    z-index: 1;
+    box-shadow: 0 2px 4px rgba(6, 182, 212, 0.3);
+}
+
+/* Range Slider Base */
+.price-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 10px;
+    border-radius: 8px;
+    background: transparent;
+    outline: none;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: auto;
+    z-index: 2;
+}
+
+.price-slider::-webkit-slider-runnable-track {
+    height: 10px;
+    background: transparent;
+    border-radius: 8px;
+}
+
+/* Slider Track - Webkit (Chrome, Safari) */
+.price-slider::-webkit-slider-track {
+    width: 100%;
+    height: 10px;
+    border-radius: 8px;
+    background: #E5E7EB;
+}
+
+/* Slider Thumb - Webkit - Enhanced */
+.price-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%);
+    border: 4px solid white;
+    cursor: grab;
+    box-shadow:
+        0 3px 8px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(6, 182, 212, 0.1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.price-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+    box-shadow:
+        0 4px 12px rgba(6, 182, 212, 0.4),
+        0 0 0 4px rgba(6, 182, 212, 0.1),
+        0 0 0 1px rgba(6, 182, 212, 0.2);
+}
+
+.price-slider::-webkit-slider-thumb:active {
+    cursor: grabbing;
+    transform: scale(1.1);
+    box-shadow:
+        0 2px 8px rgba(6, 182, 212, 0.3),
+        0 0 0 4px rgba(6, 182, 212, 0.15);
+}
+
+/* Slider Track - Firefox */
+.price-slider::-moz-range-track {
+    width: 100%;
+    height: 10px;
+    border-radius: 8px;
+    background: #E5E7EB;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Slider Progress Fill - Firefox */
+.price-slider::-moz-range-progress {
+    height: 10px;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #06B6D4 0%, #0891B2 100%);
+}
+
+/* Slider Thumb - Firefox - Enhanced */
+.price-slider::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%);
+    border: 4px solid white;
+    cursor: grab;
+    box-shadow:
+        0 3px 8px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(6, 182, 212, 0.1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.price-slider::-moz-range-thumb:hover {
+    transform: scale(1.15);
+    box-shadow:
+        0 4px 12px rgba(6, 182, 212, 0.4),
+        0 0 0 4px rgba(6, 182, 212, 0.1);
+}
+
+.price-slider::-moz-range-thumb:active {
+    cursor: grabbing;
+    transform: scale(1.1);
+}
+
+/* Price Range Labels - Enhanced */
+/* Inline Price Labels - Below Slider */
+.price-inline-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding: 0 4px;
+}
+
+.price-label-left,
+.price-label-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.price-label-right {
+    align-items: flex-end;
+}
+
+.label-text {
+    font-size: 11px;
+    color: #9CA3AF;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.label-value {
+    font-size: 15px;
+    color: #06B6D4;
+    font-weight: 700;
+}
+
+/* Price Actions - Integrated Buttons */
+.price-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #E5E7EB;
+}
+
+.btn-apply-filter,
+.btn-clear-filter {
+    flex: 1;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-apply-filter {
+    background: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%);
+    color: white;
+    border: none;
+}
+
+.btn-apply-filter:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(6, 182, 212, 0.3);
+}
+
+.btn-clear-filter {
+    background: white;
+    color: #6B7280;
+    border: 2px solid #E5E7EB;
+    text-decoration: none;
+}
+
+.btn-clear-filter:hover {
+    border-color: #EF4444;
+    color: #EF4444;
+    transform: translateY(-2px);
+}
+
+/* Active Filters Badges - Compact */
+.active-filters-badges {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px dashed #E5E7EB;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.badges-label {
+    font-size: 10px;
+    color: #9CA3AF;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.badges-container {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    flex: 1;
+    flex-direction: row;
+}
+
+.filter-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: #E0F2FE;
+    color: #0891B2;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 600;
+    border: 1px solid #BAE6FD;
+    white-space: nowrap;
+}
+
+.filter-badge-remove {
+    background: rgba(8, 145, 178, 0.15);
+    border: none;
+    color: #0891B2;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 10px;
+    line-height: 1;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    margin-left: 2px;
+}
+
+.filter-badge-remove:hover {
+    background: rgba(8, 145, 178, 0.3);
+    transform: scale(1.1);
+}
+
+/* ==========================================
+   DEVICES GRID VIEW
+   ========================================== */
+.devices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 80px;
+}
+
+/* ==========================================
+   DEVICE CARD dengan Hover Effect
+   ========================================== */
+.device-item-card {
+    background: white;
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    position: relative;
+    cursor: pointer;
+}
+
+/* Hover effect - simple tapi keren */
+.device-item-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    border-color: #06B6D4;
+}
+
+/* Selected state - border biru tebal */
+.device-item-card.selected {
+    border-color: #06B6D4;
+    border-width: 3px;
+    background: #F0F9FF;
+}
+
+/* Checkbox styling */
+.device-checkbox {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.device-item-card h3 {
+    margin-top: 8px;
+    margin-bottom: 4px;
+    color: #111827;
+    font-size: 18px;
+}
+
+.device-brand {
+    color: #6B7280;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+}
+
+/* ==========================================
+   DEVICE SPECS PREVIEW dengan Icons
+   ========================================== */
+.device-specs-preview {
+    margin: 16px 0;
+    padding: 12px;
+    background: #F9FAFB;
+    border-radius: 8px;
+}
+
+.device-specs-preview p {
+    margin: 6px 0;
+    font-size: 13px;
+    color: #374151;
+}
+
+.device-specs-preview strong {
+    color: #111827;
+    font-weight: 600;
+}
+
+/* Price styling */
+.device-price {
+    color: #06B6D4;
+    font-size: 20px;
+    font-weight: 700;
+    margin: 12px 0;
+}
+
+/* ==========================================
+   DEVICE ACTIONS
+   ========================================== */
+.device-actions {
+    margin-top: 12px;
+}
+
+/* ==========================================
+   DEVICES LIST VIEW
+   ========================================== */
+.devices-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 80px;
+}
+
+.device-item-list {
+    background: white;
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    gap: 20px;
+    align-items: center;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.device-item-list:hover {
+    border-color: #06B6D4;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.device-item-list.selected {
+    border-color: #06B6D4;
+    border-width: 3px;
+    background: #F0F9FF;
+}
+
+/* Checkbox in list view */
+.device-item-list .device-checkbox {
+    position: relative;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+/* Device Info in List */
+.device-list-info {
+    min-width: 200px;
+}
+
+.device-list-info h3 {
+    margin: 0 0 4px 0;
+    color: #111827;
+    font-size: 18px;
+}
+
+.device-list-info .device-brand {
+    margin: 0;
+}
+
+/* Device Specs in List */
+.device-list-specs {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    flex: 1;
+}
+
+.spec-badge {
+    background: #F3F4F6;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #374151;
+    white-space: nowrap;
+}
+
+.spec-badge strong {
+    color: #111827;
+    font-weight: 600;
+}
+
+/* Device Actions in List */
+.device-list-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    min-width: 150px;
+}
+
+.device-list-actions .device-price {
+    margin: 0;
+    font-size: 18px;
+}
+
+/* ==========================================
+   FLOATING COMPARE BAR
+   ========================================== */
+.compare-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #06B6D4 0%, #14B8A6 100%);
+    padding: 20px;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    z-index: 999;
+}
+
+/* Show compare bar saat ada device yang dipilih */
+.compare-bar.active {
+    transform: translateY(0);
+}
+
+.compare-bar-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.selected-devices {
+    display: flex;
+    gap: 12px;
+    flex: 1;
+    color: white;
+}
+
+.selected-device-tag {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 16px;
+    border-radius: 20px;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.compare-bar-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.compare-bar-actions .btn {
+    padding: 10px 24px;
+    font-size: 14px;
+}
+
+/* ==========================================
+   NO DEVICES STATE
+   ========================================== */
+.no-devices {
+    text-align: center;
+    padding: 60px 20px;
+    background: #F9FAFB;
+    border-radius: 12px;
+    border: 2px dashed #D1D5DB;
+    grid-column: 1 / -1;
+}
+
+.empty-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+}
+
+.no-devices p {
+    color: #6B7280;
+    margin: 8px 0;
+}
+
+/* ==========================================
+   RESPONSIVE - MOBILE
+   ========================================== */
+@media (max-width: 768px) {
+
+    /* Devices header - remove flex on mobile */
+    .devices-header {
+        display: block;
+        margin-bottom: 16px;
+    }
+
+    .devices-header h1 {
+        font-size: 28px;
+        margin-bottom: 0;
+    }
+
+    /* HIDE view toggle on mobile - Grid view only */
+    .view-toggle {
+        display: none !important;
+    }
+
+    /* FORCE Grid view on mobile, hide List view */
+    .devices-grid {
+        display: grid !important;
+    }
+
+    .devices-list {
+        display: none !important;
+    }
+
+    /* Filter form stacks vertically */
+    .filter-form {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-buttons {
+        flex-direction: column;
+    }
+
+    .btn-filter {
+        width: 100%;
+    }
+
+    /* Price slider full width on mobile */
+    .filter-item-price {
+        grid-column: 1;
+    }
+
+    /* Mobile-optimized price value display */
+    .price-value {
+        font-size: 18px;
+        min-width: 160px;
+        padding: 10px 20px;
+    }
+
+    /* Mobile slider - larger touch target */
+    .price-slider {
+        height: 12px;
+    }
+
+    .price-slider::-webkit-slider-thumb {
+        width: 32px;
+        height: 32px;
+        border: 5px solid white;
+    }
+
+    .price-slider::-moz-range-thumb {
+        width: 32px;
+        height: 32px;
+        border: 5px solid white;
+    }
+
+    /* Active filters pills - stack better on mobile */
+    .active-filters-container {
+        padding: 12px 16px;
+        gap: 12px;
+    }
+
+    .active-filters {
+        width: 100%;
+    }
+
+    .btn-clear-all {
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    /* Active filter badges - even more compact on mobile */
+    .active-filters-badges {
+        margin-top: 10px;
+        padding-top: 8px;
+        gap: 4px;
+    }
+
+    .badges-label {
+        font-size: 9px;
+    }
+
+    .badges-container {
+        gap: 4px;
+        flex-direction: row;
+    }
+
+    .filter-badge {
+        padding: 2px 6px;
+        font-size: 9px;
+        border-radius: 8px;
+        gap: 2px;
+    }
+
+    .filter-badge-remove {
+        width: 12px;
+        height: 12px;
+        font-size: 9px;
+    }
+
+    /* Price presets - 2 per row on mobile */
+    .price-presets {
+        gap: 6px;
+    }
+
+    .preset-btn {
+        flex: 1 1 calc(50% - 3px);
+        min-width: 0;
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
+    /* Smaller price display on mobile */
+    .price-value {
+        font-size: 16px;
+        min-width: 180px;
+        padding: 8px 16px;
+    }
+
+    /* Grid view - 1 column */
+    .devices-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* List view - stack vertically */
+    .device-item-list {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .device-list-info,
+    .device-list-specs,
+    .device-list-actions {
+        min-width: auto;
+    }
+
+    .device-list-specs {
+        flex-direction: column;
+    }
+
+    .device-list-actions {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Checkbox positioning in list view mobile */
+    .device-item-list .device-checkbox {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+    }
+
+    /* Compare bar responsive */
+    .compare-bar-content {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .selected-devices {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+/* ==========================================
+   TABLET RESPONSIVE (768px - 1024px)
+   ========================================== */
+@media (min-width: 769px) and (max-width: 1024px) {
+
+    /* View toggle optimized for tablet */
+    .view-toggle {
+        padding: 3px;
+    }
+
+    .view-toggle-btn {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+
+    .view-toggle-btn i {
+        font-size: 16px;
+    }
+
+    /* Price slider for tablet */
+    .price-value {
+        font-size: 18px;
+        padding: 10px 20px;
+        min-width: 180px;
+    }
+
+    .price-slider {
+        height: 9px;
+    }
+
+    .price-slider::-webkit-slider-thumb,
+    .price-slider::-moz-range-thumb {
+        width: 26px;
+        height: 26px;
+    }
+}

@@ -1,0 +1,243 @@
+/* ==========================================
+   FEATURES & ABOUT PAGES CSS
+   File: pages.css
+   Deskripsi: CSS untuk halaman Features dan About
+   ========================================== */
+
+/* ===================================
+   Features Page
+   =================================== */
+
+.features-section {
+    padding: 48px 0;
+    background-color: #F9FAFB;
+}
+
+.features-header {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.features-header h1 {
+    font-size: 42px;
+    margin-bottom: 16px;
+    color: #111827;
+}
+
+.section-subtitle {
+    font-size: 18px;
+    color: #6B7280;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* Features Grid */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 64px;
+}
+
+.feature-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    border: 1px solid #E5E7EB;
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-color: #0077BE;
+}
+
+.feature-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.feature-card h3 {
+    font-size: 20px;
+    margin-bottom: 12px;
+    color: #111827;
+}
+
+.feature-card p {
+    font-size: 15px;
+    color: #6B7280;
+    line-height: 1.6;
+}
+
+/* Features CTA */
+.features-cta {
+    text-align: center;
+    background: linear-gradient(135deg, #0077BE 0%, #00A8A8 100%);
+    color: white;
+    padding: 48px;
+    border-radius: 16px;
+}
+
+.features-cta h2 {
+    font-size: 32px;
+    margin-bottom: 12px;
+    color: white;
+}
+
+.features-cta p {
+    font-size: 18px;
+    margin-bottom: 24px;
+    color: white;
+    opacity: 0.9;
+}
+
+.features-cta .btn {
+    background-color: white;
+    color: #0077BE;
+    font-weight: 600;
+}
+
+.features-cta .btn:hover {
+    background-color: #F9FAFB;
+    transform: translateY(-2px);
+}
+
+/* ===================================
+   About Page
+   =================================== */
+
+.about-section {
+    padding: 48px 0;
+}
+
+.about-header {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.about-header h1 {
+    font-size: 42px;
+    margin-bottom: 16px;
+    color: #111827;
+}
+
+/* About Content */
+.about-content {
+    display: grid;
+    gap: 24px;
+    margin-bottom: 64px;
+}
+
+.about-card {
+    background-color: #F9FAFB;
+    border-radius: 12px;
+    padding: 32px;
+    border: 1px solid #E5E7EB;
+}
+
+.about-card.full-width {
+    grid-column: 1 / -1;
+}
+
+.about-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.about-card h2 {
+    font-size: 24px;
+    margin-bottom: 16px;
+    color: #111827;
+}
+
+.about-card p {
+    font-size: 16px;
+    color: #6B7280;
+    line-height: 1.8;
+}
+
+/* Why Grid */
+.why-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+    margin-top: 24px;
+}
+
+.why-item {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #E5E7EB;
+}
+
+.why-item h4 {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #111827;
+}
+
+.why-item p {
+    font-size: 14px;
+    color: #6B7280;
+    margin: 0;
+}
+
+/* Team Card */
+.team-card {
+    background: linear-gradient(135deg, #E0F2FE 0%, #CCFBF1 100%);
+    border: 2px solid #0077BE;
+}
+
+/* About CTA */
+.about-cta {
+    text-align: center;
+    background-color: #F9FAFB;
+    padding: 48px;
+    border-radius: 16px;
+    border: 2px solid #E5E7EB;
+}
+
+.about-cta h2 {
+    font-size: 32px;
+    margin-bottom: 12px;
+    color: #111827;
+}
+
+.about-cta p {
+    font-size: 18px;
+    margin-bottom: 24px;
+    color: #6B7280;
+}
+
+/* ===================================
+   Responsive
+   =================================== */
+
+@media (max-width: 768px) {
+
+    .features-header h1,
+    .about-header h1 {
+        font-size: 32px;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .why-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .features-cta,
+    .about-cta {
+        padding: 32px 24px;
+    }
+
+    .features-cta h2,
+    .about-cta h2 {
+        font-size: 24px;
+    }
+}

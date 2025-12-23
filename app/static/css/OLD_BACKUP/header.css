@@ -1,0 +1,228 @@
+/* ==========================================
+   HEADER - Modern & Clean Design
+   File: header.css
+   Deskripsi: CSS khusus untuk header navigation
+   ========================================== */
+
+/* ===================================
+   Header - Modern & Clean
+   =================================== */
+
+.header {
+    background-color: #FFFFFF;
+    padding: 16px 0;
+    border-bottom: 1px solid #E5E7EB;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Logo Styling */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #0077BE;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+.logo img {
+    width: 40px;
+    height: 40px;
+}
+
+/* Navigation Styling */
+.nav {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+}
+
+/* Navigation Links */
+.nav-link {
+    color: #374151;
+    font-weight: 500;
+    font-size: 15px;
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s ease;
+    padding: 8px 0;
+}
+
+/* Hover Effect - Underline Animation */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #0077BE;
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #0077BE;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* Active State */
+.nav-link.active {
+    color: #0077BE;
+    font-weight: 600;
+}
+
+.nav-link.active::after {
+    width: 100%;
+}
+
+/* Get Started Button - CTA */
+.btn-cta {
+    background: linear-gradient(135deg, #0077BE 0%, #00A8A8 100%);
+    color: white !important;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0, 119, 190, 0.3);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 119, 190, 0.4);
+    color: white !important;
+}
+
+.btn-cta::after {
+    display: none;
+}
+
+/* ===================================
+   Hamburger Menu (Mobile Only)
+   =================================== */
+
+.hamburger-menu {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    z-index: 101;
+}
+
+.hamburger-menu span {
+    width: 25px;
+    height: 3px;
+    background-color: #374151;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+/* Hamburger Animation when Active */
+.hamburger-menu.active span:nth-child(1) {
+    transform: rotate(45deg) translate(7px, 7px);
+}
+
+.hamburger-menu.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-menu.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* ===================================
+   Mobile Navigation Styles
+   =================================== */
+
+@media (max-width: 768px) {
+    /* Show hamburger menu on mobile */
+    .hamburger-menu {
+        display: flex;
+    }
+
+    /* Hide desktop navigation by default */
+    .nav {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 280px;
+        height: 100vh;
+        background-color: #FFFFFF;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 80px 24px 24px;
+        gap: 24px;
+        box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+        transition: right 0.3s ease;
+        z-index: 100;
+    }
+
+    /* Show navigation when active */
+    .nav.active {
+        right: 0;
+    }
+
+    /* Mobile nav links */
+    .nav-link {
+        width: 100%;
+        padding: 12px 0;
+        font-size: 16px;
+        border-bottom: 1px solid #E5E7EB;
+    }
+
+    .nav-link:last-of-type {
+        border-bottom: none;
+    }
+
+    /* Mobile CTA button */
+    .btn-cta {
+        width: 100%;
+        text-align: center;
+        margin-top: 12px;
+    }
+
+    /* Overlay when menu is open */
+    .nav-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 99;
+    }
+
+    .nav-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+}

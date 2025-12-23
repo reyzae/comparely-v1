@@ -1,0 +1,192 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Analytics{% endblock %}
+{% block breadcrumb %}Analytics{% endblock %}
+
+{% block extra_css %}
+<style>
+    .analytics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .analytics-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .analytics-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 1rem;
+    }
+
+    .chart-container {
+        position: relative;
+        height: 300px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Analytics</h1>
+    <p class="page-description">Analisis mendalam tentang data perangkat</p>
+</div>
+
+<!-- Analytics Cards -->
+<div class="analytics-grid">
+    <!-- Price Range Analysis -->
+    <div class="analytics-card">
+        <h3 class="analytics-title">Distribusi Harga</h3>
+        <div class="chart-container">
+            <canvas id="priceChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Release Year Trend -->
+    <div class="analytics-card">
+        <h3 class="analytics-title">Trend Tahun Rilis</h3>
+        <div class="chart-container">
+            <canvas id="yearChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Category Distribution -->
+    <div class="analytics-card">
+        <h3 class="analytics-title">Distribusi Kategori</h3>
+        <div class="chart-container">
+            <canvas id="categoryChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Detailed Stats -->
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Statistik Detail</h3>
+    </div>
+    <div class="table-container">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Brand</th>
+                    <th>Jumlah Device</th>
+                    <th>Rata-rata Harga</th>
+                    <th>Tahun Terbaru</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for brand, stats in brand_details.items() %}
+                <tr>
+                    <td><strong>{{ brand }}</strong></td>
+                    <td>{{ stats.count }}</td>
+                    <td>{{ "Rp {:,.0f}".format(stats.avg_price) if stats.avg_price else 'N/A' }}</td>
+                    <td>{{ stats.latest_year or 'N/A' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script type="application/json" id="priceDataJson">
+{{ (price_ranges | default({})) | tojson | safe }}
+</script>
+<script type="application/json" id="yearDataJson">
+{{ (year_stats | default({})) | tojson | safe }}
+</script>
+<script type="application/json" id="categoryDataJson">
+{{ (category_stats | default({})) | tojson | safe }}
+</script>
+
+<script>
+    // Price Range Chart
+    const priceData = JSON.parse(document.getElementById('priceDataJson').textContent || '{}');
+    const priceCtx = document.getElementById('priceChart');
+    if (priceCtx && Object.keys(priceData).length > 0) {
+        new Chart(priceCtx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(priceData),
+                datasets: [{
+                    data: Object.values(priceData),
+                    backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    }
+
+    // Year Trend Chart
+    const yearData = JSON.parse(document.getElementById('yearDataJson').textContent || '{}');
+    const yearCtx = document.getElementById('yearChart');
+    if (yearCtx && Object.keys(yearData).length > 0) {
+        new Chart(yearCtx, {
+            type: 'line',
+            data: {
+                labels: Object.keys(yearData),
+                datasets: [{
+                    label: 'Jumlah Device',
+                    data: Object.values(yearData),
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    }
+
+    // Category Chart
+    const categoryData = JSON.parse(document.getElementById('categoryDataJson').textContent || '{}');
+    const categoryCtx = document.getElementById('categoryChart');
+    if (categoryCtx && Object.keys(categoryData).length > 0) {
+        new Chart(categoryCtx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(categoryData),
+                datasets: [{
+                    label: 'Jumlah Device',
+                    data: Object.values(categoryData),
+                    backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                    borderColor: '#10b981',
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+</script>
+{% endblock %}

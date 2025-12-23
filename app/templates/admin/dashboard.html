@@ -1,0 +1,423 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Dashboard{% endblock %}
+{% block breadcrumb %}Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Stats Cards Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    .stat-icon.blue {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    }
+
+    .stat-icon.green {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
+
+    .stat-icon.purple {
+        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    }
+
+    .stat-icon.orange {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+        font-size: 0.875rem;
+        color: #6b7280;
+        font-weight: 500;
+    }
+
+    /* Charts Section */
+    .charts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .chart-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .chart-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 1rem;
+    }
+
+    /* Make pie chart more compact */
+    .chart-card canvas {
+        max-width: 350px;
+        max-height: 350px;
+        margin: 0 auto;
+        display: block;
+    }
+
+    /* ========================================
+       MOBILE FIXES - Dashboard Specific
+    ======================================== */
+    @media (max-width: 768px) {
+
+        /* FIX #1: Horizontal Stat Card Layout */
+        .stat-card {
+            display: flex;
+            flex-direction: row;
+            /* Horizontal layout */
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            /* FIX #5: Better spacing */
+            border: 1px solid #e5e7eb;
+            /* FIX #8: Better contrast */
+        }
+
+        .stat-card:hover {
+            transform: none;
+            /* Disable hover effect on mobile */
+        }
+
+        /* FIX #1: Icon on left, content on right */
+        .stat-card-header {
+            margin-bottom: 0;
+            flex-direction: row;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        /* FIX #3: Consistent icon size */
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            font-size: 1.75rem;
+            flex-shrink: 0;
+        }
+
+        /* FIX #1: Content layout */
+        .stat-content {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        /* FIX #1: Hide ALL "Lihat semua" links on mobile */
+        .stat-link,
+        .stat-card a,
+        .stat-card a[style] {
+            display: none !important;
+            /* Override inline styles */
+        }
+
+        /* FIX #5: More spacing between cards */
+        .stat-card+.stat-card {
+            margin-top: 1rem;
+        }
+
+        /* FIX #7: Better header spacing */
+        .page-header {
+            padding: 1.5rem 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .page-title {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Charts - Stack vertically */
+        .charts-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .chart-card {
+            padding: 1rem;
+        }
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+    }
+
+    /* CONSISTENT SIZING: Make all buttons same size */
+    .quick-actions .btn {
+        flex: 1;
+        /* Equal width */
+        min-width: 200px;
+        /* Minimum width */
+        justify-content: center;
+        /* Center content */
+        text-align: center;
+        padding: 1rem 1.5rem;
+        /* Consistent padding */
+    }
+
+    @media (max-width: 768px) {
+        .charts-grid {
+            grid-template-columns: 1fr;
+        }
+
+        /* Stack buttons vertically on mobile */
+        .quick-actions {
+            flex-direction: column;
+        }
+
+        .quick-actions .btn {
+            width: 100%;
+            /* Full width on mobile */
+            min-width: unset;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-description">Ringkasan statistik dan aktivitas sistem</p>
+</div>
+
+<!-- Stats Cards -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <div>
+                <div class="stat-value">{{ total_devices or 0 }}</div>
+                <div class="stat-label">Total Devices</div>
+            </div>
+            <div class="stat-icon blue">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+            </div>
+        </div>
+        <a href="/admin/devices" style="color: #3b82f6; text-decoration: none; font-size: 0.875rem;">
+            <i class="fa-solid fa-arrow-right"></i> Lihat semua
+        </a>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <div>
+                <div class="stat-value">{{ total_categories or 0 }}</div>
+                <div class="stat-label">Categories</div>
+            </div>
+            <div class="stat-icon green">
+                <i class="fa-solid fa-tags"></i>
+            </div>
+        </div>
+        <a href="/admin/categories" style="color: #10b981; text-decoration: none; font-size: 0.875rem;">
+            <i class="fa-solid fa-arrow-right"></i> Lihat semua
+        </a>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <div>
+                <div class="stat-value">{{ total_brands or 0 }}</div>
+                <div class="stat-label">Brands</div>
+            </div>
+            <div class="stat-icon purple">
+                <i class="fa-solid fa-building"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <div>
+                <div class="stat-value">{{ latest_device_year or 'N/A' }}</div>
+                <div class="stat-label">Latest Year</div>
+            </div>
+            <div class="stat-icon orange">
+                <i class="fa-solid fa-calendar"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts -->
+<div class="charts-grid">
+    <!-- Category Distribution Chart -->
+    <div class="chart-card">
+        <h3 class="chart-title">Distribusi Device per Category</h3>
+        <canvas id="categoryChart"></canvas>
+    </div>
+
+    <!-- Brand Distribution Chart -->
+    <div class="chart-card">
+        <h3 class="chart-title">Distribusi Device per Brand</h3>
+        <canvas id="brandChart"></canvas>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Quick Actions</h3>
+    </div>
+    <div class="quick-actions">
+        <a href="/admin/devices/new" class="btn btn-success">
+            <i class="fa-solid fa-circle-plus"></i> Add New Device
+        </a>
+        <a href="/admin/categories/new" class="btn btn-success">
+            <i class="fa-solid fa-circle-plus"></i> Add New Category
+        </a>
+        <a href="/admin/bulk-operations" class="btn btn-primary">
+            <i class="fa-solid fa-list-check"></i> Bulk Operations
+        </a>
+        <a href="/admin/analytics" class="btn btn-primary">
+            <i class="fa-solid fa-chart-pie"></i> View Analytics
+        </a>
+        <a href="/admin/tools" class="btn btn-secondary">
+            <i class="fa-solid fa-screwdriver-wrench"></i> Admin Tools
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<!-- Data dari backend -->
+<script type="application/json" id="categoryDataJson">
+{{ (category_stats | default({})) | tojson | safe }}
+</script>
+<script type="application/json" id="brandDataJson">
+{{ (brand_stats | default({})) | tojson | safe }}
+</script>
+
+<script>
+    // Ambil data dari JSON
+    const categoryData = JSON.parse(document.getElementById('categoryDataJson').textContent || '{}');
+    const brandData = JSON.parse(document.getElementById('brandDataJson').textContent || '{}');
+
+    // Category Chart (Pie)
+    const categoryCtx = document.getElementById('categoryChart');
+    if (categoryCtx && categoryData && Object.keys(categoryData).length > 0) {
+        new Chart(categoryCtx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(categoryData),
+                datasets: [{
+                    data: Object.values(categoryData),
+                    backgroundColor: [
+                        '#3b82f6',
+                        '#10b981',
+                        '#8b5cf6',
+                        '#f59e0b',
+                        '#ef4444',
+                        '#06b6d4'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+
+    // Brand Chart (Bar)
+    const brandCtx = document.getElementById('brandChart');
+    if (brandCtx && brandData && Object.keys(brandData).length > 0) {
+        new Chart(brandCtx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(brandData),
+                datasets: [{
+                    label: 'Jumlah Device',
+                    data: Object.values(brandData),
+                    backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                    borderColor: '#3b82f6',
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}

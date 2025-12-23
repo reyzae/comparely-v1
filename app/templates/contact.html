@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - COMPARELY{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='/css/pages.css') }}">
+{% endblock %}
+
+{% block breadcrumb %}
+<div class="breadcrumb-container">
+    <div class="container">
+        <a href="/">Home</a> / <span>Contact</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Contact Page -->
+<section class="about-section">
+    <div class="container">
+        <!-- Header -->
+        <div class="about-header">
+            <h1><i class="fa-solid fa-envelope"></i> Hubungi Kami</h1>
+            <p class="section-subtitle">Ada pertanyaan? Kami siap membantu!</p>
+        </div>
+
+        <!-- Contact Content -->
+        <div class="about-content">
+            <!-- Contact Info -->
+            <div class="about-card full-width">
+                <h2><i class="fa-solid fa-circle-info"></i> Informasi Kontak</h2>
+                <p>COMPARELY adalah project tugas akhir mata kuliah Dasar Pemrograman. Untuk pertanyaan, saran, atau
+                    feedback, Anda dapat menghubungi tim pengembang kami.</p>
+            </div>
+
+            <!-- Team Contact -->
+            <div class="about-card full-width">
+                <h2><i class="fa-solid fa-users"></i> Tim Pengembang</h2>
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 16px;">
+                    <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #E5E7EB;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <i class="fa-solid fa-user-circle" style="font-size: 24px; color: #06B6D4;"></i>
+                            <div>
+                                <p style="font-weight: 600; color: #111827; margin: 0;">Reyza Wirakusuma</p>
+                                <p style="font-size: 14px; color: #6B7280; margin: 4px 0 0 0;">17250107</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #E5E7EB;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <i class="fa-solid fa-user-circle" style="font-size: 24px; color: #06B6D4;"></i>
+                            <div>
+                                <p style="font-weight: 600; color: #111827; margin: 0;">Rachmat Muhaimin Rustam</p>
+                                <p style="font-size: 14px; color: #6B7280; margin: 4px 0 0 0;">17250381</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #E5E7EB;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <i class="fa-solid fa-user-circle" style="font-size: 24px; color: #06B6D4;"></i>
+                            <div>
+                                <p style="font-weight: 600; color: #111827; margin: 0;">Tegar Abdiansyah Pangestu</p>
+                                <p style="font-size: 14px; color: #6B7280; margin: 4px 0 0 0;">17250651</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #E5E7EB;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <i class="fa-solid fa-user-circle" style="font-size: 24px; color: #06B6D4;"></i>
+                            <div>
+                                <p style="font-weight: 600; color: #111827; margin: 0;">Rofik Rokhmattullah</p>
+                                <p style="font-size: 14px; color: #6B7280; margin: 4px 0 0 0;">17250705</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #E5E7EB;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <i class="fa-solid fa-user-circle" style="font-size: 24px; color: #06B6D4;"></i>
+                            <div>
+                                <p style="font-weight: 600; color: #111827; margin: 0;">Abdul Khair</p>
+                                <p style="font-size: 14px; color: #6B7280; margin: 4px 0 0 0;">17250610</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ -->
+            <div class="about-card full-width">
+                <h2><i class="fa-solid fa-circle-question"></i> Frequently Asked Questions</h2>
+                <div style="margin-top: 16px;">
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #111827; margin-bottom: 8px;">Apakah data
+                            di COMPARELY akurat?</h4>
+                        <p style="margin: 0; color: #6B7280;">Data dikumpulkan dari berbagai sumber publik. Kami
+                            berusaha menyediakan informasi yang akurat, namun selalu disarankan untuk verifikasi dari
+                            sumber resmi.</p>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #111827; margin-bottom: 8px;">Apakah bisa
+                            request device baru?</h4>
+                        <p style="margin: 0; color: #6B7280;">Saat ini COMPARELY adalah project tugas akhir dengan
+                            database terbatas. Namun feedback Anda sangat dihargai untuk pengembangan di masa depan.</p>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #111827; margin-bottom: 8px;">Apakah ada
+                            biaya untuk menggunakan COMPARELY?</h4>
+                        <p style="margin: 0; color: #6B7280;">Tidak, COMPARELY sepenuhnya gratis untuk digunakan sebagai
+                            platform edukasi.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feedback -->
+            <div class="about-card full-width"
+                style="background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%); border: 2px solid #06B6D4;">
+                <h2 style="color: #1E40AF;"><i class="fa-solid fa-comments"></i> Feedback & Saran</h2>
+                <p style="color: #1E40AF;">Kami sangat menghargai feedback dan saran Anda untuk meningkatkan COMPARELY.
+                    Terima kasih telah menggunakan platform kami!</p>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="back-button-section" style="text-align: center; margin-top: 32px;">
+            <a href="/" class="btn btn-secondary"><i class="fa-solid fa-house"></i> Kembali ke Homepage</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

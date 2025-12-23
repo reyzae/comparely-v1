@@ -1,0 +1,184 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Activity Logs{% endblock %}
+{% block breadcrumb %}Activity Logs{% endblock %}
+
+{% block extra_css %}
+<style>
+    .filter-bar {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .filter-form {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: end;
+    }
+
+    .filter-group {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .timeline {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .timeline-item {
+        display: flex;
+        gap: 1rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .timeline-item:last-child {
+        border-bottom: none;
+    }
+
+    .timeline-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .timeline-icon.create {
+        background-color: #d1fae5;
+        color: #059669;
+    }
+
+    .timeline-icon.update {
+        background-color: #dbeafe;
+        color: #2563eb;
+    }
+
+    .timeline-icon.delete {
+        background-color: #fee2e2;
+        color: #dc2626;
+    }
+
+    .timeline-content {
+        flex: 1;
+    }
+
+    .timeline-title {
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.25rem;
+    }
+
+    .timeline-description {
+        color: #64748b;
+        font-size: 0.9rem;
+    }
+
+    .timeline-time {
+        color: #94a3b8;
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Activity Logs</h1>
+    <p class="page-description">Riwayat aktivitas admin di sistem</p>
+</div>
+
+<!-- Filter Bar -->
+<div class="filter-bar">
+    <form method="get" class="filter-form">
+        <div class="filter-group">
+            <label class="form-label">Action Type</label>
+            <select name="action_type" class="form-select">
+                <option value="">Semua</option>
+                <option value="create" {% if action_type=='create' %}selected{% endif %}>Create</option>
+                <option value="update" {% if action_type=='update' %}selected{% endif %}>Update</option>
+                <option value="delete" {% if action_type=='delete' %}selected{% endif %}>Delete</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label class="form-label">Entity Type</label>
+            <select name="entity_type" class="form-select">
+                <option value="">Semua</option>
+                <option value="device" {% if entity_type=='device' %}selected{% endif %}>Device</option>
+                <option value="category" {% if entity_type=='category' %}selected{% endif %}>Category</option>
+                <option value="user" {% if entity_type=='user' %}selected{% endif %}>User</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-filter"></i> Filter
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Timeline -->
+<div class="timeline">
+    {% if logs %}
+    {% for log in logs %}
+    <div class="timeline-item">
+        <div class="timeline-icon {{ log.action }}">
+            {% if log.action == 'create' %}
+            <i class="fas fa-plus"></i>
+            {% elif log.action == 'update' %}
+            <i class="fas fa-edit"></i>
+            {% elif log.action == 'delete' %}
+            <i class="fas fa-trash"></i>
+            {% endif %}
+        </div>
+        <div class="timeline-content">
+            <div class="timeline-title">{{ log.title }}</div>
+            <div class="timeline-description">{{ log.description }}</div>
+            <div class="timeline-time">
+                <i class="fas fa-clock"></i> {{ log.timestamp }}
+                {% if log.user %}
+                | <i class="fas fa-user"></i> {{ log.user }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="text-center text-muted" style="padding: 2rem;">
+        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+        <p>Belum ada aktivitas yang tercatat</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Pagination -->
+{% if total_pages > 1 %}
+<div class="pagination">
+    {% if page > 1 %}
+    <a href="?page={{ page - 1 }}&action_type={{ action_type or '' }}&entity_type={{ entity_type or '' }}"
+        class="page-link">
+        <i class="fas fa-chevron-left"></i> Previous
+    </a>
+    {% endif %}
+
+    <span class="page-info">Page {{ page }} of {{ total_pages }}</span>
+
+    {% if page < total_pages %} <a
+        href="?page={{ page + 1 }}&action_type={{ action_type or '' }}&entity_type={{ entity_type or '' }}"
+        class="page-link">
+        Next <i class="fas fa-chevron-right"></i>
+        </a>
+        {% endif %}
+</div>
+{% endif %}
+{% endblock %}
