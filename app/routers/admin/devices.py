@@ -370,44 +370,98 @@ async def import_devices_json(
         imported_count = 0
         errors = []
         
+        # Get all valid categories for validation
+        valid_categories = {cat.id: cat.name for cat in db.query(Category).all()}
+        
         for idx, device_data in enumerate(devices_data):
             try:
+                # Validate required fields
+                required_fields = ['name', 'brand', 'category_id', 'price']
+                for field in required_fields:
+                    value = device_data.get(field)
+                    if not value or (isinstance(value, str) and not value.strip()):
+                        raise ValueError(f"Field '{field}' is required")
+                
+                # Validate and convert category_id
+                try:
+                    category_id = int(device_data.get('category_id'))
+                    if category_id not in valid_categories:
+                        raise ValueError(f"Invalid category_id '{category_id}'. Valid categories: {', '.join([f'{k}={v}' for k, v in valid_categories.items()])}")
+                except (ValueError, TypeError) as e:
+                    if 'Invalid category_id' in str(e):
+                        raise
+                    raise ValueError(f"category_id must be a valid integer")
+                
+                # Validate and convert price
+                try:
+                    price_str = str(device_data.get('price', '')).replace(',', '').replace('.', '').strip()
+                    if not price_str:
+                        raise ValueError("Price is required")
+                    price = float(price_str)
+                    if price < 0:
+                        raise ValueError("Price cannot be negative")
+                except (ValueError, TypeError) as e:
+                    raise ValueError(f"Invalid price format: {device_data.get('price')}")
+                
+                # Validate and convert release_year
+                release_year = None
+                if device_data.get('release_year'):
+                    try:
+                        release_year = int(device_data.get('release_year'))
+                        if release_year < 1900 or release_year > 2100:
+                            raise ValueError(f"Invalid release year: {release_year}")
+                    except (ValueError, TypeError):
+                        raise ValueError(f"Invalid release_year format: {device_data.get('release_year')}")
+                
                 # Create device from data
                 device = Phone(
-                    name=device_data.get('name'),
-                    brand=device_data.get('brand'),
-                    category_id=int(device_data.get('category_id', 1)),
-                    cpu=device_data.get('cpu'),
-                    gpu=device_data.get('gpu'),
-                    ram=device_data.get('ram'),
-                    storage=device_data.get('storage'),
-                    camera=device_data.get('camera'),
-                    battery=device_data.get('battery'),
-                    screen=device_data.get('screen'),
-                    release_year=int(device_data.get('release_year')) if device_data.get('release_year') else None,
-                    price=float(device_data.get('price')) if device_data.get('price') else None,
-                    image_url=device_data.get('image_url'),
-                    description=device_data.get('description')
+                    name=device_data.get('name').strip(),
+                    brand=device_data.get('brand').strip(),
+                    category_id=category_id,
+                    cpu=device_data.get('cpu', '').strip() or 'N/A',
+                    gpu=device_data.get('gpu', '').strip() or 'N/A',
+                    ram=device_data.get('ram', '').strip() or 'N/A',
+                    storage=device_data.get('storage', '').strip() or 'N/A',
+                    camera=device_data.get('camera', '').strip() or 'N/A',
+                    battery=device_data.get('battery', '').strip() or 'N/A',
+                    screen=device_data.get('screen', '').strip() or 'N/A',
+                    release_year=release_year,
+                    price=price,
+                    image_url=device_data.get('image_url', '').strip() or None,
+                    description=device_data.get('description', '').strip() or device_data.get('source_data', '').strip() or None
                 )
                 db.add(device)
                 imported_count += 1
+            except ValueError as e:
+                errors.append(f"Row {idx + 2}: {str(e)}")  # +2 because idx starts at 0 and row 1 is header
+                logger.warning(f"Validation error at row {idx + 2}: {e}")
             except Exception as e:
-                errors.append(f"Row {idx + 1}: {str(e)}")
-                logger.error(f"Error importing device at row {idx + 1}: {e}")
+                errors.append(f"Row {idx + 2}: Unexpected error - {str(e)}")
+                logger.error(f"Error importing device at row {idx + 2}: {e}")
         
-        db.commit()
-        logger.info(f"Imported {imported_count} devices via JSON")
+        # Only commit if at least one device was successfully processed
+        if imported_count > 0:
+            db.commit()
+            logger.info(f"Imported {imported_count} devices via CSV upload")
+        
+        # Prepare response
+        status_code = 200 if imported_count > 0 else 400
+        message = f"Successfully imported {imported_count} device(s)"
+        if errors:
+            message += f". {len(errors)} error(s) encountered."
         
         return JSONResponse(
-            status_code=200,
+            status_code=status_code,
             content={
                 "imported": imported_count,
-                "errors": errors,
-                "message": f"Successfully imported {imported_count} devices"
+                "errors": errors[:10],  # Limit to first 10 errors for readability
+                "total_errors": len(errors),
+                "message": message
             }
         )
     except Exception as e:
         logger.exception(f"Error importing devices: {e}")
+        db.rollback()
         return JSONResponse(
             status_code=500,
             content={"detail": f"Import failed: {str(e)}"}

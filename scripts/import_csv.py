@@ -14,7 +14,7 @@ import csv
 import sys
 from decimal import Decimal
 from app.database import SessionLocal
-from app.models import Device
+from app.models import Device, Category
 
 def import_devices_from_csv(csv_file_path: str):
     """
@@ -37,17 +37,43 @@ def import_devices_from_csv(csv_file_path: str):
             
             for row_num, row in enumerate(csv_reader, start=2):  # Start=2 karena row 1 adalah header
                 try:
-                    # Validasi: Pastikan field wajib tidak kosong
+                    # Validate: Pastikan field wajib tidak kosong
                     required_fields = ['name', 'brand', 'category_id', 'price']
                     for field in required_fields:
                         if not row.get(field) or row[field].strip() == '':
                             raise ValueError(f"Field '{field}' tidak boleh kosong")
                     
+                    # Validate category_id exists
+                    category_id = int(row['category_id'])
+                    category = db.query(Category).filter(Category.id == category_id).first()
+                    if not category:
+                        raise ValueError(f"Category ID {category_id} tidak ditemukan. Buat kategori terlebih dahulu.")
+                    
+                    # Validate and convert price
+                    price_str = row['price'].replace(',', '').replace('.', '').strip()
+                    if not price_str:
+                        raise ValueError("Price tidak boleh kosong")
+                    price = Decimal(price_str)
+                    if price < 0:
+                        raise ValueError("Price tidak boleh negatif")
+                    
+                    # Validate release_year if provided
+                    release_year = None
+                    if row.get('release_year') and row['release_year'].strip():
+                        try:
+                            release_year = int(row['release_year'])
+                            if release_year < 1900 or release_year > 2100:
+                                raise ValueError(f"Release year tidak valid: {release_year}")
+                        except ValueError:
+                            raise ValueError(f"Format release_year tidak valid: {row['release_year']}")
+                    else:
+                        release_year = 2023  # Default value
+                    
                     # Buat object Device baru
                     device = Device(
                         name=row['name'].strip(),
                         brand=row['brand'].strip(),
-                        category_id=int(row['category_id']),
+                        category_id=category_id,
                         cpu=row.get('cpu', '').strip() or 'N/A',
                         gpu=row.get('gpu', '').strip() or 'N/A',
                         ram=row.get('ram', '').strip() or 'N/A',
@@ -55,10 +81,10 @@ def import_devices_from_csv(csv_file_path: str):
                         camera=row.get('camera', '').strip() or 'N/A',
                         battery=row.get('battery', '').strip() or 'N/A',
                         screen=row.get('screen', '').strip() or 'N/A',
-                        release_year=int(row.get('release_year', 2023)),
-                        price=Decimal(row['price'].replace(',', '').replace('.', '')),  # Hapus koma/titik pemisah ribuan
+                        release_year=release_year,
+                        price=price,
                         image_url=row.get('image_url', '').strip() or None,
-                        description=row.get('source_data', '').strip() or None  # Gunakan source_data sebagai description
+                        description=row.get('description', '').strip() or row.get('source_data', '').strip() or None
                     )
                     
                     # Tambahkan ke database

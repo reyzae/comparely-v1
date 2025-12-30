@@ -165,13 +165,13 @@
             return;
         }
 
-        // Parse header
-        const headers = lines[0].split(',').map(h => h.trim());
+        // Parse header using proper CSV parser
+        const headers = parseCSVLine(lines[0]);
 
-        // Parse data
+        // Parse data rows
         csvData = [];
         for (let i = 1; i < lines.length; i++) {
-            const values = lines[i].split(',').map(v => v.trim());
+            const values = parseCSVLine(lines[i]);
             const row = {};
             headers.forEach((header, index) => {
                 row[header] = values[index] || '';
@@ -181,6 +181,43 @@
 
         // Show preview
         displayPreview(headers, csvData);
+    }
+
+    /**
+     * Parse a single CSV line according to RFC 4180
+     * Handles quoted values with commas and escaped quotes
+     */
+    function parseCSVLine(line) {
+        const result = [];
+        let current = '';
+        let inQuotes = false;
+
+        for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+            const nextChar = line[i + 1];
+
+            if (char === '"') {
+                if (inQuotes && nextChar === '"') {
+                    // Escaped quote
+                    current += '"';
+                    i++; // Skip next quote
+                } else {
+                    // Toggle quote mode
+                    inQuotes = !inQuotes;
+                }
+            } else if (char === ',' && !inQuotes) {
+                // Field delimiter
+                result.push(current.trim());
+                current = '';
+            } else {
+                current += char;
+            }
+        }
+
+        // Add last field
+        result.push(current.trim());
+
+        return result;
     }
 
     function displayPreview(headers, data) {
@@ -228,11 +265,26 @@
 
             const result = await response.json();
 
-            if (response.ok) {
-                alert(`Berhasil import ${result.imported} devices!`);
+            if (response.ok || result.imported > 0) {
+                let message = `Berhasil import ${result.imported} devices!`;
+
+                if (result.errors && result.errors.length > 0) {
+                    message += `\n\nErrors (${result.total_errors || result.errors.length}):\n`;
+                    message += result.errors.join('\n');
+
+                    if (result.total_errors > result.errors.length) {
+                        message += `\n... and ${result.total_errors - result.errors.length} more errors`;
+                    }
+                }
+
+                alert(message);
                 window.location.href = '/admin/devices';
             } else {
-                alert(`Error: ${result.detail || 'Import gagal'}`);
+                let errorMsg = result.detail || 'Import gagal';
+                if (result.errors && result.errors.length > 0) {
+                    errorMsg += '\n\nErrors:\n' + result.errors.join('\n');
+                }
+                alert(`Error: ${errorMsg}`);
             }
         } catch (error) {
             alert(`Error: ${error.message}`);

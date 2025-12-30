@@ -34,3 +34,8 @@ USE_CASES = [
     "kuliah",
     "multimedia"
 ]
+
+# n8n Integration Configuration
+N8N_WEBHOOK_URL = os.getenv("N8N_WEBHOOK_URL", "")
+N8N_ENABLED = os.getenv("N8N_ENABLED", "false").lower() == "true"
+N8N_TIMEOUT = int(os.getenv("N8N_TIMEOUT", "10"))

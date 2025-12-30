@@ -31,8 +31,10 @@ Buka endpoint `GET /devices/` untuk melihat semua data yang sudah masuk.
 File CSV harus punya header (baris pertama) dengan kolom berikut:
 
 ```
-name,brand,category_id,cpu,gpu,ram,storage,camera,battery,screen,release_year,price,image_url,source_data
+name,brand,category_id,cpu,gpu,ram,storage,camera,battery,screen,release_year,price,image_url,description
 ```
+
+**Note**: `description` dapat juga menggunakan nama field `source_data` (keduanya didukung).
 
 **Kolom Wajib:**
 - `name`: Nama device
