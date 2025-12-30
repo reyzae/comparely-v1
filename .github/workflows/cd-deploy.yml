@@ -46,8 +46,8 @@ jobs:
     - name: Backup database on VPS
       run: |
         ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << 'EOF'
-          cd /home/comparely/comparely
-          BACKUP_DIR="/home/comparely/backups"
+          cd /var/www/comparely
+          BACKUP_DIR="/var/www/comparely/backups"
           mkdir -p $BACKUP_DIR
           
           # Backup database
@@ -65,7 +65,7 @@ jobs:
         ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << 'EOF'
           set -e
           
-          cd /home/comparely/comparely
+          cd /var/www/comparely
           
           echo "📥 Pulling latest changes..."
           git fetch origin
@@ -88,7 +88,7 @@ jobs:
     - name: Update environment variables
       run: |
         ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << 'EOF'
-          cd /home/comparely/comparely
+          cd /var/www/comparely
           
           # Update .env if needed (without overwriting existing)
           if [ ! -f ".env" ]; then
@@ -101,7 +101,8 @@ jobs:
       run: |
         ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << 'EOF'
           echo "🔄 Restarting application..."
-          sudo systemctl restart comparely
+          # Restart application (user needs NOPASSWD sudo for systemctl)
+          sudo systemctl restart comparely || echo "⚠️ Service restart skipped (no systemd setup yet)"
           
           # Wait for service to start
           sleep 5
@@ -154,10 +155,10 @@ jobs:
       run: |
         echo "🔙 Attempting rollback..."
         ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << 'EOF'
-          cd /home/comparely/comparely
+          cd /var/www/comparely
           
           # Restore latest backup
-          BACKUP_DIR="/home/comparely/backups"
+          BACKUP_DIR="/var/www/comparely/backups"
           LATEST_BACKUP=$(ls -t $BACKUP_DIR/comparely_*.db | head -1)
           
           if [ -f "$LATEST_BACKUP" ]; then
