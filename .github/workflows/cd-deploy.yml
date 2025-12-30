@@ -1,0 +1,170 @@
+name: CD - Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.github/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+
+jobs:
+  deploy:
+    name: Deploy to VPS
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+    
+    - name: Create deployment info
+      run: |
+        echo "DEPLOY_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_ENV
+        echo "DEPLOY_COMMIT=${{ github.sha }}" >> $GITHUB_ENV
+        echo "DEPLOY_BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
+    
+    - name: Backup database on VPS
+      run: |
+        ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << 'EOF'
+          cd /home/comparely/comparely
+          BACKUP_DIR="/home/comparely/backups"
+          mkdir -p $BACKUP_DIR
+          
+          # Backup database
+          if [ -f "comparely.db" ]; then
+            cp comparely.db $BACKUP_DIR/comparely_$(date +%Y%m%d_%H%M%S).db
+            echo "✅ SQLite database backed up"
+          fi
+          
+          # Keep only last 5 backups
+          ls -t $BACKUP_DIR/comparely_*.db | tail -n +6 | xargs -r rm
+        EOF
+    
+    - name: Deploy application
+      run: |
+        ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << 'EOF'
+          set -e
+          
+          cd /home/comparely/comparely
+          
+          echo "📥 Pulling latest changes..."
+          git fetch origin
+          git reset --hard origin/${{ github.ref_name }}
+          
+          echo "🔧 Activating virtual environment..."
+          source .venv/bin/activate
+          
+          echo "📦 Installing dependencies..."
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          
+          echo "🗄️ Running database migrations..."
+          # Add migration commands here if using Alembic
+          # alembic upgrade head
+          
+          echo "✅ Deployment completed successfully"
+        EOF
+    
+    - name: Update environment variables
+      run: |
+        ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << 'EOF'
+          cd /home/comparely/comparely
+          
+          # Update .env if needed (without overwriting existing)
+          if [ ! -f ".env" ]; then
+            cp .env.example .env
+            echo "⚠️ Created .env from .env.example - Please configure manually"
+          fi
+        EOF
+    
+    - name: Restart application
+      run: |
+        ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << 'EOF'
+          echo "🔄 Restarting application..."
+          sudo systemctl restart comparely
+          
+          # Wait for service to start
+          sleep 5
+          
+          # Check service status
+          if sudo systemctl is-active --quiet comparely; then
+            echo "✅ Application restarted successfully"
+          else
+            echo "❌ Application failed to start"
+            sudo journalctl -u comparely -n 50
+            exit 1
+          fi
+        EOF
+    
+    - name: Health check
+      run: |
+        ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << 'EOF'
+          set -e
+          
+          echo "🏥 Running health check..."
+          
+          # Wait for application to be ready
+          for i in {1..10}; do
+            if curl -f http://localhost:8000/ &> /dev/null; then
+              echo "✅ Application is healthy"
+              exit 0
+            fi
+            echo "⏳ Waiting for application... ($i/10)"
+            sleep 3
+          done
+          
+          echo "❌ Health check failed"
+          exit 1
+        EOF
+    
+    - name: Deployment notification
+      if: always()
+      run: |
+        if [ "${{ job.status }}" == "success" ]; then
+          echo "🎉 Deployment successful!"
+          echo "Environment: ${{ github.event.inputs.environment || 'production' }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "Branch: ${{ github.ref_name }}"
+        else
+          echo "❌ Deployment failed!"
+        fi
+    
+    - name: Rollback on failure
+      if: failure()
+      run: |
+        echo "🔙 Attempting rollback..."
+        ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << 'EOF'
+          cd /home/comparely/comparely
+          
+          # Restore latest backup
+          BACKUP_DIR="/home/comparely/backups"
+          LATEST_BACKUP=$(ls -t $BACKUP_DIR/comparely_*.db | head -1)
+          
+          if [ -f "$LATEST_BACKUP" ]; then
+            cp $LATEST_BACKUP comparely.db
+            echo "✅ Database restored from backup"
+          fi
+          
+          # Restart service
+          sudo systemctl restart comparely
+        EOF

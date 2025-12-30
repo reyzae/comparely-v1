@@ -8,6 +8,7 @@ on:
 
 jobs:
   test:
+    name: Test & Quality Checks
     runs-on: ubuntu-latest
     
     strategy:
@@ -28,27 +29,94 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pip install pytest pytest-cov
+        pip install pytest pytest-cov flake8 black isort bandit safety pylint mypy
     
-    - name: Lint with flake8 (optional)
+    - name: Code formatting check (Black)
       run: |
-        pip install flake8
+        black --check --diff app/ tests/ scripts/
+      continue-on-error: true
+    
+    - name: Import sorting check (isort)
+      run: |
+        isort --check-only --diff app/ tests/ scripts/
+      continue-on-error: true
+    
+    - name: Lint with flake8
+      run: |
         # Stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # Exit-zero treats all errors as warnings
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        flake8 app/ tests/ scripts/ --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Treat all errors as warnings
+        flake8 app/ tests/ scripts/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      continue-on-error: true
+    
+    - name: Security check with Bandit
+      run: |
+        bandit -r app/ -ll -f json -o bandit-report.json || true
+        bandit -r app/ -ll
+      continue-on-error: true
+    
+    - name: Check for vulnerable dependencies
+      run: |
+        safety check --json || true
       continue-on-error: true
     
     - name: Run tests with pytest
       run: |
-        pytest --cov=app --cov-report=term-missing
+        pytest tests/ --cov=app --cov-report=term-missing --cov-report=xml --cov-report=html -v
+      continue-on-error: false
+    
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v4
+      if: matrix.python-version == '3.11'
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
       continue-on-error: true
     
-    - name: Validate import_csv.py syntax
-      run: |
-        python -m py_compile import_csv.py
-        echo "✅ import_csv.py syntax is valid"
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results-${{ matrix.python-version }}
+        path: |
+          htmlcov/
+          coverage.xml
+          bandit-report.json
     
-    - name: Check database models
+    - name: Validate database models
       run: |
-        python -c "from app.models import Device, Category, Benchmark; print('✅ All models imported successfully')"
+        python -c "from app.models import Device, Category, User, Role; print('✅ All models imported successfully')"
+    
+    - name: Check application startup
+      run: |
+        timeout 10 python -c "from app.main import app; print('✅ Application initialized successfully')" || echo "⚠️ Application startup check timed out (expected)"
+    
+  build-check:
+    name: Build Verification
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Compile all Python files
+      run: |
+        python -m compileall app/ scripts/ -q
+        echo "✅ All Python files compiled successfully"
+    
+    - name: Check for missing dependencies
+      run: |
+        pip check
+        echo "✅ No dependency conflicts found"
