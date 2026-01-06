@@ -135,19 +135,6 @@ pytest
 # Jalankan dengan coverage
 pytest --cov=app tests/
 ```
-
----
-
-## 🤝 Kontribusi
-
-Kontribusi sangat diterima! Silakan:
-
-1. Fork repository
-2. Buat feature branch
-3. Commit perubahan Anda
-4. Push ke branch
-5. Buat Pull Request
-
 ---
 
 ## 📄 Lisensi
@@ -161,7 +148,3 @@ Project ini dilisensikan di bawah MIT License.
 Untuk masalah, pertanyaan, atau saran:
 - **GitHub Issues**: [Buat issue](https://github.com/reyzae/comparely-v1/issues)
 - **Dokumentasi**: Cek folder `/docs`
-
----
-
-**Dibuat dengan ❤️ menggunakan Python & FastAPI**
