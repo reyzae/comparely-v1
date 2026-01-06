@@ -1,43 +1,43 @@
-# 📱 COMPARELY - Device Comparison Platform
+# 📱 COMPARELY - Platform Perbandingan Perangkat
 
 ![CI Status](https://github.com/reyzae/comparely-v1/workflows/CI%20-%20COMPARELY/badge.svg)
 
-A modern web application for comparing and recommending technology devices (smartphones & laptops) built with **Python FastAPI** and **AI-powered recommendations**.
+Aplikasi web modern untuk membandingkan dan memberikan rekomendasi perangkat teknologi (smartphone & laptop) yang dibangun dengan **Python FastAPI** dan **rekomendasi berbasis AI**.
 
 ---
 
-## ✨ Key Features
+## ✨ Fitur Utama
 
-### 🌐 Public Features
-- **Modern Web Interface**: Responsive design with consistent UI
-- **Device Search**: Search devices by name, brand, or specifications
-- **Side-by-Side Comparison**: Compare 2 devices in detail
-- **🤖 AI-Powered Comparison**: Smart analysis using xAI Grok
-- **Smart Recommendations**: Get recommendations based on budget and needs
-- **🧠 AI Recommendations**: Personalized suggestions based on your use case
-- **Filter & Sort**: Filter by category, brand, year, and price
-- **Responsive Design**: Optimized for desktop, tablet, and mobile
+### 🌐 Fitur Publik
+- **Interface Web Modern**: Desain responsif dengan UI yang konsisten
+- **Pencarian Perangkat**: Cari perangkat berdasarkan nama, brand, atau spesifikasi
+- **Perbandingan Side-by-Side**: Bandingkan 2 perangkat secara detail
+- **🤖 Perbandingan AI**: Analisis cerdas menggunakan xAI Grok
+- **Rekomendasi Cerdas**: Dapatkan rekomendasi berdasarkan budget dan kebutuhan
+- **🧠 Rekomendasi AI**: Saran personal berdasarkan use case Anda
+- **Filter & Sort**: Filter berdasarkan kategori, brand, tahun, dan harga
+- **Desain Responsif**: Optimal untuk desktop, tablet, dan mobile
 
-### 🔐 Admin Panel
-- **Dashboard Analytics**: Complete statistics with charts and visualizations
-- **Device Management**: Full CRUD operations with bulk actions
-- **Category Management**: Manage device categories
-- **User Management**: Manage users and roles
-- **Role-Based Access Control (RBAC)**: Super Admin, Admin, and Viewer roles
-- **Activity Logs**: Track all admin activities
-- **CSV Import/Export**: Bulk data operations
-- **Tools & Utilities**: Database optimization and cache management
+### 🔐 Panel Admin
+- **Dashboard Analytics**: Statistik lengkap dengan charts dan visualisasi
+- **Manajemen Device**: Operasi CRUD lengkap dengan bulk actions
+- **Manajemen Kategori**: Kelola kategori perangkat
+- **Manajemen User**: Kelola users dan roles
+- **Role-Based Access Control (RBAC)**: Role Super Admin, Admin, dan Viewer
+- **Activity Logs**: Tracking semua aktivitas admin
+- **CSV Import/Export**: Operasi data massal
+- **Tools & Utilities**: Optimasi database dan manajemen cache
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Teknologi
 
 **Backend**
 - Python 3.11+ & FastAPI
 - SQLAlchemy ORM
-- SQLite/MySQL Database
-- xAI Grok for AI features
-- bcrypt for security
+- Database SQLite/MySQL
+- xAI Grok untuk fitur AI
+- bcrypt untuk keamanan
 
 **Frontend**
 - Jinja2 Templates
@@ -46,7 +46,7 @@ A modern web application for comparing and recommending technology devices (smar
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Panduan Cepat
 
 ### 1. Clone Repository
 ```bash
@@ -72,96 +72,96 @@ pip install -r requirements.txt
 
 ### 4. Setup Environment Variables
 ```bash
-# Copy example file
+# Copy file example
 cp .env.example .env
 
-# Edit .env and configure:
-# - DATABASE_URL (SQLite by default)
-# - AI_API_KEY (optional, for AI features)
-# - SECRET_KEY (generate with: python -c "import secrets; print(secrets.token_urlsafe(32))")
+# Edit .env dan konfigurasi:
+# - DATABASE_URL (SQLite secara default)
+# - AI_API_KEY (opsional, untuk fitur AI)
+# - SECRET_KEY (generate dengan: python -c "import secrets; print(secrets.token_urlsafe(32))")
 ```
 
-### 5. Initialize Database
+### 5. Inisialisasi Database
 ```bash
 python scripts/utils/init_db.py
 ```
 
-### 6. Create Admin User
+### 6. Buat User Admin
 ```bash
 python scripts/utils/create_admin_simple.py
-# Follow prompts to create admin user
+# Ikuti prompt untuk membuat user admin
 # Default: admin / admin123
 ```
 
-### 7. Run Application
+### 7. Jalankan Aplikasi
 ```bash
 uvicorn app.main:app --reload
 
-# Available at:
-# - Public: http://localhost:8000
+# Aplikasi tersedia di:
+# - Publik: http://localhost:8000
 # - Admin: http://localhost:8000/admin/login
 ```
 
 ---
 
-## 📚 Documentation
+## 📚 Dokumentasi
 
-For detailed documentation, see the `/docs` folder:
-- Authentication Guide
-- RBAC Implementation
-- API Documentation
-- Deployment Guide
+Untuk dokumentasi lengkap, lihat folder `/docs`:
+- Panduan Autentikasi
+- Implementasi RBAC
+- Dokumentasi API
+- Panduan Deployment
 
 ---
 
-## 🔒 Security Features
+## 🔒 Fitur Keamanan
 
 - Bcrypt password hashing
-- Session management with encrypted cookies
+- Manajemen session dengan encrypted cookies
 - Role-based access control
-- SQL injection prevention (SQLAlchemy)
-- XSS protection (Jinja2 auto-escaping)
+- Pencegahan SQL injection (SQLAlchemy)
+- Proteksi XSS (Jinja2 auto-escaping)
 
-**⚠️ Important**: Change default admin password after first login!
+**⚠️ Penting**: Ganti password admin default setelah login pertama kali!
 
 ---
 
 ## 🧪 Testing
 
 ```bash
-# Run tests
+# Jalankan tests
 pytest
 
-# Run with coverage
+# Jalankan dengan coverage
 pytest --cov=app tests/
 ```
 
 ---
 
-## 🤝 Contributing
+## 🤝 Kontribusi
 
-Contributions are welcome! Please:
+Kontribusi sangat diterima! Silakan:
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License.
+1. Fork repository
+2. Buat feature branch
+3. Commit perubahan Anda
+4. Push ke branch
+5. Buat Pull Request
 
 ---
 
-## 📞 Support
+## 📄 Lisensi
 
-For issues, questions, or suggestions:
-- **GitHub Issues**: [Create an issue](https://github.com/reyzae/comparely-v1/issues)
-- **Documentation**: Check the `/docs` folder
+Project ini dilisensikan di bawah MIT License.
 
 ---
 
-**Built with ❤️ using Python & FastAPI**
+## 📞 Dukungan
+
+Untuk masalah, pertanyaan, atau saran:
+- **GitHub Issues**: [Buat issue](https://github.com/reyzae/comparely-v1/issues)
+- **Dokumentasi**: Cek folder `/docs`
+
+---
+
+**Dibuat dengan ❤️ menggunakan Python & FastAPI**
