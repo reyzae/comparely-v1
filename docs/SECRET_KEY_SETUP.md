@@ -22,15 +22,15 @@ SECRET_KEY=your-generated-key-here
 
 ## Catatan Penting
 
-⚠️ **JANGAN PERNAH commit `.env` ke Git!**
+**JANGAN PERNAH commit `.env` ke Git!**
 - `.env` udah ada di `.gitignore`
 - Cuma commit `.env.example` (tanpa key beneran)
 
-⚠️ **Ganti SECRET_KEY di production!**
+**Ganti SECRET_KEY di production!**
 - Pake key yang beda buat development dan production
 - Jangan pernah share SECRET_KEY kamu
 
-⚠️ **Kalau SECRET_KEY bocor:**
+**Kalau SECRET_KEY bocor:**
 1. Generate key baru secepatnya
 2. Update `.env` dengan key baru
 3. Restart aplikasi

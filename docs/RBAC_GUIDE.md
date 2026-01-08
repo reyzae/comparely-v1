@@ -7,24 +7,24 @@ Sistem RBAC udah diimplementasikan buat ngatur akses berdasarkan role user.
 ## Hirarki Role
 
 ### 1. Super Admin
-- ✅ Akses penuh ke semua fitur
-- ✅ Bisa manage users & roles
-- ✅ Create, Read, Update, Delete (CRUD) semua resource
-- ✅ Akses ke Settings & Tools
+- Akses penuh ke semua fitur
+- Bisa manage users & roles
+- Create, Read, Update, Delete (CRUD) semua resource
+- Akses ke Settings & Tools
 
 ### 2. Admin
-- ✅ Akses penuh ke devices & categories
-- ✅ Bisa CRUD operations
-- ✅ Liat analytics
-- ⚠️ Akses terbatas ke user management
-- ❌ Gak bisa akses system settings
+- Akses penuh ke devices & categories
+- Bisa CRUD operations
+- Liat analytics
+- Akses terbatas ke user management
+- Gak bisa akses system settings
 
 ### 3. Viewer
-- ✅ Akses read-only
-- ✅ Bisa liat devices, categories, analytics
-- ❌ Gak bisa create, edit, atau delete
-- ❌ Gak bisa akses user management
-- ❌ Gak bisa akses settings
+- Akses read-only
+- Bisa liat devices, categories, analytics
+- Gak bisa create, edit, atau delete
+- Gak bisa akses user management
+- Gak bisa akses settings
 
 ---
 
@@ -173,11 +173,11 @@ async def delete_user(...):
 
 ## Checklist Implementasi
 
-### ✅ File RBAC Core Udah Dibuat:
+### File RBAC Core Udah Dibuat:
 - [x] `app/core/rbac.py` - Middleware & decorators
 - [x] `app/core/rbac_context.py` - Template helpers
 
-### ⏭️ TODO: Update Routers (Perlu Manual):
+### TODO: Update Routers (Perlu Manual):
 
 Buat setiap admin router, tambahin RBAC context:
 
@@ -208,7 +208,7 @@ return templates.TemplateResponse(
 - [ ] `settings.py`
 - [ ] `bulk_operations.py`
 
-### ⏭️ TODO: Update Templates (Perlu Manual):
+### TODO: Update Templates (Perlu Manual):
 
 Buat setiap template, wrap tombol action pake cek permission:
 
@@ -279,15 +279,15 @@ python update_routers_rbac.py
 
 | Fitur | Super Admin | Admin | Viewer |
 |-------|-------------|-------|--------|
-| Liat Devices | ✅ | ✅ | ✅ |
-| Buat Device | ✅ | ✅ | ❌ |
-| Edit Device | ✅ | ✅ | ❌ |
-| Hapus Device | ✅ | ✅ | ❌ |
-| Liat Users | ✅ | ⚠️ | ❌ |
-| Manage Users | ✅ | ❌ | ❌ |
-| Liat Analytics | ✅ | ✅ | ✅ |
-| System Settings | ✅ | ❌ | ❌ |
-| Bulk Operations | ✅ | ✅ | ❌ |
+| Liat Devices | Ya | Ya | Ya |
+| Buat Device | Ya | Ya | Tidak |
+| Edit Device | Ya | Ya | Tidak |
+| Hapus Device | Ya | Ya | Tidak |
+| Liat Users | Ya | Terbatas | Tidak |
+| Manage Users | Ya | Tidak | Tidak |
+| Liat Analytics | Ya | Ya | Ya |
+| System Settings | Ya | Tidak | Tidak |
+| Bulk Operations | Ya | Ya | Tidak |
 
 ---
 
@@ -304,14 +304,14 @@ python update_routers_rbac.py
 
 ## Langkah Selanjutnya
 
-1. ✅ **RBAC Core**: Udah diimplementasikan
-2. ⏭️ **Update Routers**: Tambahin RBAC context ke semua routers
-3. ⏭️ **Update Templates**: Sembunyiin tombol berdasarkan permissions
-4. ⏭️ **Test**: Login sebagai role yang berbeda dan verify akses
-5. ⏭️ **Production**: Deploy dengan role assignment yang proper
+1. **RBAC Core**: Udah diimplementasikan
+2. **Update Routers**: Tambahin RBAC context ke semua routers
+3. **Update Templates**: Sembunyiin tombol berdasarkan permissions
+4. **Test**: Login sebagai role yang berbeda dan verify akses
+5. **Production**: Deploy dengan role assignment yang proper
 
 ---
 
-**SISTEM RBAC SIAP DIIMPLEMENTASIKAN!** 🎉
+**SISTEM RBAC SIAP DIIMPLEMENTASIKAN!**
 
 Pake fungsi helper dan decorators buat ngamanin admin panel kamu.

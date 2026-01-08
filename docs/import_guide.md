@@ -51,9 +51,9 @@ name,brand,category_id,cpu,gpu,ram,storage,camera,battery,screen,release_year,pr
 
 ### Format Harga
 ```
-✅ BENER: 12999000
-❌ SALAH: 12.999.000
-❌ SALAH: Rp 12.999.000
+BENER: 12999000
+SALAH: 12.999.000
+SALAH: Rp 12.999.000
 ```
 
 ### Category ID

@@ -119,10 +119,10 @@ uvicorn app.main:app --reload
 ```
 
 **Yang Perlu Dicek:**
-- ✅ `highlights` berisi array of objects (bukan string)
-- ✅ `ai_summary` ada dan gak kosong
-- ✅ `scores` berisi skor performance/camera/battery
-- ✅ `source` = `"n8n_ai"` (bukan `"rule_based"`)
+- `highlights` berisi array of objects (bukan string)
+- `ai_summary` ada dan gak kosong
+- `scores` berisi skor performance/camera/battery
+- `source` = `"n8n_ai"` (bukan `"rule_based"`)
 
 ### Test 2: Mekanisme Fallback
 
@@ -131,9 +131,9 @@ uvicorn app.main:app --reload
 3. Test comparison lagi
 
 **Yang Diharapkan:**
-- ✅ Response tetap berhasil (gak error)
-- ✅ `highlights` berisi string sederhana
-- ✅ `source` = `"rule_based"`
+- Response tetap berhasil (gak error)
+- `highlights` berisi string sederhana
+- `source` = `"rule_based"`
 
 ### Test 3: Error Handling
 
@@ -142,9 +142,9 @@ uvicorn app.main:app --reload
 3. Restart dan test
 
 **Yang Diharapkan:**
-- ✅ Response tetap berhasil (fallback ke rule-based)
-- ✅ Cek logs buat error message
-- ✅ User gak liat error
+- Response tetap berhasil (fallback ke rule-based)
+- Cek logs buat error message
+- User gak liat error
 
 ---
 
@@ -158,9 +158,9 @@ uvicorn app.main:app --reload
 4. Klik eksekusi buat detail
 
 **Yang Perlu Dicek:**
-- ✅ Status: Success (hijau)
-- ✅ Input data: device_1, device_2 ada
-- ✅ Output data: ai_highlights, ai_summary ada
+- Status: Success (hijau)
+- Input data: device_1, device_2 ada
+- Output data: ai_highlights, ai_summary ada
 
 ### Cek Log Backend
 
@@ -303,12 +303,12 @@ Atau edit `.env` dan restart.
 
 ## Langkah Selanjutnya
 
-1. ✅ Setup workflow n8n
-2. ✅ Konfigurasi backend
-3. ✅ Test integrasi
-4. 📝 Kustomisasi algoritma AI (liat `N8N_CUSTOM_AI_ALGORITHM.md`)
-5. 📊 Monitor performa
-6. 🚀 Deploy ke production
+1. Setup workflow n8n
+2. Konfigurasi backend
+3. Test integrasi
+4. Kustomisasi algoritma AI (liat `N8N_CUSTOM_AI_ALGORITHM.md`)
+5. Monitor performa
+6. Deploy ke production
 
 ---
 

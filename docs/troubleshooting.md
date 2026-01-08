@@ -15,7 +15,7 @@ Dokumen ini nyatet semua masalah yang ketemu selama development dan solusinya.
 
 ## 1. Foreign Key Constraint Error
 
-### ❌ **Pesan Error:**
+### **Pesan Error:**
 ```
 sqlalchemy.exc.IntegrityError: (mysql.connector.errors.IntegrityError) 1452 (23000): 
 Cannot add or update a child row: a foreign key constraint fails 
@@ -23,10 +23,10 @@ Cannot add or update a child row: a foreign key constraint fails
 REFERENCES `categories` (`id`))
 ```
 
-### 🔍 **Penyebab:**
+### **Penyebab:**
 User nyoba nambahin HP dengan `category_id` yang gak ada di tabel `categories`.
 
-### ✅ **Solusi:**
+### **Solusi:**
 1. Bikin kategori dulu pake endpoint `POST /categories/`
 2. Catat ID kategori yang dibuat (misal: `id: 1`)
 3. Pake ID tersebut waktu bikin HP baru
@@ -49,7 +49,7 @@ POST /devices/
 }
 ```
 
-### 📝 **File Terkait:**
+### **File Terkait:**
 - `app/routers/categories.py`
 - `app/models.py` (relasi foreign key)
 
@@ -57,28 +57,28 @@ POST /devices/
 
 ## 2. Pydantic v1 vs v2 Incompatibility
 
-### ❌ **Pesan Error:**
+### **Pesan Error:**
 ```
 UserWarning: Valid config keys have changed in V2:
 * 'orm_mode' has been renamed to 'from_attributes'
 ```
 
-### 🔍 **Penyebab:**
+### **Penyebab:**
 Kode pake sintaks Pydantic v1 (`orm_mode = True`), tapi library yang terinstall adalah Pydantic v2.
 
-### ✅ **Solusi:**
+### **Solusi:**
 Update semua Pydantic schema buat pake sintaks v2.
 
 **Perubahan di `app/schemas/device.py`:**
 ```python
-# ❌ SEBELUM (Pydantic v1)
+# SEBELUM (Pydantic v1)
 class Device(DeviceBase):
     id: int
     
     class Config:
         orm_mode = True
 
-# ✅ SESUDAH (Pydantic v2)
+# SESUDAH (Pydantic v2)
 class Device(DeviceBase):
     id: int
     
@@ -95,28 +95,28 @@ class Device(DeviceBase):
 
 ## 3. Compare Endpoint Serialization Error
 
-### ❌ **Pesan Error:**
+### **Pesan Error:**
 ```
 500 Internal Server Error
 ```
 
-### 🔍 **Penyebab:**
+### **Penyebab:**
 Ada 2 masalah:
 1. Router pake `response_model=dict` yang terlalu strict
 2. Service layer nyoba manual serialization pake `.from_orm()` (Pydantic v1 syntax)
 
-### ✅ **Solusi:**
+### **Solusi:**
 
 **1. Hapus `response_model=dict` di router:**
 
 File: `app/routers/compare.py`
 ```python
-# ❌ SEBELUM
+# SEBELUM
 @router.get("/", response_model=dict)
 def compare_devices(id1: int, id2: int, db: Session = Depends(get_db)):
     ...
 
-# ✅ SESUDAH
+# SESUDAH
 @router.get("/")
 def compare_devices(id1: int, id2: int, db: Session = Depends(get_db)):
     ...
@@ -126,7 +126,7 @@ def compare_devices(id1: int, id2: int, db: Session = Depends(get_db)):
 
 File: `app/services/comparison_service.py`
 ```python
-# ❌ SEBELUM (Manual serialization)
+# SEBELUM (Manual serialization)
 from ..schemas.device import Device as DeviceSchema
 
 return {
@@ -135,7 +135,7 @@ return {
     "highlights": highlights
 }
 
-# ✅ SESUDAH (Biarin FastAPI yang handle)
+# SESUDAH (Biarin FastAPI yang handle)
 return {
     "device_1": device1,
     "device_2": device2,
@@ -151,16 +151,16 @@ return {
 
 ## 4. Uvicorn Command Not Found
 
-### ❌ **Pesan Error:**
+### **Pesan Error:**
 ```powershell
 uvicorn : The term 'uvicorn' is not recognized as the name of a cmdlet, 
 function, script file, or operable program.
 ```
 
-### 🔍 **Penyebab:**
+### **Penyebab:**
 Virtual environment (`.venv`) belum diaktifin di terminal PowerShell.
 
-### ✅ **Solusi:**
+### **Solusi:**
 Aktifin virtual environment dulu:
 
 ```powershell
@@ -174,7 +174,7 @@ Aktifin virtual environment dulu:
 uvicorn app.main:app --reload
 ```
 
-### 💡 **Tips:**
+### **Tips:**
 Kalau muncul error "running scripts is disabled", jalanin:
 ```powershell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
@@ -184,12 +184,12 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 ## 5. Validation Error 422 (Unprocessable Content)
 
-### ❌ **Pesan Error:**
+### **Pesan Error:**
 ```
 422 Unprocessable Content
 ```
 
-### 🔍 **Penyebab:**
+### **Penyebab:**
 Data yang dikirim gak sesuai dengan schema yang didefinisikan. Kemungkinan:
 - Ada field wajib yang kosong
 - Tipe data salah (misal: string buat field integer)
@@ -203,14 +203,14 @@ Data yang dikirim gak sesuai dengan schema yang didefinisikan. Kemungkinan:
 **Contoh Kesalahan Umum:**
 
 ```json
-// ❌ SALAH
+// SALAH
 {
   "category_id": 0,        // ← ID 0 gak valid
   "price": "1.000.000",    // ← Format salah (pake titik)
   "release_year": "2023"   // ← Harusnya integer, bukan string
 }
 
-// ✅ BENER
+// BENER
 {
   "category_id": 1,
   "price": 1000000,        // atau "1000000.00"

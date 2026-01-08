@@ -4,10 +4,10 @@ Ini algoritma AI sederhana buat nganalisis perbandingan HP **tanpa perlu bayar A
 
 ## Kenapa Pake Ini?
 
-✅ **Gratis 100%** - Gak perlu token atau API key  
-✅ **Cepet** - Gak usah nunggu API external  
-✅ **Bisa diubah-ubah** - Logic-nya bisa disesuaikan sesuka hati  
-✅ **Aman** - Data gak keluar dari server kita  
+**Gratis 100%** - Gak perlu token atau API key  
+**Cepet** - Gak usah nunggu API external  
+**Bisa diubah-ubah** - Logic-nya bisa disesuaikan sesuka hati  
+**Aman** - Data gak keluar dari server kita  
 
 ---
 
@@ -199,7 +199,7 @@ if (Math.abs(perf1 - perf2) > 5) {
   const winnerCPU = perf1 > perf2 ? device1.cpu : device2.cpu;
   
   highlights.push({
-    category: "🎮 Performa Gaming",
+    category: "Performa Gaming",
     winner: winner,
     reason: `Skor performa ${perfDiff}% lebih tinggi pake ${winnerCPU}, lebih smooth buat gaming sama multitasking`
   });
@@ -213,7 +213,7 @@ if (Math.abs(cam1 - cam2) > 2) {
   const camDiff = Math.abs(cam1 - cam2);
   
   highlights.push({
-    category: "📸 Kamera",
+    category: "Kamera",
     winner: winner,
     reason: `${camWinner}MP vs ${camLoser}MP, selisih ${camDiff}MP bikin foto lebih detail dan tajam`
   });
@@ -227,7 +227,7 @@ if (Math.abs(bat1 - bat2) > 300) {
   const batDiffPercent = Math.round(((batWinner - batLoser) / batLoser) * 100);
   
   highlights.push({
-    category: "🔋 Daya Tahan Baterai",
+    category: "Daya Tahan Baterai",
     winner: winner,
     reason: `${batWinner}mAh vs ${batLoser}mAh, tahan ${batDiffPercent}% lebih lama buat pemakaian sehari-hari`
   });
@@ -240,7 +240,7 @@ if (Math.abs(value1 - value2) > 0.5) {
   const cheaper = device1.price < device2.price ? device1.name : device2.name;
   
   highlights.push({
-    category: "💰 Value for Money",
+    category: "Value for Money",
     winner: winner,
     reason: `Lebih worth it! ${cheaper} lebih murah Rp ${(priceDiff/1000).toFixed(0)}rb dengan specs yang oke`
   });
@@ -254,7 +254,7 @@ if (Math.abs(recency1 - recency2) > 0) {
   const yearDiff = Math.abs(recency1 - recency2);
   
   highlights.push({
-    category: "📅 Teknologi Terbaru",
+    category: "Teknologi Terbaru",
     winner: winner,
     reason: `Rilis ${yearWinner} (${yearDiff} tahun lebih baru), udah pake teknologi sama fitur terkini`
   });
@@ -345,27 +345,27 @@ return {
 {
   "ai_highlights": [
     {
-      "category": "🎮 Performa Gaming",
+      "category": "Performa Gaming",
       "winner": "iPhone 15 Pro",
       "reason": "Skor performa 6% lebih tinggi pake A17 Pro, lebih smooth buat gaming sama multitasking"
     },
     {
-      "category": "📸 Kamera",
+      "category": "Kamera",
       "winner": "Samsung Galaxy S24",
       "reason": "50MP vs 48MP, selisih 2MP bikin foto lebih detail dan tajam"
     },
     {
-      "category": "🔋 Daya Tahan Baterai",
+      "category": "Daya Tahan Baterai",
       "winner": "Samsung Galaxy S24",
       "reason": "4000mAh vs 3274mAh, tahan 22% lebih lama buat pemakaian sehari-hari"
     },
     {
-      "category": "💰 Value for Money",
+      "category": "Value for Money",
       "winner": "Samsung Galaxy S24",
       "reason": "Lebih worth it! Samsung Galaxy S24 lebih murah Rp 3000rb dengan specs yang oke"
     },
     {
-      "category": "📅 Teknologi Terbaru",
+      "category": "Teknologi Terbaru",
       "winner": "Samsung Galaxy S24",
       "reason": "Rilis 2024 (1 tahun lebih baru), udah pake teknologi sama fitur terkini"
     }
@@ -437,7 +437,7 @@ const storage2 = parseStorage(device2.storage);
 if (Math.abs(storage1 - storage2) > 64) {
   const winner = storage1 > storage2 ? device1.name : device2.name;
   highlights.push({
-    category: "💾 Storage",
+    category: "Storage",
     winner: winner,
     reason: `${Math.max(storage1, storage2)}GB lebih lega buat foto, video, sama aplikasi`
   });

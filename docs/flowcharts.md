@@ -4,7 +4,7 @@ Dokumentasi visual buat sistem COMPARELY pake Mermaid diagrams.
 
 ---
 
-## 📊 1. Arsitektur Sistem
+## 1. Arsitektur Sistem
 
 ```mermaid
 graph TB
@@ -71,7 +71,7 @@ graph TB
 
 ---
 
-## 🔍 2. Flow Pencarian Perangkat
+## 2. Flow Pencarian Perangkat
 
 ```mermaid
 flowchart TD
@@ -105,7 +105,7 @@ flowchart TD
 
 ---
 
-## ⚖️ 3. Flow Perbandingan Perangkat
+## 3. Flow Perbandingan Perangkat
 
 ```mermaid
 flowchart TD
@@ -142,7 +142,7 @@ flowchart TD
 
 ---
 
-## 🤖 4. Flow Perbandingan dengan AI
+## 4. Flow Perbandingan dengan AI
 
 ```mermaid
 flowchart TD
@@ -188,7 +188,7 @@ flowchart TD
 
 ---
 
-## 🎯 5. Flow Rekomendasi Perangkat
+## 5. Flow Rekomendasi Perangkat
 
 ```mermaid
 flowchart TD
@@ -233,7 +233,7 @@ flowchart TD
 
 ---
 
-## 🧠 6. Flow Rekomendasi dengan AI
+## 6. Flow Rekomendasi dengan AI
 
 ```mermaid
 flowchart TD
@@ -280,7 +280,7 @@ flowchart TD
 
 ---
 
-## 📥 7. Flow Import Data CSV
+## 7. Flow Import Data CSV
 
 ```mermaid
 flowchart TD
@@ -342,7 +342,7 @@ flowchart TD
 
 ---
 
-## 🔄 8. Activity Diagram - User Journey
+## 8. Activity Diagram - User Journey
 
 ```mermaid
 stateDiagram-v2
@@ -387,13 +387,13 @@ stateDiagram-v2
 ## Catatan Diagram
 
 ### Konvensi Warna:
-- 🔵 **Biru** (`#42A5F5`): Start/End points
-- 🟠 **Orange** (`#FFA726`): Decision points (diamond shapes)
-- 🟡 **Kuning** (`#FFD54F`): Processing/Logic
-- 🟣 **Ungu** (`#BA68C8`, `#AB47BC`): AI/External services & formatting
-- 🟢 **Hijau** (`#81C784`, `#66BB6A`): Success states & database operations
-- 🔴 **Merah** (`#EF5350`): Error states
-- 🟤 **Orange Muda** (`#FFB74D`): Warning/Skip states
+- **Biru** (`#42A5F5`): Start/End points
+- **Orange** (`#FFA726`): Decision points (diamond shapes)
+- **Kuning** (`#FFD54F`): Processing/Logic
+- **Ungu** (`#BA68C8`, `#AB47BC`): AI/External services & formatting
+- **Hijau** (`#81C784`, `#66BB6A`): Success states & database operations
+- **Merah** (`#EF5350`): Error states
+- **Orange Muda** (`#FFB74D`): Warning/Skip states
 
 ### Cara Pake:
 1. Copy kode Mermaid ke Markdown viewer yang support Mermaid

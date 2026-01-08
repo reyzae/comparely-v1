@@ -5,11 +5,11 @@
 Script `scrape_gsmarena.py` udah dilengkapi dengan fitur:
 
 ### Fitur Utama:
-1. **✅ Filter Data N/A** - Cuma simpen data lengkap (camera, battery, RAM, storage)
-2. **✅ Pencegahan Duplicate** - Cek nama & brand sebelum simpen
-3. **✅ Auto-Retry** - 3x percobaan kalau koneksi gagal
-4. **✅ Progress Detail** - Liat status setiap device (SAVED/SKIP/DUPLICATE)
-5. **✅ Statistik Lengkap** - Total scraped, complete, skipped
+1. **Filter Data N/A** - Cuma simpen data lengkap (camera, battery, RAM, storage)
+2. **Pencegahan Duplicate** - Cek nama & brand sebelum simpen
+3. **Auto-Retry** - 3x percobaan kalau koneksi gagal
+4. **Progress Detail** - Liat status setiap device (SAVED/SKIP/DUPLICATE)
+5. **Statistik Lengkap** - Total scraped, complete, skipped
 
 ### Cara Pakai:
 
@@ -22,11 +22,11 @@ python scrape_gsmarena.py
 
 ### Contoh Output:
 ```
-📊 STATISTIK:
+STATISTIK:
    Total scraped      : 150
-   ✅ Complete & saved : 45
-   ⏭️  Skipped (N/A)    : 95
-   ⏭️  Skipped (Dup)    : 10
+   Complete & saved : 45
+   Skipped (N/A)    : 95
+   Skipped (Dup)    : 10
 ```
 
 ---
@@ -169,4 +169,4 @@ Response:
 
 ---
 
-**Happy Scraping! 🚀**
+**Happy Scraping!**
