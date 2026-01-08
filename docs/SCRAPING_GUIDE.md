@@ -1,29 +1,29 @@
-# Panduan Penggunaan Scraper & Database Management
+# Panduan Scraper & Database Management
 
-## 🚀 Enhanced Scraper
+## Scraper yang Udah Ditingkatkan
 
-Script `scrape_gsmarena.py` sudah dilengkapi dengan fitur:
+Script `scrape_gsmarena.py` udah dilengkapi dengan fitur:
 
 ### Fitur Utama:
-1. **✅ Filter Data N/A** - Hanya simpan data lengkap (camera, battery, RAM, storage)
-2. **✅ Pencegahan Duplicate** - Cek nama & brand sebelum simpan
-3. **✅ Auto-Retry** - 3x percobaan jika koneksi gagal
-4. **✅ Progress Detail** - Lihat status setiap device (SAVED/SKIP/DUPLICATE)
+1. **✅ Filter Data N/A** - Cuma simpen data lengkap (camera, battery, RAM, storage)
+2. **✅ Pencegahan Duplicate** - Cek nama & brand sebelum simpen
+3. **✅ Auto-Retry** - 3x percobaan kalau koneksi gagal
+4. **✅ Progress Detail** - Liat status setiap device (SAVED/SKIP/DUPLICATE)
 5. **✅ Statistik Lengkap** - Total scraped, complete, skipped
 
-### Cara Menggunakan:
+### Cara Pakai:
 
 ```bash
-# Jalankan scraper
+# Jalanin scraper
 python scrape_gsmarena.py
 
 # Output akan di: data/scraped_phones.csv
 ```
 
-### Output Example:
+### Contoh Output:
 ```
 📊 STATISTIK:
-   Total scraped      : 150~
+   Total scraped      : 150
    ✅ Complete & saved : 45
    ⏭️  Skipped (N/A)    : 95
    ⏭️  Skipped (Dup)    : 10
@@ -31,7 +31,7 @@ python scrape_gsmarena.py
 
 ---
 
-## 🗑️ Database Reset
+## Reset Database
 
 ### Opsi 1: Via Script (Recommended)
 
@@ -41,7 +41,7 @@ python reset_database.py
 
 **Fitur:**
 - Konfirmasi safety (ketik 'RESET')
-- Tampilkan jumlah data yang akan dihapus
+- Tampilkan jumlah data yang bakal dihapus
 - Reset auto increment ID
 - Aman dan terkontrol
 
@@ -69,9 +69,9 @@ curl http://localhost:8000/admin/stats
 
 ---
 
-## 📋 Workflow Lengkap
+## Workflow Lengkap
 
-### 1. Reset Database (jika perlu)
+### 1. Reset Database (kalau perlu)
 ```bash
 python reset_database.py
 # Ketik: RESET
@@ -90,7 +90,7 @@ python import_csv.py data/scraped_phones.csv
 
 ### 4. Verifikasi
 ```bash
-# Jalankan web app
+# Jalanin web app
 uvicorn app.main:app --reload
 
 # Buka browser: http://localhost:8000
@@ -98,10 +98,10 @@ uvicorn app.main:app --reload
 
 ---
 
-## 🎯 Tips & Best Practices
+## Tips & Best Practices
 
-### Untuk Demo/Presentasi:
-1. **Scrape 1x saja** - Gunakan data yang sudah di-scrape
+### Buat Demo/Presentasi:
+1. **Scrape 1x aja** - Pake data yang udah di-scrape
 2. **Fokus ke kualitas** - 40-50 devices lengkap lebih baik dari 100 dengan N/A
 3. **Backup data** - Copy CSV sebelum import ulang
 
@@ -109,23 +109,23 @@ uvicorn app.main:app --reload
 
 **Q: Scraper dapat banyak SKIP?**
 - Normal! Banyak model di GSMArena belum punya data lengkap
-- Model upcoming/rumor memang datanya tidak complete
-- Target: 40-50 complete dari 150 scraped sudah bagus
+- Model upcoming/rumor memang datanya gak complete
+- Target: 40-50 complete dari 150 scraped udah bagus
 
 **Q: Duplicate terdeteksi?**
 - Bagus! Berarti filter bekerja
-- Duplicate bisa terjadi jika scrape ulang tanpa reset DB
+- Duplicate bisa terjadi kalau scrape ulang tanpa reset DB
 
 **Q: Import gagal?**
-- Pastikan database MySQL running
+- Pastiin database MySQL running
 - Cek .env file (DATABASE_URL)
-- Reset database dulu jika ada konflik
+- Reset database dulu kalau ada konflik
 
 ---
 
-## 🔧 Konfigurasi Scraper
+## Konfigurasi Scraper
 
-Edit `scrape_gsmarena.py` jika perlu:
+Edit `scrape_gsmarena.py` kalau perlu:
 
 ```python
 # Jumlah model per brand
@@ -138,13 +138,13 @@ MAX_RETRIES = 3  # Default: 3
 BRANDS = {
     "Samsung": "samsung-phones-9",
     "Xiaomi": "xiaomi-phones-80",
-    # Tambah brand lain di sini
+    # Tambahin brand lain di sini
 }
 ```
 
 ---
 
-## 📊 Database Stats API
+## Database Stats API
 
 Cek statistik database:
 

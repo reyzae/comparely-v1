@@ -1,84 +1,82 @@
-# 🔐 ROLE-BASED ACCESS CONTROL (RBAC) - IMPLEMENTATION GUIDE
+# Panduan RBAC (Role-Based Access Control)
 
-## ✅ RBAC System Implemented!
-
-Role-Based Access Control telah diimplementasikan untuk membatasi akses berdasarkan role user.
+Sistem RBAC udah diimplementasikan buat ngatur akses berdasarkan role user.
 
 ---
 
-## 📊 ROLE HIERARCHY
+## Hirarki Role
 
-### **1. Super Admin**
-- ✅ Full access ke semua fitur
-- ✅ Manage users & roles
-- ✅ Create, Read, Update, Delete (CRUD) semua resources
-- ✅ Access ke Settings & Tools
+### 1. Super Admin
+- ✅ Akses penuh ke semua fitur
+- ✅ Bisa manage users & roles
+- ✅ Create, Read, Update, Delete (CRUD) semua resource
+- ✅ Akses ke Settings & Tools
 
-### **2. Admin**
-- ✅ Full access ke devices & categories
-- ✅ CRUD operations
-- ✅ View analytics
-- ⚠️ Limited access ke user management
-- ❌ Cannot access system settings
+### 2. Admin
+- ✅ Akses penuh ke devices & categories
+- ✅ Bisa CRUD operations
+- ✅ Liat analytics
+- ⚠️ Akses terbatas ke user management
+- ❌ Gak bisa akses system settings
 
-### **3. Viewer**
-- ✅ Read-only access
-- ✅ View devices, categories, analytics
-- ❌ Cannot create, edit, or delete
-- ❌ Cannot access user management
-- ❌ Cannot access settings
+### 3. Viewer
+- ✅ Akses read-only
+- ✅ Bisa liat devices, categories, analytics
+- ❌ Gak bisa create, edit, atau delete
+- ❌ Gak bisa akses user management
+- ❌ Gak bisa akses settings
 
 ---
 
-## 🛠️ IMPLEMENTATION
+## Implementasi
 
-### **1. RBAC Middleware** (`app/core/rbac.py`)
+### 1. RBAC Middleware (`app/core/rbac.py`)
 
-**Functions**:
+**Fungsi-fungsi:**
 ```python
 # Decorators
-@require_role(["Admin", "Super Admin"])  # Route protection
+@require_role(["Admin", "Super Admin"])  # Proteksi route
 
-# Permission checks
-can_create(user)  # Check create permission
-can_update(user)  # Check update permission
-can_delete(user)  # Check delete permission
+# Cek permission
+can_create(user)  # Cek permission create
+can_update(user)  # Cek permission update
+can_delete(user)  # Cek permission delete
 has_permission(user, "permission_name")  # Custom permission
 ```
 
-**Usage in Routes**:
+**Cara Pake di Routes:**
 ```python
 from app.core.rbac import require_role
 
 @router.post("/devices/new")
 @require_role(["Admin", "Super Admin"])
 async def create_device(...):
-    # Only Admin & Super Admin can access
+    # Cuma Admin & Super Admin yang bisa akses
     ...
 ```
 
 ---
 
-### **2. Template Context** (`app/core/rbac_context.py`)
+### 2. Template Context (`app/core/rbac_context.py`)
 
-**Functions for Templates**:
+**Fungsi buat Templates:**
 ```python
-add_rbac_to_context(current_user)  # Add to template context
+add_rbac_to_context(current_user)  # Tambahin ke template context
 ```
 
-**Returns**:
+**Return:**
 - `can_create` - Boolean
 - `can_edit` - Boolean
 - `can_delete` - Boolean
 - `is_admin` - Boolean
 - `is_viewer` - Boolean
-- `user_role` - String (role name)
+- `user_role` - String (nama role)
 
-**Usage in Templates**:
+**Cara Pake di Templates:**
 ```html
 {% if can_create %}
     <a href="/admin/devices/new" class="btn btn-success">
-        <i class="fas fa-plus"></i> Add New Device
+        <i class="fas fa-plus"></i> Tambah Device Baru
     </a>
 {% endif %}
 
@@ -87,15 +85,15 @@ add_rbac_to_context(current_user)  # Add to template context
 {% endif %}
 
 {% if can_delete %}
-    <button class="btn btn-delete">Delete</button>
+    <button class="btn btn-delete">Hapus</button>
 {% endif %}
 ```
 
 ---
 
-## 🎯 HOW TO USE
+## Cara Pakai
 
-### **Step 1: Update Router to Include RBAC Context**
+### Langkah 1: Update Router buat Include RBAC Context
 
 ```python
 from app.core.rbac_context import add_rbac_to_context
@@ -104,7 +102,7 @@ from app.core.rbac_context import add_rbac_to_context
 async def admin_devices(request: Request, db: Session = Depends(get_db)):
     current_user = get_current_user(request, db)
     
-    # Add RBAC context
+    # Tambahin RBAC context
     rbac_context = add_rbac_to_context(current_user)
     
     return templates.TemplateResponse(
@@ -112,42 +110,42 @@ async def admin_devices(request: Request, db: Session = Depends(get_db)):
         {
             "request": request,
             "current_user": current_user,
-            **rbac_context,  # Add RBAC permissions
+            **rbac_context,  # Tambahin RBAC permissions
             "devices": devices,
-            # ... other context
+            # ... context lainnya
         }
     )
 ```
 
-### **Step 2: Protect Routes with Decorator**
+### Langkah 2: Proteksi Routes pake Decorator
 
 ```python
 from app.core.rbac import require_role
 
-# Only Admin & Super Admin
+# Cuma Admin & Super Admin
 @router.post("/devices/new")
 @require_role(["Admin", "Super Admin"])
 async def create_device(...):
     ...
 
-# Only Super Admin
+# Cuma Super Admin
 @router.post("/users/delete")
 @require_role(["Super Admin"])
 async def delete_user(...):
     ...
 ```
 
-### **Step 3: Hide UI Elements in Templates**
+### Langkah 3: Sembunyiin Elemen UI di Templates
 
 ```html
-<!-- Show "Add New" button only for Admin/Super Admin -->
+<!-- Tampilkan tombol "Tambah Baru" cuma buat Admin/Super Admin -->
 {% if can_create %}
 <a href="/admin/devices/new" class="btn btn-success">
-    <i class="fas fa-plus"></i> Add New Device
+    <i class="fas fa-plus"></i> Tambah Device Baru
 </a>
 {% endif %}
 
-<!-- Show Edit/Delete buttons only for Admin/Super Admin -->
+<!-- Tampilkan tombol Edit/Hapus cuma buat Admin/Super Admin -->
 {% if can_edit %}
 <a href="/admin/devices/{{ device.id }}/edit" class="btn btn-edit btn-sm">
     <i class="fas fa-edit"></i> Edit
@@ -157,50 +155,50 @@ async def delete_user(...):
 {% if can_delete %}
 <form method="POST" action="/admin/devices/{{ device.id }}/delete" style="display: inline;">
     <button type="submit" class="btn btn-delete btn-sm">
-        <i class="fas fa-trash"></i> Delete
+        <i class="fas fa-trash"></i> Hapus
     </button>
 </form>
 {% endif %}
 
-<!-- Show role-specific message -->
+<!-- Tampilkan pesan khusus role -->
 {% if is_viewer %}
 <div class="alert alert-info">
     <i class="fas fa-info-circle"></i>
-    You have read-only access. Contact admin to request edit permissions.
+    Kamu punya akses read-only. Hubungi admin kalau mau request edit permissions.
 </div>
 {% endif %}
 ```
 
 ---
 
-## 📝 IMPLEMENTATION CHECKLIST
+## Checklist Implementasi
 
-### **✅ Core RBAC Files Created**:
+### ✅ File RBAC Core Udah Dibuat:
 - [x] `app/core/rbac.py` - Middleware & decorators
 - [x] `app/core/rbac_context.py` - Template helpers
 
-### **⏭️ TODO: Update Routers** (Manual Implementation Needed):
+### ⏭️ TODO: Update Routers (Perlu Manual):
 
-For each admin router, add RBAC context:
+Buat setiap admin router, tambahin RBAC context:
 
-**Example for `devices.py`**:
+**Contoh buat `devices.py`**:
 ```python
 from app.core.rbac_context import add_rbac_to_context
 
-# In each GET route:
+# Di setiap GET route:
 rbac_context = add_rbac_to_context(current_user)
 return templates.TemplateResponse(
     "template.html",
     {
         "request": request,
         "current_user": current_user,
-        **rbac_context,  # ADD THIS
-        # ... other context
+        **rbac_context,  # TAMBAHIN INI
+        # ... context lainnya
     }
 )
 ```
 
-**Routers to Update**:
+**Routers yang Perlu Di-update**:
 - [ ] `dashboard.py`
 - [ ] `devices.py`
 - [ ] `categories.py`
@@ -210,110 +208,110 @@ return templates.TemplateResponse(
 - [ ] `settings.py`
 - [ ] `bulk_operations.py`
 
-### **⏭️ TODO: Update Templates** (Manual Implementation Needed):
+### ⏭️ TODO: Update Templates (Perlu Manual):
 
-For each template, wrap action buttons with permission checks:
+Buat setiap template, wrap tombol action pake cek permission:
 
-**Example**:
+**Contoh**:
 ```html
-<!-- Before -->
-<a href="/admin/devices/new" class="btn btn-success">Add New</a>
+<!-- Sebelum -->
+<a href="/admin/devices/new" class="btn btn-success">Tambah Baru</a>
 
-<!-- After -->
+<!-- Sesudah -->
 {% if can_create %}
-<a href="/admin/devices/new" class="btn btn-success">Add New</a>
+<a href="/admin/devices/new" class="btn btn-success">Tambah Baru</a>
 {% endif %}
 ```
 
-**Templates to Update**:
+**Templates yang Perlu Di-update**:
 - [ ] `devices_list.html`
 - [ ] `categories_list.html`
 - [ ] `users_list.html`
 - [ ] `dashboard.html`
-- [ ] etc.
+- [ ] dll.
 
 ---
 
-## 🧪 TESTING
+## Testing
 
-### **Test 1: Login as Admin**
+### Test 1: Login sebagai Admin
 ```
 Username: admin
 Password: admin123
-Expected: Full access, can create/edit/delete
+Expected: Akses penuh, bisa create/edit/delete
 ```
 
-### **Test 2: Login as Viewer**
+### Test 2: Login sebagai Viewer
 ```
 Username: user1
 Password: user1123
-Expected: Read-only, no create/edit/delete buttons
+Expected: Read-only, gak ada tombol create/edit/delete
 ```
 
-### **Test 3: Direct URL Access**
+### Test 3: Akses URL Langsung
 ```
-Try accessing: POST /admin/devices/new as Viewer
-Expected: 403 Forbidden error
+Coba akses: POST /admin/devices/new sebagai Viewer
+Expected: Error 403 Forbidden
 ```
 
 ---
 
-## 🚀 QUICK START
+## Quick Start
 
-### **Option 1: Auto-Update All Routers** (Recommended)
+### Opsi 1: Auto-Update Semua Routers (Recommended)
 
-Run this script to auto-add RBAC context to all routers:
+Jalanin script ini buat auto-add RBAC context ke semua routers:
 
 ```bash
 python update_routers_rbac.py
 ```
 
-### **Option 2: Manual Update** (Step by Step)
+### Opsi 2: Update Manual (Step by Step)
 
-1. Update one router at a time
-2. Test each router
-3. Update corresponding template
+1. Update satu router dulu
+2. Test setiap router
+3. Update template yang sesuai
 4. Test UI permissions
 
 ---
 
-## 📚 PERMISSION MATRIX
+## Tabel Permission
 
-| Feature | Super Admin | Admin | Viewer |
-|---------|-------------|-------|--------|
-| View Devices | ✅ | ✅ | ✅ |
-| Create Device | ✅ | ✅ | ❌ |
+| Fitur | Super Admin | Admin | Viewer |
+|-------|-------------|-------|--------|
+| Liat Devices | ✅ | ✅ | ✅ |
+| Buat Device | ✅ | ✅ | ❌ |
 | Edit Device | ✅ | ✅ | ❌ |
-| Delete Device | ✅ | ✅ | ❌ |
-| View Users | ✅ | ⚠️ | ❌ |
+| Hapus Device | ✅ | ✅ | ❌ |
+| Liat Users | ✅ | ⚠️ | ❌ |
 | Manage Users | ✅ | ❌ | ❌ |
-| View Analytics | ✅ | ✅ | ✅ |
+| Liat Analytics | ✅ | ✅ | ✅ |
 | System Settings | ✅ | ❌ | ❌ |
 | Bulk Operations | ✅ | ✅ | ❌ |
 
 ---
 
-## ⚠️ IMPORTANT NOTES
+## Catatan Penting
 
-1. **RBAC is implemented but NOT YET APPLIED to all routes**
-2. **Manual update needed** for each router & template
-3. **Test thoroughly** after implementing
-4. **Viewer role** = Read-only access
-5. **Admin role** = Full CRUD access (except user management)
-6. **Super Admin** = Full access to everything
-
----
-
-## 🛠️ NEXT STEPS
-
-1. ✅ **RBAC Core**: Implemented
-2. ⏭️ **Update Routers**: Add RBAC context to all routers
-3. ⏭️ **Update Templates**: Hide buttons based on permissions
-4. ⏭️ **Test**: Login as different roles and verify access
-5. ⏭️ **Production**: Deploy with proper role assignments
+1. **RBAC udah diimplementasikan tapi BELUM DITERAPKAN ke semua routes**
+2. **Perlu update manual** buat setiap router & template
+3. **Test dengan teliti** setelah implementasi
+4. **Role Viewer** = Akses read-only
+5. **Role Admin** = Akses CRUD penuh (kecuali user management)
+6. **Super Admin** = Akses penuh ke semuanya
 
 ---
 
-**RBAC SYSTEM READY FOR IMPLEMENTATION!** 🎉
+## Langkah Selanjutnya
 
-Use the helper functions and decorators to secure your admin panel.
+1. ✅ **RBAC Core**: Udah diimplementasikan
+2. ⏭️ **Update Routers**: Tambahin RBAC context ke semua routers
+3. ⏭️ **Update Templates**: Sembunyiin tombol berdasarkan permissions
+4. ⏭️ **Test**: Login sebagai role yang berbeda dan verify akses
+5. ⏭️ **Production**: Deploy dengan role assignment yang proper
+
+---
+
+**SISTEM RBAC SIAP DIIMPLEMENTASIKAN!** 🎉
+
+Pake fungsi helper dan decorators buat ngamanin admin panel kamu.

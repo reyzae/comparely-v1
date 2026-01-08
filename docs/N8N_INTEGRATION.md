@@ -1,33 +1,31 @@
-# Integrasi n8n untuk Fitur Highlight
+# Cara Integrasi n8n buat Fitur Highlight
 
-## Overview
-
-Dokumentasi lengkap untuk setup dan konfigurasi integrasi n8n dengan Comparely. n8n digunakan untuk memproses highlight perbandingan device dengan **custom AI algorithm** yang gratis (tidak perlu API berbayar).
+Ini dokumentasi lengkap buat setup dan konfigurasi integrasi n8n dengan Comparely. n8n dipake buat proses highlight perbandingan HP pake **algoritma AI custom** yang gratis (gak perlu bayar API).
 
 ---
 
-## Prerequisites
+## Yang Perlu Disiapkan
 
-1. **n8n self-hosted** sudah running di `n8n.wiracenter.com`
-2. **Comparely backend** sudah terinstall dan berjalan
-3. Akses ke n8n dashboard untuk membuat workflow
+1. **n8n self-hosted** udah jalan di `n8n.wiracenter.com`
+2. **Backend Comparely** udah terinstall dan running
+3. Akses ke dashboard n8n buat bikin workflow
 
 ---
 
-## Setup n8n Workflow
+## Setup Workflow n8n
 
-### Step 1: Login ke n8n
+### Langkah 1: Login ke n8n
 
 Buka browser dan akses: `https://n8n.wiracenter.com`
 
-### Step 2: Create New Workflow
+### Langkah 2: Bikin Workflow Baru
 
-1. Click **"New Workflow"** di dashboard
-2. Beri nama: `Comparely - Device Comparison AI`
+1. Klik **"New Workflow"** di dashboard
+2. Kasih nama: `Comparely - Device Comparison AI`
 
-### Step 3: Add Webhook Node
+### Langkah 3: Tambahin Webhook Node
 
-1. Click **"+"** untuk add node
+1. Klik **"+"** buat add node
 2. Pilih **"Webhook"**
 3. Konfigurasi:
    - **HTTP Method**: `POST`
@@ -37,67 +35,67 @@ Buka browser dan akses: `https://n8n.wiracenter.com`
 
 4. **Save** node
 
-### Step 4: Add Function Node
+### Langkah 4: Tambahin Function Node
 
-1. Click **"+"** setelah Webhook node
+1. Klik **"+"** setelah Webhook node
 2. Pilih **"Code"** → **"Run Once for All Items"**
-3. **Copy-paste** JavaScript code dari file `N8N_CUSTOM_AI_ALGORITHM.md`
+3. **Copy-paste** kode JavaScript dari file `N8N_CUSTOM_AI_ALGORITHM.md`
 4. **Save** node
 
-### Step 5: Connect Nodes
+### Langkah 5: Hubungkan Node
 
 1. Drag dari Webhook node ke Function node
-2. Pastikan ada garis connecting keduanya
+2. Pastiin ada garis yang nyambungin keduanya
 
-### Step 6: Activate Workflow
+### Langkah 6: Aktifkan Workflow
 
-1. Click toggle **"Inactive"** → **"Active"** di kanan atas
-2. Workflow sekarang live!
+1. Klik toggle **"Inactive"** → **"Active"** di kanan atas
+2. Workflow sekarang udah live!
 
-### Step 7: Copy Webhook URL
+### Langkah 7: Copy URL Webhook
 
-1. Click pada Webhook node
+1. Klik pada Webhook node
 2. Copy **Production URL** (contoh: `https://n8n.wiracenter.com/webhook/comparison-highlight`)
-3. Save URL ini untuk konfigurasi backend
+3. Simpen URL ini buat konfigurasi backend
 
 ---
 
 ## Konfigurasi Backend Comparely
 
-### Step 1: Update .env File
+### Langkah 1: Update File .env
 
-Buat atau edit file `.env` di root folder Comparely:
+Bikin atau edit file `.env` di root folder Comparely:
 
 ```bash
-# n8n Integration Configuration
+# Konfigurasi Integrasi n8n
 N8N_WEBHOOK_URL=https://n8n.wiracenter.com/webhook/comparison-highlight
 N8N_ENABLED=true
 N8N_TIMEOUT=10
 ```
 
 **Penjelasan:**
-- `N8N_WEBHOOK_URL`: URL webhook dari n8n (dari Step 7 di atas)
-- `N8N_ENABLED`: Set `true` untuk enable n8n, `false` untuk disable
+- `N8N_WEBHOOK_URL`: URL webhook dari n8n (dari Langkah 7 di atas)
+- `N8N_ENABLED`: Set `true` buat enable n8n, `false` buat disable
 - `N8N_TIMEOUT`: Timeout dalam detik (default: 10)
 
-### Step 2: Restart Aplikasi
+### Langkah 2: Restart Aplikasi
 
 ```bash
-# Stop aplikasi (Ctrl+C jika running)
+# Stop aplikasi (Ctrl+C kalau lagi running)
 # Start ulang
 uvicorn app.main:app --reload
 ```
 
 ---
 
-## Testing Integration
+## Testing Integrasi
 
-### Test 1: Basic Comparison
+### Test 1: Perbandingan Dasar
 
 1. Buka browser: `http://localhost:8000/compare?id1=1&id2=2`
-2. Periksa response JSON
+2. Cek response JSON
 
-**Expected Response:**
+**Response yang Diharapkan:**
 
 ```json
 {
@@ -105,9 +103,9 @@ uvicorn app.main:app --reload
   "device_2": { ... },
   "highlights": [
     {
-      "category": "🎮 Gaming Performance",
+      "category": "🎮 Performa Gaming",
       "winner": "iPhone 15 Pro",
-      "reason": "Score performa 6% lebih tinggi dengan A17 Pro"
+      "reason": "Skor performa 6% lebih tinggi pake A17 Pro"
     },
     ...
   ],
@@ -120,21 +118,21 @@ uvicorn app.main:app --reload
 }
 ```
 
-**Check:**
+**Yang Perlu Dicek:**
 - ✅ `highlights` berisi array of objects (bukan string)
-- ✅ `ai_summary` ada dan tidak kosong
-- ✅ `scores` berisi performance/camera/battery scores
+- ✅ `ai_summary` ada dan gak kosong
+- ✅ `scores` berisi skor performance/camera/battery
 - ✅ `source` = `"n8n_ai"` (bukan `"rule_based"`)
 
-### Test 2: Fallback Mechanism
+### Test 2: Mekanisme Fallback
 
 1. Set `N8N_ENABLED=false` di `.env`
 2. Restart aplikasi
 3. Test comparison lagi
 
-**Expected:**
-- ✅ Response tetap berhasil (tidak error)
-- ✅ `highlights` berisi simple strings
+**Yang Diharapkan:**
+- ✅ Response tetap berhasil (gak error)
+- ✅ `highlights` berisi string sederhana
 - ✅ `source` = `"rule_based"`
 
 ### Test 3: Error Handling
@@ -143,105 +141,105 @@ uvicorn app.main:app --reload
 2. Set `N8N_ENABLED=true`
 3. Restart dan test
 
-**Expected:**
+**Yang Diharapkan:**
 - ✅ Response tetap berhasil (fallback ke rule-based)
-- ✅ Check logs untuk error message
-- ✅ User tidak melihat error
+- ✅ Cek logs buat error message
+- ✅ User gak liat error
 
 ---
 
 ## Monitoring & Debugging
 
-### Check n8n Execution Logs
+### Cek Log Eksekusi n8n
 
-1. Login ke n8n dashboard
-2. Click **"Executions"** di sidebar
-3. Lihat list executions dari workflow
-4. Click execution untuk detail
+1. Login ke dashboard n8n
+2. Klik **"Executions"** di sidebar
+3. Liat list eksekusi dari workflow
+4. Klik eksekusi buat detail
 
-**What to check:**
+**Yang Perlu Dicek:**
 - ✅ Status: Success (hijau)
 - ✅ Input data: device_1, device_2 ada
 - ✅ Output data: ai_highlights, ai_summary ada
 
-### Check Backend Logs
+### Cek Log Backend
 
 ```bash
-# Lihat logs aplikasi
+# Liat logs aplikasi
 # Cari log dari n8n_service
 ```
 
-**Log messages:**
+**Pesan Log:**
 - `INFO: Sending comparison to n8n: iPhone 15 Pro vs Samsung Galaxy S24`
 - `INFO: Successfully received response from n8n`
-- `ERROR: n8n request timeout after 10 seconds` (jika timeout)
-- `INFO: Using rule-based highlights (n8n not available)` (jika fallback)
+- `ERROR: n8n request timeout after 10 seconds` (kalau timeout)
+- `INFO: Using rule-based highlights (n8n not available)` (kalau fallback)
 
 ---
 
 ## Troubleshooting
 
-### Problem: `source` selalu `"rule_based"`
+### Masalah: `source` selalu `"rule_based"`
 
-**Possible causes:**
+**Kemungkinan Penyebab:**
 1. `N8N_ENABLED=false` di `.env`
 2. `N8N_WEBHOOK_URL` salah atau kosong
-3. n8n workflow tidak active
-4. n8n server down
+3. Workflow n8n gak aktif
+4. Server n8n down
 
-**Solution:**
-1. Check `.env` file
-2. Verify webhook URL di n8n dashboard
-3. Pastikan workflow toggle = "Active"
-4. Test n8n URL di browser/Postman
+**Solusi:**
+1. Cek file `.env`
+2. Verify URL webhook di dashboard n8n
+3. Pastiin workflow toggle = "Active"
+4. Test URL n8n di browser/Postman
 
 ---
 
-### Problem: Response lambat (> 10 detik)
+### Masalah: Response lambat (> 10 detik)
 
-**Possible causes:**
-1. n8n processing terlalu lama
+**Kemungkinan Penyebab:**
+1. Proses n8n terlalu lama
 2. Network latency tinggi
-3. Function node code tidak optimal
+3. Kode Function node gak optimal
 
-**Solution:**
-1. Increase `N8N_TIMEOUT` di `.env` (contoh: `15`)
-2. Optimize JavaScript code di Function node
-3. Check network connection
+**Solusi:**
+1. Naikin `N8N_TIMEOUT` di `.env` (contoh: `15`)
+2. Optimasi kode JavaScript di Function node
+3. Cek koneksi network
 
 ---
 
-### Problem: `highlights` kosong atau format salah
+### Masalah: `highlights` kosong atau format salah
 
-**Possible causes:**
-1. Function node code error
-2. Input data tidak lengkap
+**Kemungkinan Penyebab:**
+1. Kode Function node error
+2. Input data gak lengkap
 3. Parsing error di JavaScript
 
-**Solution:**
-1. Check n8n execution logs untuk error
+**Solusi:**
+1. Cek log eksekusi n8n buat error
 2. Verify input data di n8n
-3. Test Function node code secara manual
-4. Check `N8N_CUSTOM_AI_ALGORITHM.md` untuk code yang benar
+3. Test kode Function node secara manual
+4. Cek `N8N_CUSTOM_AI_ALGORITHM.md` buat kode yang bener
 
 ---
 
-### Problem: n8n workflow error
+### Masalah: Workflow n8n error
 
-**Possible causes:**
-1. JavaScript syntax error
-2. Missing fields di input
-3. Node configuration salah
+**Kemungkinan Penyebab:**
+1. Syntax error JavaScript
+2. Field yang hilang di input
+3. Konfigurasi node salah
 
-**Solution:**
-1. Check error message di n8n execution
-2. Validate JavaScript code
-3. Re-check webhook configuration
-4. Test dengan sample data di n8n
+**Solusi:**
+1. Cek error message di eksekusi n8n
+2. Validasi kode JavaScript
+3. Re-check konfigurasi webhook
+4. Test pake sample data di n8n
 
 ---
 
-## Advanced Configuration
+## Konfigurasi Advanced
 
 ### Custom Timeout per Request
 
@@ -257,9 +255,9 @@ response = requests.post(
 )
 ```
 
-### Add Authentication
+### Tambahin Authentication
 
-Jika n8n webhook perlu authentication:
+Kalau webhook n8n perlu authentication:
 
 1. **Di n8n**: Enable authentication di Webhook node
 2. **Di backend**: Update `n8n_service.py`:
@@ -271,7 +269,7 @@ headers = {
 }
 ```
 
-### Disable n8n Temporarily
+### Disable n8n Sementara
 
 Tanpa restart aplikasi:
 
@@ -285,39 +283,39 @@ Atau edit `.env` dan restart.
 
 ---
 
-## Performance Tips
+## Tips Performa
 
-1. **Cache Results**: Implement caching untuk comparison yang sama
-2. **Async Processing**: n8n call sudah non-blocking
-3. **Batch Processing**: Untuk multiple comparisons, consider batch API
-4. **Monitoring**: Setup monitoring untuk n8n uptime
+1. **Cache Results**: Implement caching buat comparison yang sama
+2. **Async Processing**: Call n8n udah non-blocking
+3. **Batch Processing**: Buat multiple comparisons, pertimbangin batch API
+4. **Monitoring**: Setup monitoring buat n8n uptime
 
 ---
 
-## Security Considerations
+## Pertimbangan Keamanan
 
-1. **HTTPS Only**: Pastikan n8n menggunakan HTTPS
-2. **Webhook Secret**: Add secret token untuk validate requests
+1. **HTTPS Only**: Pastiin n8n pake HTTPS
+2. **Webhook Secret**: Tambahin secret token buat validasi request
 3. **Rate Limiting**: Implement rate limiting di n8n
-4. **Input Validation**: Validate data sebelum send ke n8n
+4. **Input Validation**: Validasi data sebelum kirim ke n8n
 
 ---
 
-## Next Steps
+## Langkah Selanjutnya
 
-1. ✅ Setup n8n workflow
-2. ✅ Configure backend
-3. ✅ Test integration
-4. 📝 Customize AI algorithm (lihat `N8N_CUSTOM_AI_ALGORITHM.md`)
-5. 📊 Monitor performance
-6. 🚀 Deploy to production
+1. ✅ Setup workflow n8n
+2. ✅ Konfigurasi backend
+3. ✅ Test integrasi
+4. 📝 Kustomisasi algoritma AI (liat `N8N_CUSTOM_AI_ALGORITHM.md`)
+5. 📊 Monitor performa
+6. 🚀 Deploy ke production
 
 ---
 
-## Support
+## Bantuan
 
-Untuk masalah atau pertanyaan:
-- Check dokumentasi: `N8N_CUSTOM_AI_ALGORITHM.md`
+Kalau ada masalah atau pertanyaan:
+- Cek dokumentasi: `N8N_CUSTOM_AI_ALGORITHM.md`
 - Review implementation plan: `implementation_plan.md`
-- Check backend logs
-- Review n8n execution logs
+- Cek backend logs
+- Review log eksekusi n8n

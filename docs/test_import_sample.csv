@@ -1,0 +1,4 @@
+name,brand,category_id,cpu,gpu,ram,storage,camera,battery,screen,release_year,price,image_url,description
+"Samsung Galaxy S23, Ultra",Samsung,1,Snapdragon 8 Gen 2,Adreno 740,12GB,256GB,200MP + 12MP + 10MP,5000mAh,"6.8"" AMOLED",2023,18999000,https://example.com/s23.jpg,Flagship smartphone dengan kamera terbaik
+iPhone 15 Pro,Apple,1,A17 Pro,Apple GPU,8GB,256GB,48MP + 12MP + 12MP,3274mAh,6.1" OLED,2023,19999000,https://example.com/iphone15.jpg,iPhone terbaru dengan chip A17 Pro
+Google Pixel 8,Google,1,Google Tensor G3,Mali-G715,8GB,128GB,50MP + 12MP,4575mAh,6.2" OLED,2023,10999000,https://example.com/pixel8.jpg,Pure Android experience dengan AI features

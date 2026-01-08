@@ -1,12 +1,10 @@
-# 🔐 AUTHENTICATION GUIDE - COMPARELY
+# Panduan Authentication - COMPARELY
 
-## ✅ Password Reset Complete!
-
-Semua user password sudah direset dengan pattern: `[username]123`
+Semua password user udah direset dengan pattern: `[username]123`
 
 ---
 
-## 👥 LOGIN CREDENTIALS
+## Login Credentials
 
 | Username | Password | Role | Email |
 |----------|----------|------|-------|
@@ -19,9 +17,9 @@ Semua user password sudah direset dengan pattern: `[username]123`
 
 ---
 
-## 🔑 CHANGE PASSWORD FEATURE
+## Fitur Ganti Password
 
-### **Cara Menggunakan**:
+### Cara Pakai:
 
 1. **Login** ke admin panel
 2. **Klik avatar** di kanan atas
@@ -34,130 +32,130 @@ Semua user password sudah direset dengan pattern: `[username]123`
 6. **Klik "Update Password"**
 7. **Done!** Password berhasil diubah
 
-### **Fitur Change Password**:
-- ✅ Verify current password (security)
-- ✅ Validate new password match
-- ✅ Hash dengan bcrypt
+### Fitur Change Password:
+- ✅ Verify password lama (keamanan)
+- ✅ Validasi password baru harus match
+- ✅ Hash pake bcrypt
 - ✅ Update database
-- ✅ Success/error message
-- ✅ Available di `/admin/profile`
+- ✅ Pesan success/error
+- ✅ Tersedia di `/admin/profile`
 
 ---
 
-## 🚀 TESTING LOGIN
+## Testing Login
 
-### **Test 1: Login dengan Admin**
+### Test 1: Login pake Admin
 ```
 URL: http://localhost:8000/admin/login
 Username: admin
 Password: admin123
 ```
 
-### **Test 2: Login dengan User Lain**
+### Test 2: Login pake User Lain
 ```
 URL: http://localhost:8000/admin/login
 Username: tegar
 Password: tegar123
 ```
 
-### **Test 3: Change Password**
+### Test 3: Ganti Password
 ```
 1. Login sebagai admin
 2. Buka: http://localhost:8000/admin/profile
-3. Change password dari admin123 ke password baru
+3. Ganti password dari admin123 ke password baru
 4. Logout
-5. Login lagi dengan password baru
+5. Login lagi pake password baru
 ```
 
 ---
 
-## 🔧 AUTHENTICATION SYSTEM
+## Sistem Authentication
 
-### **Features**:
-- ✅ Real user authentication (bcrypt hash)
+### Fitur:
+- ✅ Autentikasi user beneran (bcrypt hash)
 - ✅ Session management (SessionMiddleware)
 - ✅ Login/Logout
-- ✅ Change password
-- ✅ Password verification
-- ✅ User-specific data
-- ✅ Multi-user support
-- ✅ Role-based display
+- ✅ Ganti password
+- ✅ Verifikasi password
+- ✅ Data per-user
+- ✅ Support multi-user
+- ✅ Tampilan berdasarkan role
 
-### **Security**:
-- ✅ Bcrypt password hashing
-- ✅ Session encryption (SECRET_KEY)
-- ✅ Current password verification
-- ✅ Password confirmation
-- ✅ Active user check
-- ✅ Last login tracking
+### Keamanan:
+- ✅ Password hashing pake Bcrypt
+- ✅ Enkripsi session (SECRET_KEY)
+- ✅ Verifikasi password lama
+- ✅ Konfirmasi password
+- ✅ Cek user aktif
+- ✅ Tracking last login
 
 ---
 
-## 📝 ADMIN PANEL ACCESS
+## Akses Admin Panel
 
-### **Routes**:
-- `/admin/login` - Login page
+### Routes:
+- `/admin/login` - Halaman login
 - `/admin/logout` - Logout
-- `/admin/profile` - User profile & change password
-- `/admin/dashboard` - Dashboard (after login)
+- `/admin/profile` - Profile user & ganti password
+- `/admin/dashboard` - Dashboard (setelah login)
 
-### **Profile Page Sections**:
-1. **Profile Info**:
-   - Avatar (first letter of username)
+### Bagian Halaman Profile:
+1. **Info Profile**:
+   - Avatar (huruf pertama username)
    - Username
    - Email
    - Role
    - Last login
 
-2. **Change Password**:
-   - Current password input
-   - New password input
-   - Confirm password input
-   - Update button
+2. **Ganti Password**:
+   - Input password lama
+   - Input password baru
+   - Input konfirmasi password
+   - Tombol update
 
 3. **Session**:
-   - Logout button
+   - Tombol logout
 
 ---
 
-## 🎯 NEXT STEPS
+## Langkah Selanjutnya
 
-1. ✅ **Test Login**: Login dengan semua user untuk verify
-2. ✅ **Test Change Password**: Ubah password dan test login lagi
-3. ✅ **Production**: Ganti SECRET_KEY di .env untuk production
-4. ⏭️ **Optional**: Implement "Forgot Password" feature
-5. ⏭️ **Optional**: Implement "Force Password Change" on first login
+1. ✅ **Test Login**: Login pake semua user buat verify
+2. ✅ **Test Ganti Password**: Ubah password dan test login lagi
+3. ✅ **Production**: Ganti SECRET_KEY di .env buat production
+4. ⏭️ **Opsional**: Implement fitur "Forgot Password"
+5. ⏭️ **Opsional**: Implement "Force Password Change" di first login
 
 ---
 
-## ⚠️ IMPORTANT NOTES
+## Catatan Penting
 
-1. **Default Passwords**: Semua user punya password default `[username]123`
-2. **Security**: Instruksikan user untuk **change password** setelah first login
+1. **Password Default**: Semua user punya password default `[username]123`
+2. **Keamanan**: Instruksikan user buat **ganti password** setelah first login
 3. **SECRET_KEY**: Jangan commit SECRET_KEY ke Git
-4. **Production**: Use HTTPS untuk secure cookies
+4. **Production**: Pake HTTPS buat secure cookies
 5. **Backup**: Backup database sebelum production
 
 ---
 
-## 🛠️ TROUBLESHOOTING
+## Troubleshooting
 
-### **Login gagal?**
-- Check: Username dan password benar
-- Check: User is_active = True
-- Check: Password hash di database benar (starts with $2)
-- Check: SessionMiddleware aktif
+### Login gagal?
+- Cek: Username dan password bener
+- Cek: User is_active = True
+- Cek: Password hash di database bener (mulai dengan $2)
+- Cek: SessionMiddleware aktif
 
-### **Change password gagal?**
-- Check: Current password benar
-- Check: New password dan confirm password match
-- Check: User logged in (session valid)
+### Ganti password gagal?
+- Cek: Password lama bener
+- Cek: Password baru dan konfirmasi password match
+- Cek: User udah login (session valid)
 
-### **Session tidak persist?**
-- Check: SECRET_KEY ada di .env
-- Check: SessionMiddleware di main.py
-- Check: Browser cookies enabled
+### Session gak persist?
+- Cek: SECRET_KEY ada di .env
+- Cek: SessionMiddleware di main.py
+- Cek: Browser cookies enabled
 
 ---
 
-**AUTHENTICATION SYSTEM READY!** 🎉
+**SISTEM AUTHENTICATION SIAP!** 🎉

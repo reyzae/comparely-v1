@@ -1,20 +1,20 @@
 # Dokumentasi API - Fitur AI
 
-## 🤖 Perbandingan Cerdas dengan AI
+## Perbandingan Cerdas pake AI
 
 ### **GET /compare/ai**
 
-Bandingkan 2 perangkat dengan analisis mendalam dari Grok AI.
+Bandingin 2 HP dengan analisis mendalam dari Grok AI.
 
 **Parameter Query:**
-- `id1` (wajib): ID perangkat pertama
-- `id2` (wajib): ID perangkat kedua
+- `id1` (wajib): ID HP pertama
+- `id2` (wajib): ID HP kedua
 
 **Response:**
 ```json
 {
-  "device_1": { /* spesifikasi perangkat */ },
-  "device_2": { /* spesifikasi perangkat */ },
+  "device_1": { /* spesifikasi HP */ },
+  "device_2": { /* spesifikasi HP */ },
   "highlights": [
     "xiaomi redmi 4x lebih murah Rp 11,000,000",
     "iphone 15 128gb lebih baru (Rilis 2023)"
@@ -30,11 +30,11 @@ curl -X GET "http://localhost:8000/compare/ai?id1=10&id2=11"
 
 ---
 
-## 🧠 Rekomendasi dengan AI
+## Rekomendasi pake AI
 
 ### **GET /recommendation/ai**
 
-Dapatkan rekomendasi perangkat cerdas dengan analisis dari Grok AI.
+Dapetin rekomendasi HP cerdas dengan analisis dari Grok AI.
 
 **Parameter Query:**
 - `max_price` (opsional): Budget maksimal
@@ -47,9 +47,9 @@ Dapatkan rekomendasi perangkat cerdas dengan analisis dari Grok AI.
 ```json
 {
   "devices": [
-    { /* spesifikasi perangkat 1 */ },
-    { /* spesifikasi perangkat 2 */ },
-    { /* spesifikasi perangkat 3 */ }
+    { /* spesifikasi HP 1 */ },
+    { /* spesifikasi HP 2 */ },
+    { /* spesifikasi HP 3 */ }
   ],
   "ai_recommendation": "**Top 3 Rekomendasi:**\n\n1. iPhone 15 128GB - Layar Super Retina XDR..."
 }
@@ -62,7 +62,7 @@ curl -X GET "http://localhost:8000/recommendation/ai?max_price=12000000&use_case
 
 ---
 
-## 📝 Use Case yang Tersedia
+## Use Case yang Tersedia
 
 - `gaming` - Gaming & performa tinggi
 - `fotografi` - Fotografi & videografi
@@ -72,7 +72,7 @@ curl -X GET "http://localhost:8000/recommendation/ai?max_price=12000000&use_case
 
 ---
 
-## ⚙️ Konfigurasi AI
+## Konfigurasi AI
 
 **AI Provider**: Grok AI (xAI)
 **Model**: grok-4-latest
@@ -81,14 +81,13 @@ curl -X GET "http://localhost:8000/recommendation/ai?max_price=12000000&use_case
 
 ---
 
-## 🔧 Error Handling
+## Error Handling
 
-Jika AI service gagal, endpoint akan mengembalikan fallback message:
+Kalau AI service gagal, endpoint bakal return fallback message:
 ```json
 {
-  "ai_analysis": "Maaf, analisis AI sedang tidak tersedia. Error: ..."
+  "ai_analysis": "Maaf, analisis AI sedang gak tersedia. Error: ..."
 }
 ```
 
-Fitur comparison/recommendation rule-based tetap berfungsi normal.
-
+Fitur comparison/recommendation rule-based tetap jalan normal.

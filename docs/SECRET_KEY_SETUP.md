@@ -1,46 +1,46 @@
-# 🔐 SECRET_KEY Setup Guide
+# Setup SECRET_KEY
 
-## Generate New SECRET_KEY
+## Bikin SECRET_KEY Baru
 
-Run this command to generate a secure random key:
+Jalanin command ini buat generate key random yang aman:
 
 ```bash
 python -c "import secrets; print(secrets.token_urlsafe(32))"
 ```
 
-## Update .env File
+## Update File .env
 
-1. Copy `.env.example` to `.env`:
+1. Copy `.env.example` ke `.env`:
 ```bash
 cp .env.example .env
 ```
 
-2. Edit `.env` and replace `SECRET_KEY` with generated key:
+2. Edit `.env` dan ganti `SECRET_KEY` dengan key yang udah di-generate:
 ```env
 SECRET_KEY=your-generated-key-here
 ```
 
-## Important Notes
+## Catatan Penting
 
-⚠️ **NEVER commit `.env` to Git!**
-- `.env` is in `.gitignore`
-- Only commit `.env.example` (without real keys)
+⚠️ **JANGAN PERNAH commit `.env` ke Git!**
+- `.env` udah ada di `.gitignore`
+- Cuma commit `.env.example` (tanpa key beneran)
 
-⚠️ **Change SECRET_KEY in production!**
-- Use different key for development and production
-- Never share your SECRET_KEY
+⚠️ **Ganti SECRET_KEY di production!**
+- Pake key yang beda buat development dan production
+- Jangan pernah share SECRET_KEY kamu
 
-⚠️ **If SECRET_KEY is exposed:**
-1. Generate new key immediately
-2. Update `.env` with new key
-3. Restart application
-4. All users will need to re-login
+⚠️ **Kalau SECRET_KEY bocor:**
+1. Generate key baru secepatnya
+2. Update `.env` dengan key baru
+3. Restart aplikasi
+4. Semua user harus re-login
 
-## Verify Setup
+## Verifikasi Setup
 
-Check if SECRET_KEY is loaded:
+Cek apakah SECRET_KEY udah ke-load:
 ```bash
 python -c "from dotenv import load_dotenv; import os; load_dotenv(); print('OK' if os.getenv('SECRET_KEY') else 'MISSING')"
 ```
 
-Should output: `OK`
+Harusnya output: `OK`

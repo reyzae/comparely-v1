@@ -1,6 +1,6 @@
-# COMPARELY - Flowcharts & Diagrams
+# COMPARELY - Flowcharts & Diagram
 
-Dokumentasi visual untuk sistem COMPARELY menggunakan Mermaid diagrams.
+Dokumentasi visual buat sistem COMPARELY pake Mermaid diagrams.
 
 ---
 
@@ -384,24 +384,24 @@ stateDiagram-v2
 
 ---
 
-## 📝 Catatan Diagram
+## Catatan Diagram
 
 ### Konvensi Warna:
 - 🔵 **Biru** (`#42A5F5`): Start/End points
-- � **Orange** (`#FFA726`): Decision points (diamond shapes)
-- �🟡 **Kuning** (`#FFD54F`): Processing/Logic
+- 🟠 **Orange** (`#FFA726`): Decision points (diamond shapes)
+- 🟡 **Kuning** (`#FFD54F`): Processing/Logic
 - 🟣 **Ungu** (`#BA68C8`, `#AB47BC`): AI/External services & formatting
 - 🟢 **Hijau** (`#81C784`, `#66BB6A`): Success states & database operations
 - 🔴 **Merah** (`#EF5350`): Error states
 - 🟤 **Orange Muda** (`#FFB74D`): Warning/Skip states
 
-### Cara Menggunakan:
+### Cara Pake:
 1. Copy kode Mermaid ke Markdown viewer yang support Mermaid
-2. Atau gunakan online editor: https://mermaid.live/
-3. Untuk proposal, screenshot diagram dan masukkan ke dokumen
-4. Diagram akan otomatis render dengan warna yang cerah dan jelas
+2. Atau pake online editor: https://mermaid.live/
+3. Buat proposal, screenshot diagram dan masukin ke dokumen
+4. Diagram bakal otomatis render dengan warna yang cerah dan jelas
 
 ---
 
 **Dibuat**: 3 Desember 2025
-**Untuk**: Proposal & Dokumentasi Proyek COMPARELY
+**Buat**: Proposal & Dokumentasi Proyek COMPARELY
