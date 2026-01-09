@@ -107,7 +107,7 @@ class TestCSVImport:
         import os
         
         # Path ke import_csv.py
-        csv_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), "import_csv.py")
+        csv_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), "scripts", "import_csv.py")
         
         # Compile untuk check syntax
         try:
@@ -115,6 +115,8 @@ class TestCSVImport:
             assert True
         except py_compile.PyCompileError:
             assert False, "import_csv.py has syntax errors"
+        except FileNotFoundError:
+            assert False, "import_csv.py not found in scripts/ folder"
 
 
 # Jika dijalankan langsung
