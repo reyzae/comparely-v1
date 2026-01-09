@@ -4,11 +4,13 @@ Activity Logger Utility - Helper untuk auto-logging aktivitas
 Author: Kelompok COMPARELY
 """
 
-from sqlalchemy.orm import Session
-from fastapi import Request
-from typing import Optional, Dict, Any
-from app.crud import activity_log as activity_log_crud
 import json
+from typing import Any, Dict, Optional
+
+from fastapi import Request
+from sqlalchemy.orm import Session
+
+from app.crud import activity_log as activity_log_crud
 
 
 def log_activity(
@@ -20,11 +22,11 @@ def log_activity(
     entity_name: Optional[str] = None,
     old_values: Optional[Dict[str, Any]] = None,
     new_values: Optional[Dict[str, Any]] = None,
-    description: Optional[str] = None
+    description: Optional[str] = None,
 ):
     """
     Helper function untuk log aktivitas dengan mudah.
-    
+
     Args:
         db: Database session
         request: FastAPI Request object
@@ -35,7 +37,7 @@ def log_activity(
         old_values: Data sebelum perubahan
         new_values: Data setelah perubahan
         description: Deskripsi human-readable
-    
+
     Example:
         log_activity(
             db=db,
@@ -50,11 +52,11 @@ def log_activity(
     # Get user info from session
     user_id = request.session.get("user_id")
     user_name = request.session.get("user_name", "System")
-    
+
     # Get request metadata
     ip_address = request.client.host if request.client else None
     user_agent = request.headers.get("user-agent")
-    
+
     # Create log
     activity_log_crud.create_activity_log(
         db=db,
@@ -68,7 +70,7 @@ def log_activity(
         new_values=new_values,
         ip_address=ip_address,
         user_agent=user_agent,
-        description=description
+        description=description,
     )
 
 
@@ -78,11 +80,11 @@ def log_create(
     entity_type: str,
     entity_id: int,
     entity_name: str,
-    data: Optional[Dict[str, Any]] = None
+    data: Optional[Dict[str, Any]] = None,
 ):
     """
     Shortcut untuk log CREATE action.
-    
+
     Example:
         log_create(db, request, "Phone", phone.id, phone.name, {"brand": "Apple"})
     """
@@ -95,7 +97,7 @@ def log_create(
         entity_id=entity_id,
         entity_name=entity_name,
         new_values=data,
-        description=description
+        description=description,
     )
 
 
@@ -106,13 +108,13 @@ def log_update(
     entity_id: int,
     entity_name: str,
     old_data: Optional[Dict[str, Any]] = None,
-    new_data: Optional[Dict[str, Any]] = None
+    new_data: Optional[Dict[str, Any]] = None,
 ):
     """
     Shortcut untuk log UPDATE action.
-    
+
     Example:
-        log_update(db, request, "Phone", phone.id, phone.name, 
+        log_update(db, request, "Phone", phone.id, phone.name,
                   old_data={"price": 10000}, new_data={"price": 12000})
     """
     description = f"Updated {entity_type}: {entity_name}"
@@ -125,7 +127,7 @@ def log_update(
         entity_name=entity_name,
         old_values=old_data,
         new_values=new_data,
-        description=description
+        description=description,
     )
 
 
@@ -135,11 +137,11 @@ def log_delete(
     entity_type: str,
     entity_id: int,
     entity_name: str,
-    data: Optional[Dict[str, Any]] = None
+    data: Optional[Dict[str, Any]] = None,
 ):
     """
     Shortcut untuk log DELETE action.
-    
+
     Example:
         log_delete(db, request, "Phone", phone.id, phone.name)
     """
@@ -152,14 +154,14 @@ def log_delete(
         entity_id=entity_id,
         entity_name=entity_name,
         old_values=data,
-        description=description
+        description=description,
     )
 
 
 def log_login(db: Session, request: Request, user_name: str):
     """
     Shortcut untuk log LOGIN action.
-    
+
     Example:
         log_login(db, request, "admin@example.com")
     """
@@ -169,14 +171,14 @@ def log_login(db: Session, request: Request, user_name: str):
         action="LOGIN",
         entity_type="User",
         entity_name=user_name,
-        description=f"User {user_name} logged in"
+        description=f"User {user_name} logged in",
     )
 
 
 def log_logout(db: Session, request: Request, user_name: str):
     """
     Shortcut untuk log LOGOUT action.
-    
+
     Example:
         log_logout(db, request, "admin@example.com")
     """
@@ -186,28 +188,28 @@ def log_logout(db: Session, request: Request, user_name: str):
         action="LOGOUT",
         entity_type="User",
         entity_name=user_name,
-        description=f"User {user_name} logged out"
+        description=f"User {user_name} logged out",
     )
 
 
 def get_model_changes(old_obj: Any, new_data: Dict[str, Any]) -> tuple:
     """
     Helper untuk detect perubahan antara object lama dan data baru.
-    
+
     Args:
         old_obj: SQLAlchemy model object
         new_data: Dictionary dengan data baru
-    
+
     Returns:
         Tuple (old_values, new_values) yang berisi hanya field yang berubah
-    
+
     Example:
         old_vals, new_vals = get_model_changes(phone, form_data)
         log_update(db, request, "Phone", phone.id, phone.name, old_vals, new_vals)
     """
     old_values = {}
     new_values = {}
-    
+
     for key, new_value in new_data.items():
         if hasattr(old_obj, key):
             old_value = getattr(old_obj, key)
@@ -215,5 +217,5 @@ def get_model_changes(old_obj: Any, new_data: Dict[str, Any]) -> tuple:
             if old_value != new_value:
                 old_values[key] = str(old_value) if old_value is not None else None
                 new_values[key] = str(new_value) if new_value is not None else None
-    
+
     return old_values, new_values

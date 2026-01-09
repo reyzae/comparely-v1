@@ -12,11 +12,4 @@ Package ini berisi semua router untuk aplikasi COMPARELY:
 
 from . import admin, categories, compare, devices, frontend, recommendation
 
-__all__ = [
-    "admin",
-    "categories",
-    "compare",
-    "devices",
-    "frontend",
-    "recommendation"
-]
+__all__ = ["admin", "categories", "compare", "devices", "frontend", "recommendation"]

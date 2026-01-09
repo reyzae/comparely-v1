@@ -1,16 +1,19 @@
-from sqlalchemy.orm import Session
 from typing import List
+
+from sqlalchemy.orm import Session
+
 from .. import models, schemas
 
 # ==================== READ OPERATIONS ====================
 
+
 def get_categories(db: Session) -> List[models.Category]:
     """
     Mengambil semua kategori dari database.
-    
+
     Args:
         db: Database session
-    
+
     Returns:
         List of Category objects
     """
@@ -20,11 +23,11 @@ def get_categories(db: Session) -> List[models.Category]:
 def get_category(db: Session, category_id: int):
     """
     Mengambil 1 kategori berdasarkan ID.
-    
+
     Args:
         db: Database session
         category_id: ID kategori yang dicari
-    
+
     Returns:
         Category object jika ditemukan, None jika tidak ada
     """
@@ -33,14 +36,15 @@ def get_category(db: Session, category_id: int):
 
 # ==================== CREATE OPERATIONS ====================
 
+
 def create_category(db: Session, category: schemas.CategoryCreate) -> models.Category:
     """
     Membuat kategori baru di database.
-    
+
     Args:
         db: Database session
         category: Data kategori dari request
-    
+
     Returns:
         Category object yang baru dibuat
     """

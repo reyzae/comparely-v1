@@ -4,38 +4,43 @@ Smoke tests untuk memastikan aplikasi berjalan dengan baik.
 """
 
 import pytest
-from app.main import app
 from fastapi.testclient import TestClient
 
-# Test client
-client = TestClient(app)
+from app.main import app
+
+
+@pytest.fixture(scope="module")
+def client():
+    """Provides a TestClient instance for tests."""
+    with TestClient(app) as c:
+        yield c
 
 
 class TestBasicEndpoints:
     """Test basic endpoints untuk memastikan aplikasi berjalan"""
-    
-    def test_homepage(self):
+
+    def test_homepage(self, client):
         """Test homepage dapat diakses"""
         response = client.get("/")
         assert response.status_code == 200
         assert "COMPARELY" in response.text or "Comparely" in response.text
-    
-    def test_devices_page(self):
+
+    def test_devices_page(self, client):
         """Test halaman devices dapat diakses"""
         response = client.get("/devices")
         assert response.status_code == 200
-    
-    def test_features_page(self):
+
+    def test_features_page(self, client):
         """Test halaman features dapat diakses"""
         response = client.get("/features")
         assert response.status_code == 200
-    
-    def test_about_page(self):
+
+    def test_about_page(self, client):
         """Test halaman about dapat diakses"""
         response = client.get("/about")
         assert response.status_code == 200
-    
-    def test_api_docs(self):
+
+    def test_api_docs(self, client):
         """Test API documentation dapat diakses"""
         response = client.get("/docs")
         assert response.status_code == 200
@@ -43,20 +48,20 @@ class TestBasicEndpoints:
 
 class TestAPIEndpoints:
     """Test API endpoints"""
-    
-    def test_get_devices_api(self):
+
+    def test_get_devices_api(self, client):
         """Test GET /devices/ API endpoint"""
         response = client.get("/devices/")
         assert response.status_code == 200
         assert isinstance(response.json(), list)
-    
-    def test_get_categories_api(self):
+
+    def test_get_categories_api(self, client):
         """Test GET /categories/ API endpoint"""
         response = client.get("/categories/")
         assert response.status_code == 200
         assert isinstance(response.json(), list)
-    
-    def test_search_devices(self):
+
+    def test_search_devices(self, client):
         """Test search functionality"""
         response = client.get("/search?query=samsung")
         assert response.status_code == 200
@@ -64,50 +69,57 @@ class TestAPIEndpoints:
 
 class TestModels:
     """Test database models dapat di-import"""
-    
+
     def test_import_models(self):
         """Test semua models dapat di-import"""
-        from app.models import Device, Category, Benchmark
+        from app.models import Benchmark, Category, Device
+
         assert Device is not None
         assert Category is not None
         assert Benchmark is not None
-    
+
     def test_import_schemas(self):
         """Test semua schemas dapat di-import"""
-        from app.schemas import DeviceCreate, CategoryCreate
+        from app.schemas import CategoryCreate, DeviceCreate
+
         assert DeviceCreate is not None
         assert CategoryCreate is not None
 
 
 class TestServices:
     """Test services dapat di-import"""
-    
+
     def test_import_comparison_service(self):
         """Test comparison service dapat di-import"""
         from app.services import comparison_service
+
         assert comparison_service is not None
-    
+
     def test_import_ai_service(self):
         """Test ai service dapat di-import"""
         from app.services import grok_service as ai_service
+
         assert ai_service is not None
-    
+
     def test_import_recommendation_service(self):
         """Test recommendation service dapat di-import"""
         from app.services import recommendation_service
+
         assert recommendation_service is not None
 
 
 class TestCSVImport:
     """Test CSV import script"""
-    
+
     def test_import_csv_exists(self):
         """Test import_csv.py file exists"""
         import os
-        
+
         # Path ke import_csv.py
-        csv_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), "scripts", "import_csv.py")
-        
+        csv_file = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)), "scripts", "import_csv.py"
+        )
+
         # Check if file exists
         assert os.path.exists(csv_file), "import_csv.py not found in scripts/ folder"
 

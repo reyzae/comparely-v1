@@ -5,8 +5,8 @@ File ini mengumpulkan semua schema dari file terpisah.
 Contoh: from app.schemas import Phone, Category, PhoneCreate
 """
 
-from .category import Category, CategoryCreate, CategoryBase
-from .phone import Phone, PhoneCreate, PhoneBase
+from .category import Category, CategoryBase, CategoryCreate
+from .phone import Phone, PhoneBase, PhoneCreate
 
 # List semua schema yang bisa di-import
 __all__ = [
@@ -14,7 +14,6 @@ __all__ = [
     "Category",
     "CategoryCreate",
     "CategoryBase",
-    
     # Phone schemas
     "Phone",
     "PhoneCreate",

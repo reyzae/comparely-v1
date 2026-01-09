@@ -1,11 +1,14 @@
+import os
+
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
-from .routers import devices, compare, categories, recommendation, frontend, admin
+
 from .database import engine
 from .models import Base  # Import Base dari models package baru
-import os
-from dotenv import load_dotenv
+from .routers import (admin, categories, compare, devices, frontend,
+                      recommendation)
 
 # Load environment variables
 load_dotenv()
@@ -14,9 +17,7 @@ load_dotenv()
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="COMPARELY",
-    description="Aplikasi Perbandingan Perangkat",
-    version="1.0.0"
+    title="COMPARELY", description="Aplikasi Perbandingan Perangkat", version="1.0.0"
 )
 
 # Add SessionMiddleware for user authentication
@@ -31,10 +32,10 @@ async def startup_event():
     Event yang dijalankan saat aplikasi startup.
     Melakukan validasi konfigurasi dan menampilkan warning jika ada yang kurang.
     """
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("🚀 COMPARELY - Aplikasi Perbandingan Perangkat")
-    print("="*60)
-    
+    print("=" * 60)
+
     # Check AI_API_KEY
     ai_api_key = os.getenv("AI_API_KEY", "")
     if not ai_api_key or ai_api_key == "":
@@ -46,23 +47,26 @@ async def startup_event():
         print("   3. Restart aplikasi\n")
     else:
         print("✅ AI_API_KEY terdeteksi - Fitur AI aktif")
-    
+
     # Check DATABASE_URL
     db_url = os.getenv("DATABASE_URL", "")
     if db_url:
         print("✅ DATABASE_URL terdeteksi")
     else:
         print("⚠️  WARNING: DATABASE_URL tidak ditemukan di .env")
-    
-    print("="*60 + "\n")
+
+    print("=" * 60 + "\n")
+
 
 # Favicon route
 from fastapi.responses import FileResponse
+
 
 @app.get("/favicon.ico")
 async def favicon():
     """Serve favicon"""
     return FileResponse("app/static/images/favicon.ico")
+
 
 # Folder untuk file CSS/Gambar
 app.mount("/static", StaticFiles(directory="app/static"), name="static")

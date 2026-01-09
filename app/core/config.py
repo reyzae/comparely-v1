@@ -6,6 +6,7 @@ PENTING: Jangan commit file ini ke Git jika berisi API key asli!
 """
 
 import os
+
 from dotenv import load_dotenv
 
 # Load environment variables dari file .env (jika ada)
@@ -13,8 +14,7 @@ load_dotenv()
 
 # Database Configuration
 DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "mysql+mysqlconnector://root:@localhost/comparely"
+    "DATABASE_URL", "mysql+mysqlconnector://root:@localhost/comparely"
 )
 
 # AI Configuration
@@ -27,13 +27,7 @@ AI_TEMPERATURE = 0.7  # Kreativitas AI (0.0 = strict, 1.0 = creative)
 AI_MAX_TOKENS = 500  # Maksimal panjang response
 
 # Use Case Options
-USE_CASES = [
-    "gaming",
-    "fotografi",
-    "kerja",
-    "kuliah",
-    "multimedia"
-]
+USE_CASES = ["gaming", "fotografi", "kerja", "kuliah", "multimedia"]
 
 # n8n Integration Configuration
 N8N_WEBHOOK_URL = os.getenv("N8N_WEBHOOK_URL", "")

@@ -3,15 +3,17 @@ Admin Tools Router
 Handles admin tools and utilities.
 """
 
+import logging
+
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
+
 from app.core.deps import get_db
-from .auth import get_current_user
 from app.core.rbac_context import add_rbac_to_context
 
-import logging
+from .auth import get_current_user
 
 # Setup templates
 templates = Jinja2Templates(directory="app/templates")
@@ -33,11 +35,8 @@ async def admin_tools(request: Request, db: Session = Depends(get_db)):
             "request": request,
             "current_user": current_user,
             **rbac_context,  # Add RBAC permissions
-        }
+        },
     )
-
-
-
 
 
 @router.post("/tools/clear-cache")
@@ -47,12 +46,10 @@ async def clear_cache(request: Request, db: Session = Depends(get_db)):
         # Placeholder for cache clearing logic
         logger.info("Cache cleared")
         return RedirectResponse(
-            url="/admin/tools?message=Cache cleared successfully",
-            status_code=303
+            url="/admin/tools?message=Cache cleared successfully", status_code=303
         )
     except Exception as e:
         logger.exception(f"Error clearing cache: {e}")
         return RedirectResponse(
-            url=f"/admin/tools?error=Failed to clear cache",
-            status_code=303
+            url=f"/admin/tools?error=Failed to clear cache", status_code=303
         )

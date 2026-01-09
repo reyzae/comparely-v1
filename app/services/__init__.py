@@ -16,7 +16,7 @@ Contoh:
 
 Import:
     from app.services import comparison_service
-    
+
     result = comparison_service.compare_two_devices(db, id1, id2)
 """
 

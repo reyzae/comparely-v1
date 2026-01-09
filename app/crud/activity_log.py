@@ -4,11 +4,13 @@ CRUD operations untuk Activity Logs
 Author: Kelompok COMPARELY
 """
 
-from sqlalchemy.orm import Session
-from typing import List, Optional
-from datetime import datetime, timedelta
-from app.models.activity_log import ActivityLog
 import json
+from datetime import datetime, timedelta
+from typing import List, Optional
+
+from sqlalchemy.orm import Session
+
+from app.models.activity_log import ActivityLog
 
 
 def create_activity_log(
@@ -23,11 +25,11 @@ def create_activity_log(
     new_values: Optional[dict] = None,
     ip_address: Optional[str] = None,
     user_agent: Optional[str] = None,
-    description: Optional[str] = None
+    description: Optional[str] = None,
 ) -> ActivityLog:
     """
     Buat log aktivitas baru.
-    
+
     Args:
         db: Database session
         user_id: ID user yang melakukan aksi
@@ -41,7 +43,7 @@ def create_activity_log(
         ip_address: IP address user
         user_agent: Browser user agent
         description: Deskripsi human-readable
-    
+
     Returns:
         ActivityLog object yang baru dibuat
     """
@@ -56,9 +58,9 @@ def create_activity_log(
         new_values=json.dumps(new_values) if new_values else None,
         ip_address=ip_address,
         user_agent=user_agent,
-        description=description
+        description=description,
     )
-    
+
     db.add(log)
     db.commit()
     db.refresh(log)
@@ -72,11 +74,11 @@ def get_activity_logs(
     user_id: Optional[int] = None,
     action: Optional[str] = None,
     entity_type: Optional[str] = None,
-    days: Optional[int] = None
+    days: Optional[int] = None,
 ) -> List[ActivityLog]:
     """
     Ambil daftar activity logs dengan filter.
-    
+
     Args:
         db: Database session
         skip: Offset untuk pagination
@@ -85,40 +87,40 @@ def get_activity_logs(
         action: Filter by action type
         entity_type: Filter by entity type
         days: Filter logs dari X hari terakhir
-    
+
     Returns:
         List of ActivityLog objects
     """
     query = db.query(ActivityLog)
-    
+
     # Apply filters
     if user_id:
         query = query.filter(ActivityLog.user_id == user_id)
-    
+
     if action:
         query = query.filter(ActivityLog.action == action)
-    
+
     if entity_type:
         query = query.filter(ActivityLog.entity_type == entity_type)
-    
+
     if days:
         date_from = datetime.utcnow() - timedelta(days=days)
         query = query.filter(ActivityLog.created_at >= date_from)
-    
+
     # Order by newest first
     query = query.order_by(ActivityLog.created_at.desc())
-    
+
     return query.offset(skip).limit(limit).all()
 
 
 def get_activity_log_by_id(db: Session, log_id: int) -> Optional[ActivityLog]:
     """
     Ambil activity log berdasarkan ID.
-    
+
     Args:
         db: Database session
         log_id: ID log yang dicari
-    
+
     Returns:
         ActivityLog object atau None jika tidak ditemukan
     """
@@ -130,36 +132,36 @@ def count_activity_logs(
     user_id: Optional[int] = None,
     action: Optional[str] = None,
     entity_type: Optional[str] = None,
-    days: Optional[int] = None
+    days: Optional[int] = None,
 ) -> int:
     """
     Hitung jumlah activity logs dengan filter.
-    
+
     Args:
         db: Database session
         user_id: Filter by user ID
         action: Filter by action type
         entity_type: Filter by entity type
         days: Filter logs dari X hari terakhir
-    
+
     Returns:
         Jumlah logs
     """
     query = db.query(ActivityLog)
-    
+
     if user_id:
         query = query.filter(ActivityLog.user_id == user_id)
-    
+
     if action:
         query = query.filter(ActivityLog.action == action)
-    
+
     if entity_type:
         query = query.filter(ActivityLog.entity_type == entity_type)
-    
+
     if days:
         date_from = datetime.utcnow() - timedelta(days=days)
         query = query.filter(ActivityLog.created_at >= date_from)
-    
+
     return query.count()
 
 
@@ -167,15 +169,17 @@ def delete_old_logs(db: Session, days: int = 90) -> int:
     """
     Hapus logs yang lebih tua dari X hari.
     Berguna untuk maintenance database.
-    
+
     Args:
         db: Database session
         days: Hapus logs lebih tua dari X hari
-    
+
     Returns:
         Jumlah logs yang dihapus
     """
     date_threshold = datetime.utcnow() - timedelta(days=days)
-    deleted = db.query(ActivityLog).filter(ActivityLog.created_at < date_threshold).delete()
+    deleted = (
+        db.query(ActivityLog).filter(ActivityLog.created_at < date_threshold).delete()
+    )
     db.commit()
     return deleted

@@ -7,9 +7,11 @@ Menghapus semua data devices dari database
 Cara pakai: python reset_database.py
 """
 
-from app.database import SessionLocal
-from app.models import Device, Benchmark
 from sqlalchemy import text
+
+from app.database import SessionLocal
+from app.models import Benchmark, Device
+
 
 def reset_database():
     """
@@ -20,37 +22,37 @@ def reset_database():
     print("=" * 70)
     print("Script ini akan menghapus SEMUA data devices dan benchmarks!")
     print("=" * 70)
-    
+
     # Konfirmasi dari user
     confirm = input("\nKetik 'RESET' untuk konfirmasi (atau Enter untuk batal): ")
-    
-    if confirm != 'RESET':
+
+    if confirm != "RESET":
         print("\n❌ Reset dibatalkan!")
         return
-    
+
     db = SessionLocal()
-    
+
     try:
         # Hitung jumlah data sebelum dihapus
         device_count = db.query(Device).count()
         benchmark_count = db.query(Benchmark).count()
-        
+
         print(f"\n📊 Data yang akan dihapus:")
         print(f"   Devices: {device_count}")
         print(f"   Benchmarks: {benchmark_count}")
-        
+
         # Hapus benchmarks dulu (karena ada foreign key ke devices)
         print("\n🗑️  Menghapus benchmarks...")
         db.query(Benchmark).delete()
         db.commit()
         print("   ✅ Benchmarks dihapus")
-        
+
         # Hapus devices
         print("🗑️  Menghapus devices...")
         db.query(Device).delete()
         db.commit()
         print("   ✅ Devices dihapus")
-        
+
         # Reset auto increment (opsional, agar ID mulai dari 1 lagi)
         print("\n🔄 Reset auto increment...")
         try:
@@ -60,7 +62,7 @@ def reset_database():
             print("   ✅ Auto increment direset")
         except Exception as e:
             print(f"   ⚠️  Auto increment reset gagal (tidak masalah): {str(e)}")
-        
+
         print("\n" + "=" * 70)
         print("✅ DATABASE BERHASIL DIRESET!")
         print("=" * 70)
@@ -68,12 +70,13 @@ def reset_database():
         print("\n💡 Database sekarang kosong dan siap untuk import data baru")
         print("   Jalankan: python import_csv.py data/scraped_phones.csv")
         print("=" * 70)
-        
+
     except Exception as e:
         print(f"\n❌ ERROR: {str(e)}")
         db.rollback()
     finally:
         db.close()
+
 
 def quick_reset():
     """
@@ -91,6 +94,7 @@ def quick_reset():
         db.rollback()
     finally:
         db.close()
+
 
 if __name__ == "__main__":
     reset_database()

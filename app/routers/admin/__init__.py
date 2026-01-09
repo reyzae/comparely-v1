@@ -9,17 +9,8 @@ from fastapi import APIRouter
 router = APIRouter(prefix="/admin", tags=["admin"])
 
 # Import and include sub-routers
-from . import auth
-from . import dashboard
-from . import devices
-from . import users
-from . import categories
-from . import analytics
-from . import tools
-from . import settings
-from . import activity_logs
-from . import bulk_operations
-from . import notifications
+from . import (activity_logs, analytics, auth, bulk_operations, categories,
+               dashboard, devices, notifications, settings, tools, users)
 
 # Include all sub-routers
 router.include_router(auth.router)
